@@ -1432,12 +1432,12 @@
         <div class="lock-screen-box">
           
           <div class="lock-avatar-ring">
-            <div class="lock-avatar" id="lockAvatar">H</div>
+            <div class="lock-avatar" id="lockAvatar">R</div>
             <div class="lock-badge">🔒</div>
           </div>
 
           <span class="lock-greeting" id="lockGreeting">Welcome back</span>
-          <h2 class="lock-name" id="lockUserName">Honey Shah</h2>
+          <h2 class="lock-name" id="lockUserName">Richie</h2>
           <p class="lock-subtitle">Enter 4-Digit Security PIN</p>
 
           <!-- 4 PIN Dots Indicator -->
@@ -1486,7 +1486,7 @@
 
           <div class="form-group-clean">
             <label class="form-label-clean">👤 Full Name</label>
-            <input type="text" id="regName" class="input-clean" placeholder="e.g. Honey Shah" autocomplete="name">
+            <input type="text" id="regName" class="input-clean" placeholder="e.g. Richie" autocomplete="name">
           </div>
 
           <div class="form-group-clean">
@@ -1563,9 +1563,9 @@
         <!-- TOP APP BAR -->
         <header class="app-top-header">
           <div class="header-user-chip" onclick="switchNavTab('profile')" title="View Profile">
-            <div class="header-avatar" id="headerUserAvatar">H</div>
+            <div class="header-avatar" id="headerUserAvatar">R</div>
             <div class="header-user-info">
-              <h2 id="headerUserName">Honey Shah</h2>
+              <h2 id="headerUserName">Richie</h2>
               <span id="headerUserMobile">+91 9876543210</span>
             </div>
           </div>
@@ -1771,8 +1771,8 @@
         <section class="app-screen" id="screenProfile">
           
           <div class="calendar-card" style="padding:16px; margin-bottom:14px; text-align:center;">
-            <div class="header-avatar" style="width:64px; height:64px; font-size:1.6rem; margin:0 auto 10px auto;" id="profileLargeAvatar">H</div>
-            <h3 id="profileLargeName" style="font-size:1.15rem; font-weight:800;">Honey Shah</h3>
+            <div class="header-avatar" style="width:64px; height:64px; font-size:1.6rem; margin:0 auto 10px auto;" id="profileLargeAvatar">R</div>
+            <h3 id="profileLargeName" style="font-size:1.15rem; font-weight:800;">Richie</h3>
             <p id="profileLargeMobile" style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">+91 9876543210</p>
             <div style="display:flex; justify-content:center; gap:8px;">
               <button class="btn btn-secondary" style="width:auto; padding:6px 14px; font-size:0.78rem;" onclick="lockApp()">
@@ -2257,10 +2257,18 @@
     function initAuth() {
       try {
         let u = localStorage.getItem(STORAGE_KEY_USER);
-        if (!u) {
-          // Pre-populate initial Honey Shah profile so user can immediately test lock screen!
+        if (u) {
+          try {
+            const parsed = JSON.parse(u);
+            if (parsed.name === "Honey Shah" || !parsed.name) {
+              parsed.name = "Richie";
+              localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(parsed));
+              u = JSON.stringify(parsed);
+            }
+          } catch(e) {}
+        } else {
           const defaultUser = {
-            name: "Honey Shah",
+            name: "Richie",
             mobile: "9876543210",
             pin: "1234",
             calMode: "english",
@@ -2293,8 +2301,9 @@
         const savedUserStr = localStorage.getItem(STORAGE_KEY_USER);
         if (savedUserStr) {
           const savedUser = JSON.parse(savedUserStr);
-          document.getElementById('lockUserName').innerText = savedUser.name || 'Honey Shah';
-          document.getElementById('lockAvatar').innerText = (savedUser.name || 'H').charAt(0).toUpperCase();
+          const uName = (savedUser.name && savedUser.name !== "Honey Shah") ? savedUser.name : "Richie";
+          document.getElementById('lockUserName').innerText = uName;
+          document.getElementById('lockAvatar').innerText = uName.charAt(0).toUpperCase();
           document.getElementById('lockGreeting').innerText = 'Welcome back';
         }
       }
