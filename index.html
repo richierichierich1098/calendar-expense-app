@@ -7,6 +7,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Gujarati:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- jsPDF & AutoTable for client-side PDF Statement Generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
   <style>
     :root {
       --primary: #4f46e5;         /* Modern Indigo */
@@ -1038,7 +1041,7 @@
       border: none;
       background: transparent;
       cursor: pointer;
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 700;
       transition: all 0.15s;
     }
@@ -1339,7 +1342,64 @@
     .chog-row.neutral { color: #b45309; }
     .chog-row.bad { color: #b91c1c; }
 
-    /* REPORTS */
+    /* DATA ANALYTICS & REPORTS */
+    .preset-chip {
+      padding: 5px 12px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: #f8fafc;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .preset-chip.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 2px 6px rgba(79, 70, 229, 0.3);
+    }
+
+    .btn-download-pdf {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 14px;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(220, 38, 38, 0.35);
+      transition: all 0.15s;
+      text-align: left;
+    }
+    .btn-download-pdf:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 14px rgba(220, 38, 38, 0.45);
+    }
+
+    .btn-download-excel {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 14px;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(5, 150, 105, 0.35);
+      transition: all 0.15s;
+      text-align: left;
+    }
+    .btn-download-excel:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 14px rgba(5, 150, 105, 0.45);
+    }
+
     .stat-row {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
@@ -1724,10 +1784,64 @@
         </section>
 
         <!-- ====================================================================
-             TAB 3: REPORTS & ANALYTICS
+             TAB 3: DATA ANALYTICS & STATEMENTS (DATE RANGE FILTER & DOWNLOADS)
              ==================================================================== -->
         <section class="app-screen" id="screenReports">
           
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div>
+              <h3 style="font-size:1.15rem; font-weight:800; color:#0f172a;">📈 Data Analytics & Statements</h3>
+              <span style="font-size:0.72rem; color:var(--text-muted);">Custom date range filter & reports</span>
+            </div>
+          </div>
+
+          <!-- DATE SELECTION RANGE CARD -->
+          <div class="calendar-card" style="padding:14px; margin-bottom:14px;">
+            <div style="font-size:0.82rem; font-weight:800; color:#1e293b; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+              <span>📅 Select Date Range (તારીખ પસંદ કરો)</span>
+            </div>
+
+            <!-- Date inputs row -->
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:10px;">
+              <div>
+                <label style="font-size:0.7rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:3px;">FROM DATE (તારીખ થી)</label>
+                <input type="date" id="filterStartDate" class="input-clean" style="padding:8px 10px; font-size:0.85rem;" onchange="applyDateRangeFilter()">
+              </div>
+              <div>
+                <label style="font-size:0.7rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:3px;">TO DATE (તારીખ સુધી)</label>
+                <input type="date" id="filterEndDate" class="input-clean" style="padding:8px 10px; font-size:0.85rem;" onchange="applyDateRangeFilter()">
+              </div>
+            </div>
+
+            <!-- Quick Preset Chips -->
+            <div style="display:flex; gap:6px; overflow-x:auto; padding-bottom:4px;">
+              <button class="preset-chip active" id="chipThisMonth" onclick="selectDatePreset('this_month')">This Month</button>
+              <button class="preset-chip" id="chipLastMonth" onclick="selectDatePreset('last_month')">Last Month</button>
+              <button class="preset-chip" id="chipLast30" onclick="selectDatePreset('last_30')">Last 30 Days</button>
+              <button class="preset-chip" id="chipLast7" onclick="selectDatePreset('last_7')">Last 7 Days</button>
+              <button class="preset-chip" id="chipAllTime" onclick="selectDatePreset('all_time')">All Time</button>
+            </div>
+
+            <!-- PROMINENT DOWNLOAD BUTTONS -->
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:12px; padding-top:12px; border-top:1px solid #f1f5f9;">
+              <button class="btn-download-pdf" onclick="exportPDF()">
+                <span style="font-size:1.25rem;">📄</span>
+                <div>
+                  <div style="font-size:0.84rem; font-weight:800;">Download PDF</div>
+                  <div style="font-size:0.65rem; opacity:0.85;">Formal Statement</div>
+                </div>
+              </button>
+              <button class="btn-download-excel" onclick="exportExcel()">
+                <span style="font-size:1.25rem;">📊</span>
+                <div>
+                  <div style="font-size:0.84rem; font-weight:800;">Download Excel</div>
+                  <div style="font-size:0.65rem; opacity:0.85;">Excel / CSV Sheet</div>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- SUMMARY STATS FOR SELECTED RANGE -->
           <div class="stat-row">
             <div class="stat-card green">
               <span>INCOME RECEIVED</span>
@@ -1743,24 +1857,25 @@
             </div>
           </div>
 
+          <!-- CATEGORY BREAKDOWN FOR SELECTED RANGE -->
           <div class="calendar-card" style="padding:14px; margin-bottom:14px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-              <h4 style="font-size:0.92rem; font-weight:800;">Expense Categories Breakdown</h4>
-              <button class="btn btn-secondary" style="width:auto; padding:4px 10px; font-size:0.75rem;" onclick="exportExcel()">
-                📥 Excel / CSV
-              </button>
+              <h4 style="font-size:0.92rem; font-weight:800;">Expense Breakdown in Range</h4>
+              <span style="font-size:0.72rem; color:var(--text-muted);" id="rangeDaysCount">31 Days</span>
             </div>
             <div id="categoryProgressBars"></div>
           </div>
 
+          <!-- MONEY RECEIVED TRANSACTIONS IN RANGE -->
           <div class="calendar-card" style="padding:14px; margin-bottom:14px;">
-            <h4 style="font-size:0.92rem; font-weight:800; margin-bottom:10px;">💵 Money Received Transactions</h4>
+            <h4 style="font-size:0.92rem; font-weight:800; margin-bottom:10px;">💵 Money Received in Range</h4>
             <div id="reportsIncomeList"></div>
           </div>
 
+          <!-- ITEMIZED DAILY EXPENSES IN RANGE -->
           <div class="calendar-card" style="padding:14px;">
-            <h4 style="font-size:0.92rem; font-weight:800; margin-bottom:10px;">Daily Expenses Ledger</h4>
-            <div style="max-height: 250px; overflow-y: auto;" id="dailyLedgerList"></div>
+            <h4 style="font-size:0.92rem; font-weight:800; margin-bottom:10px;">Daily Expenses Ledger in Range</h4>
+            <div style="max-height: 280px; overflow-y: auto;" id="dailyLedgerList"></div>
           </div>
 
         </section>
@@ -1825,8 +1940,8 @@
             <span>Panchang</span>
           </button>
           <button class="nav-tab-btn" id="navBtnReports" onclick="switchNavTab('reports')">
-            <span class="nav-tab-icon">📊</span>
-            <span>Reports</span>
+            <span class="nav-tab-icon">📈</span>
+            <span>Data Analytics</span>
           </button>
           <button class="nav-tab-btn" id="navBtnProfile" onclick="switchNavTab('profile')">
             <span class="nav-tab-icon">👤</span>
@@ -2354,7 +2469,6 @@
       const savedUser = JSON.parse(savedUserStr);
 
       if (enteredPin === savedUser.pin) {
-        // Correct PIN!
         for (let i = 1; i <= 4; i++) {
           const dot = document.getElementById('pDot' + i);
           if (dot) dot.style.background = '#10b981';
@@ -2367,7 +2481,6 @@
           clearNumpad();
         }, 180);
       } else {
-        // Incorrect PIN
         const row = document.getElementById('pinDotsRow');
         if (row) {
           row.classList.add('shake');
@@ -2493,16 +2606,19 @@
       document.getElementById('screenForgotPin').style.display = 'none';
       document.getElementById('mainAppShell').style.display = 'flex';
 
-      const initial = currentUser.name.charAt(0).toUpperCase();
+      const uName = (currentUser && currentUser.name && currentUser.name !== "Honey Shah") ? currentUser.name : "Richie";
+      const initial = uName.charAt(0).toUpperCase();
+
       document.getElementById('headerUserAvatar').innerText = initial;
-      document.getElementById('headerUserName').innerText = currentUser.name;
+      document.getElementById('headerUserName').innerText = uName;
       document.getElementById('headerUserMobile').innerText = `+91 ${currentUser.mobile}`;
 
       document.getElementById('profileLargeAvatar').innerText = initial;
-      document.getElementById('profileLargeName').innerText = currentUser.name;
+      document.getElementById('profileLargeName').innerText = uName;
       document.getElementById('profileLargeMobile').innerText = `+91 ${currentUser.mobile}`;
 
       setAppCalendarMode(currentUser.calMode || 'english', false);
+      initDateRangeFilter();
       renderAll();
     }
 
@@ -2670,7 +2786,6 @@
 
         cell.className = classes.join(' ');
         
-        // CLICKING ANY DATE DIRECTLY OPENS EXPENSE WINDOW
         cell.onclick = () => {
           selectedDateKey = dateKey;
           renderMainDaysGrid();
@@ -3246,73 +3361,167 @@
       }
     }
 
-    /* REPORTS & EXCEL */
-    function renderReports() {
-      let monthExpenses = 0;
-      let monthIncome = 0;
+    /* ==========================================================================
+       DATA ANALYTICS: DATE RANGE FILTERING & STATEMENTS ENGINE
+       ========================================================================== */
+    let filterStartDateVal = '2026-10-01';
+    let filterEndDateVal = '2026-10-31';
+
+    function initDateRangeFilter() {
+      selectDatePreset('this_month', false);
+    }
+
+    function selectDatePreset(preset, reRender = true) {
+      const now = new Date();
+      const y = currentYear || now.getFullYear();
+      const m = (currentMonth !== undefined) ? currentMonth : now.getMonth();
+
+      document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('active'));
+
+      if (preset === 'this_month') {
+        const lastDay = new Date(y, m + 1, 0).getDate();
+        filterStartDateVal = fmtDateKey(y, m, 1);
+        filterEndDateVal = fmtDateKey(y, m, lastDay);
+        document.getElementById('chipThisMonth')?.classList.add('active');
+      } else if (preset === 'last_month') {
+        let prevM = m - 1;
+        let prevY = y;
+        if (prevM < 0) { prevM = 11; prevY--; }
+        const lastDay = new Date(prevY, prevM + 1, 0).getDate();
+        filterStartDateVal = fmtDateKey(prevY, prevM, 1);
+        filterEndDateVal = fmtDateKey(prevY, prevM, lastDay);
+        document.getElementById('chipLastMonth')?.classList.add('active');
+      } else if (preset === 'last_7') {
+        const anchorD = (y === 2026 && m === 9) ? 7 : now.getDate();
+        const end = new Date(y, m, anchorD);
+        const start = new Date(end);
+        start.setDate(start.getDate() - 6);
+        filterStartDateVal = fmtDateKey(start.getFullYear(), start.getMonth(), start.getDate());
+        filterEndDateVal = fmtDateKey(end.getFullYear(), end.getMonth(), end.getDate());
+        document.getElementById('chipLast7')?.classList.add('active');
+      } else if (preset === 'last_30') {
+        const anchorD = (y === 2026 && m === 9) ? 31 : now.getDate();
+        const end = new Date(y, m, anchorD);
+        const start = new Date(end);
+        start.setDate(start.getDate() - 29);
+        filterStartDateVal = fmtDateKey(start.getFullYear(), start.getMonth(), start.getDate());
+        filterEndDateVal = fmtDateKey(end.getFullYear(), end.getMonth(), end.getDate());
+        document.getElementById('chipLast30')?.classList.add('active');
+      } else if (preset === 'all_time') {
+        const allDates = [...Object.keys(ledger), ...Object.keys(incomeLedger)].sort();
+        if (allDates.length > 0) {
+          filterStartDateVal = allDates[0];
+          filterEndDateVal = allDates[allDates.length - 1];
+        } else {
+          filterStartDateVal = `${y}-01-01`;
+          filterEndDateVal = `${y}-12-31`;
+        }
+        document.getElementById('chipAllTime')?.classList.add('active');
+      }
+
+      const startEl = document.getElementById('filterStartDate');
+      const endEl = document.getElementById('filterEndDate');
+      if (startEl) startEl.value = filterStartDateVal;
+      if (endEl) endEl.value = filterEndDateVal;
+
+      if (reRender) renderReports();
+    }
+
+    function applyDateRangeFilter() {
+      const startEl = document.getElementById('filterStartDate');
+      const endEl = document.getElementById('filterEndDate');
+      if (startEl && endEl && startEl.value && endEl.value) {
+        if (startEl.value > endEl.value) {
+          alert("From Date cannot be later than To Date.");
+          endEl.value = startEl.value;
+        }
+        filterStartDateVal = startEl.value;
+        filterEndDateVal = endEl.value;
+        document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('active'));
+        renderReports();
+      }
+    }
+
+    function getFilteredRecords(startDate, endDate) {
+      const dates = [];
+      const curr = new Date(startDate);
+      const end = new Date(endDate);
+      while (curr <= end) {
+        const dk = fmtDateKey(curr.getFullYear(), curr.getMonth(), curr.getDate());
+        dates.push(dk);
+        curr.setDate(curr.getDate() + 1);
+      }
+
+      let totalIncome = 0;
+      let totalExpenses = 0;
       const catTotals = {};
       accounts.forEach(a => catTotals[a.id] = 0);
 
-      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-      const ledgerRows = [];
-      const incomeRows = [];
+      const incomeRecords = [];
+      const expenseRecords = [];
+      const timelineRecords = [];
 
-      for (let d = 1; d <= daysInMonth; d++) {
-        const dk = fmtDateKey(currentYear, currentMonth, d);
-        
+      dates.forEach(dk => {
         if (incomeLedger[dk]) {
           incomeLedger[dk].forEach(inc => {
-            monthIncome += Number(inc.amount) || 0;
-            incomeRows.push({ day: d, dateKey: dk, amount: inc.amount, source: inc.source, mode: inc.mode, id: inc.id });
+            const amt = Number(inc.amount) || 0;
+            totalIncome += amt;
+            incomeRecords.push({ dateKey: dk, amount: amt, source: inc.source, mode: inc.mode, id: inc.id });
+            timelineRecords.push({ dateKey: dk, type: 'INCOME', desc: inc.source, sub: inc.mode || 'Cash', income: amt, expense: 0 });
           });
         }
 
-        const dayData = ledger[dk];
-        if (dayData) {
+        if (ledger[dk]) {
           let daySum = 0;
-          let descriptions = [];
-          Object.entries(dayData).forEach(([accId, it]) => {
+          let dayDesc = [];
+          Object.entries(ledger[dk]).forEach(([accId, it]) => {
             const amt = Number(it.amount) || 0;
             if (amt > 0) {
               daySum += amt;
               catTotals[accId] = (catTotals[accId] || 0) + amt;
-              const acc = accounts.find(a => a.id === accId) || { name: accId };
-              descriptions.push(`${acc.name}: ₹${amt}`);
+              const acc = accounts.find(a => a.id === accId) || { name: accId, unit: '' };
+              dayDesc.push(`${acc.name}: ₹${amt}`);
+              timelineRecords.push({ dateKey: dk, type: 'EXPENSE', desc: acc.name, sub: it.qty ? `Qty: ${it.qty} ${acc.unit}` : '', income: 0, expense: amt });
             }
           });
           if (daySum > 0) {
-            monthExpenses += daySum;
-            ledgerRows.push({ day: d, dateKey: dk, total: daySum, desc: descriptions.join(', ') });
+            totalExpenses += daySum;
+            expenseRecords.push({ dateKey: dk, total: daySum, desc: dayDesc.join(', ') });
           }
         }
-      }
+      });
 
-      const netBalance = monthIncome - monthExpenses;
-      document.getElementById('repTotalIncome').innerText = `+₹${monthIncome.toLocaleString('en-IN')}`;
-      document.getElementById('repTotalSpend').innerText = `-₹${monthExpenses.toLocaleString('en-IN')}`;
-      document.getElementById('repNetBalance').innerText = `₹${netBalance.toLocaleString('en-IN')}`;
-      document.getElementById('repNetBalance').style.color = netBalance >= 0 ? '#10b981' : '#ef4444';
+      return {
+        startDate,
+        endDate,
+        datesCount: dates.length,
+        totalIncome,
+        totalExpenses,
+        netBalance: totalIncome - totalExpenses,
+        catTotals,
+        incomeRecords,
+        expenseRecords,
+        timelineRecords
+      };
+    }
 
-      const incListEl = document.getElementById('reportsIncomeList');
-      if (incomeRows.length === 0) {
-        incListEl.innerHTML = '<div style="font-size:0.75rem; color:var(--text-muted); padding:8px 0;">No income records for this month.</div>';
-      } else {
-        incListEl.innerHTML = incomeRows.map(r => `
-          <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #f1f5f9; font-size:0.8rem;">
-            <div>
-              <strong style="color:#059669;">${r.day} ${monthNamesEn[currentMonth]} — +₹${r.amount.toLocaleString('en-IN')}</strong>
-              <div style="font-size:0.72rem; color:var(--text-muted);">${r.source} (${r.mode || 'Cash'})</div>
-            </div>
-            <button style="background:none; border:none; cursor:pointer; color:#ef4444;" onclick="deleteIncomeEntry('${r.dateKey}', '${r.id}')">🗑️</button>
-          </div>
-        `).join('');
-      }
+    function renderReports() {
+      const data = getFilteredRecords(filterStartDateVal, filterEndDateVal);
 
+      document.getElementById('repTotalIncome').innerText = `+₹${data.totalIncome.toLocaleString('en-IN')}`;
+      document.getElementById('repTotalSpend').innerText = `-₹${data.totalExpenses.toLocaleString('en-IN')}`;
+      document.getElementById('repNetBalance').innerText = `₹${data.netBalance.toLocaleString('en-IN')}`;
+      document.getElementById('repNetBalance').style.color = data.netBalance >= 0 ? '#10b981' : '#ef4444';
+
+      const daysCountEl = document.getElementById('rangeDaysCount');
+      if (daysCountEl) daysCountEl.innerText = `${data.datesCount} Days in Period`;
+
+      // Category Progress Bars for selected range
       const barBox = document.getElementById('categoryProgressBars');
       barBox.innerHTML = '';
       accounts.forEach(acc => {
-        const amt = catTotals[acc.id] || 0;
-        const pct = monthExpenses > 0 ? Math.round((amt / monthExpenses) * 100) : 0;
+        const amt = data.catTotals[acc.id] || 0;
+        const pct = data.totalExpenses > 0 ? Math.round((amt / data.totalExpenses) * 100) : 0;
         const row = document.createElement('div');
         row.className = 'bar-row';
         row.innerHTML = `
@@ -3327,14 +3536,31 @@
         barBox.appendChild(row);
       });
 
-      const ledgerList = document.getElementById('dailyLedgerList');
-      if (ledgerRows.length === 0) {
-        ledgerList.innerHTML = '<div style="font-size:0.75rem; color:var(--text-muted); padding:8px 0;">No expense records found.</div>';
+      // Income records list in selected range
+      const incListEl = document.getElementById('reportsIncomeList');
+      if (data.incomeRecords.length === 0) {
+        incListEl.innerHTML = '<div style="font-size:0.75rem; color:var(--text-muted); padding:6px 0;">No income records found in this date range.</div>';
       } else {
-        ledgerList.innerHTML = ledgerRows.map(r => `
+        incListEl.innerHTML = data.incomeRecords.map(r => `
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:1px solid #f1f5f9; font-size:0.8rem;">
+            <div>
+              <strong style="color:#059669;">${r.dateKey} — +₹${r.amount.toLocaleString('en-IN')}</strong>
+              <div style="font-size:0.72rem; color:var(--text-muted);">${r.source} (${r.mode || 'Cash'})</div>
+            </div>
+            <button style="background:none; border:none; cursor:pointer; color:#ef4444;" onclick="deleteIncomeEntry('${r.dateKey}', '${r.id}')">🗑️</button>
+          </div>
+        `).join('');
+      }
+
+      // Daily Expenses Ledger in selected range
+      const ledgerList = document.getElementById('dailyLedgerList');
+      if (data.expenseRecords.length === 0) {
+        ledgerList.innerHTML = '<div style="font-size:0.75rem; color:var(--text-muted); padding:6px 0;">No expense records found in this date range.</div>';
+      } else {
+        ledgerList.innerHTML = data.expenseRecords.map(r => `
           <div style="display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px solid #f1f5f9; font-size:0.8rem;">
             <div>
-              <strong>${r.day} ${monthNamesEn[currentMonth]}</strong>
+              <strong>${r.dateKey}</strong>
               <div style="font-size:0.72rem; color:var(--text-muted);">${r.desc}</div>
             </div>
             <strong style="color:var(--danger);">-₹${r.total}</strong>
@@ -3343,47 +3569,165 @@
       }
     }
 
-    function exportExcel() {
-      let csv = "\uFEFFDate,Day,Type,Description / Category,Income (+₹),Expense (-₹),Balance (₹)\r\n";
-      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-      let runningBalance = 0;
+    /* ==========================================================================
+       PDF & EXCEL EXPORT CONTROLLERS
+       ========================================================================== */
+    function exportPDF() {
+      const data = getFilteredRecords(filterStartDateVal, filterEndDateVal);
+      const userName = (currentUser && currentUser.name && currentUser.name !== "Honey Shah") ? currentUser.name : 'Richie';
 
-      for (let d = 1; d <= daysInMonth; d++) {
-        const dk = fmtDateKey(currentYear, currentMonth, d);
-        if (incomeLedger[dk]) {
-          incomeLedger[dk].forEach(inc => {
-            runningBalance += inc.amount;
-            csv += `"${dk}","${d} ${monthNamesEn[currentMonth]}","INCOME","${inc.source} (${inc.mode || 'Cash'})",${inc.amount},0,${runningBalance}\r\n`;
+      if (window.jspdf && window.jspdf.jsPDF) {
+        try {
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF();
+
+          // Header Band
+          doc.setFillColor(30, 27, 75); // Dark Indigo
+          doc.rect(0, 0, 210, 36, 'F');
+
+          doc.setTextColor(255, 255, 255);
+          doc.setFontSize(18);
+          doc.setFont("helvetica", "bold");
+          doc.text("HOUSEHOLD EXPENSE STATEMENT", 14, 16);
+
+          doc.setFontSize(10);
+          doc.setFont("helvetica", "normal");
+          doc.text(`Account Name: ${userName}   |   Period: ${data.startDate} to ${data.endDate}`, 14, 25);
+          doc.text(`Generated: ${new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}`, 14, 31);
+
+          // Summary KPI Cards
+          // Income (Green)
+          doc.setFillColor(236, 253, 245);
+          doc.roundedRect(14, 42, 58, 22, 3, 3, 'F');
+          doc.setTextColor(5, 150, 105);
+          doc.setFontSize(8);
+          doc.text("TOTAL INCOME RECEIVED", 18, 48);
+          doc.setFontSize(13);
+          doc.setFont("helvetica", "bold");
+          doc.text(`Rs. ${data.totalIncome.toLocaleString('en-IN')}`, 18, 58);
+
+          // Expenses (Red)
+          doc.setFillColor(254, 242, 242);
+          doc.roundedRect(76, 42, 58, 22, 3, 3, 'F');
+          doc.setTextColor(220, 38, 38);
+          doc.setFontSize(8);
+          doc.text("TOTAL EXPENSES", 80, 48);
+          doc.setFontSize(13);
+          doc.setFont("helvetica", "bold");
+          doc.text(`Rs. ${data.totalExpenses.toLocaleString('en-IN')}`, 80, 58);
+
+          // Net Balance (Indigo)
+          doc.setFillColor(238, 242, 255);
+          doc.roundedRect(138, 42, 58, 22, 3, 3, 'F');
+          doc.setTextColor(79, 70, 229);
+          doc.setFontSize(8);
+          doc.text("NET REMAINING BALANCE", 142, 48);
+          doc.setFontSize(13);
+          doc.setFont("helvetica", "bold");
+          doc.text(`Rs. ${data.netBalance.toLocaleString('en-IN')}`, 142, 58);
+
+          // Category Summary Table
+          doc.setFontSize(11);
+          doc.setTextColor(15, 23, 42);
+          doc.setFont("helvetica", "bold");
+          doc.text("Category Breakdown Summary", 14, 72);
+
+          const catRows = accounts.map(acc => {
+            const amt = data.catTotals[acc.id] || 0;
+            const pct = data.totalExpenses > 0 ? Math.round((amt / data.totalExpenses) * 100) : 0;
+            return [acc.name, `Rs. ${amt.toLocaleString('en-IN')}`, `${pct}%`];
           });
-        }
-        const dayData = ledger[dk];
-        if (dayData) {
-          let daySum = 0;
-          let itemsList = [];
-          Object.entries(dayData).forEach(([accId, it]) => {
-            const amt = Number(it.amount) || 0;
-            if (amt > 0) {
-              daySum += amt;
-              const acc = accounts.find(a => a.id === accId) || { name: accId };
-              itemsList.push(`${acc.name} (${it.qty || ''} ₹${amt})`);
-            }
+
+          doc.autoTable({
+            startY: 76,
+            head: [['Category / Account', 'Total Amount', 'Share (%)']],
+            body: catRows,
+            theme: 'striped',
+            headStyles: { fillColor: [79, 70, 229], textColor: [255, 255, 255], fontStyle: 'bold' },
+            styles: { fontSize: 8, cellPadding: 3 },
+            margin: { left: 14, right: 14 }
           });
-          if (daySum > 0) {
-            runningBalance -= daySum;
-            csv += `"${dk}","${d} ${monthNamesEn[currentMonth]}","EXPENSE","${itemsList.join('; ')}",0,${daySum},${runningBalance}\r\n`;
-          }
+
+          // Detailed Itemized Transactions Table
+          const finalY = doc.lastAutoTable.finalY + 10;
+          doc.setFontSize(11);
+          doc.setTextColor(15, 23, 42);
+          doc.setFont("helvetica", "bold");
+          doc.text("Detailed Itemized Transactions", 14, finalY);
+
+          let runningBal = 0;
+          const itemRows = data.timelineRecords.map(it => {
+            if (it.type === 'INCOME') runningBal += it.income;
+            else runningBal -= it.expense;
+            return [
+              it.dateKey,
+              it.type,
+              it.desc,
+              it.sub || '-',
+              it.income > 0 ? `+${it.income}` : '-',
+              it.expense > 0 ? `-${it.expense}` : '-',
+              `Rs. ${runningBal}`
+            ];
+          });
+
+          doc.autoTable({
+            startY: finalY + 4,
+            head: [['Date', 'Type', 'Description', 'Details / Mode', 'Income (Rs)', 'Expense (Rs)', 'Balance (Rs)']],
+            body: itemRows.length > 0 ? itemRows : [['-', '-', 'No records in selected range', '-', '-', '-', '-']],
+            theme: 'grid',
+            headStyles: { fillColor: [30, 41, 59], textColor: [255, 255, 255], fontStyle: 'bold' },
+            styles: { fontSize: 8, cellPadding: 2.5 },
+            columnStyles: {
+              4: { textColor: [5, 150, 105], fontStyle: 'bold' },
+              5: { textColor: [220, 38, 38], fontStyle: 'bold' },
+              6: { fontStyle: 'bold' }
+            },
+            margin: { left: 14, right: 14 }
+          });
+
+          doc.save(`Expense_Statement_${userName}_${data.startDate}_to_${data.endDate}.pdf`);
+          showToast("PDF Statement downloaded! 📄");
+          return;
+        } catch(err) {
+          console.error("PDF generation error:", err);
         }
       }
+
+      // Fallback if jsPDF is loading or unavailable
+      window.print();
+    }
+
+    function exportExcel() {
+      const data = getFilteredRecords(filterStartDateVal, filterEndDateVal);
+      const userName = (currentUser && currentUser.name && currentUser.name !== "Honey Shah") ? currentUser.name : 'Richie';
+
+      let csv = "\uFEFF";
+      csv += `HOUSEHOLD EXPENSE STATEMENT - ${userName}\r\n`;
+      csv += `Date Range: ${data.startDate} to ${data.endDate}\r\n`;
+      csv += `Total Income Received: ₹${data.totalIncome}\r\n`;
+      csv += `Total Expenses Spent: ₹${data.totalExpenses}\r\n`;
+      csv += `Net Balance: ₹${data.netBalance}\r\n\r\n`;
+
+      csv += "Date,Type,Category / Description,Details / Unit,Income (+₹),Expense (-₹),Running Balance (₹)\r\n";
+
+      let runningBal = 0;
+      data.timelineRecords.forEach(it => {
+        if (it.type === 'INCOME') runningBal += it.income;
+        else runningBal -= it.expense;
+        csv += `"${it.dateKey}","${it.type}","${it.desc}","${it.sub || ''}",${it.income},${it.expense},${runningBal}\r\n`;
+      });
+
+      csv += `\r\n"TOTAL SUMMARY","","","Income: ₹${data.totalIncome} | Expenses: ₹${data.totalExpenses}",${data.totalIncome},${data.totalExpenses},${data.netBalance}\r\n`;
 
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `Statement_${monthNamesEn[currentMonth]}_${currentYear}.csv`);
+      link.setAttribute('download', `Expense_Statement_${userName}_${data.startDate}_to_${data.endDate}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      showToast("Excel CSV downloaded! 📥");
+      showToast("Excel CSV downloaded! 📊");
     }
 
     function exportBackupJSON() {
@@ -3397,7 +3741,7 @@
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `Diary_Backup_${currentUser?.name || 'User'}.json`);
+      link.setAttribute('download', `Diary_Backup_${currentUser?.name || 'Richie'}.json`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
