@@ -3,22 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Daily Expense & Calendar Diary</title>
+  <title>Household Expense Diary & Calendar</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Gujarati:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #2563eb;         /* Google Calendar Blue */
-      --primary-dark: #1d4ed8;
-      --primary-light: #eff6ff;
-      --primary-border: #bfdbfe;
-      --accent-green: #10b981;    /* Money / Expense Green */
+      --primary: #4f46e5;         /* Modern Indigo */
+      --primary-dark: #4338ca;
+      --primary-light: #eef2ff;
+      --primary-border: #c7d2fe;
+      --accent-green: #10b981;    /* Money Green */
       --accent-green-light: #ecfdf5;
-      --accent-green-border: #a7f3d0;
-      --gold: #d97706;            /* Spiritual / Panchang Gold */
+      --gold: #d97706;            /* Panchang Gold */
       --gold-light: #fef3c7;
-      --vitrag-green: #dcfce7;    /* 8 & 14 Parva Green */
+      --vitrag-green: #dcfce7;    /* Jain Parva Green */
       --vitrag-green-border: #86efac;
       --danger: #ef4444;
       --danger-light: #fef2f2;
@@ -28,12 +27,11 @@
       --text-muted: #64748b;
       --text-light: #94a3b8;
       --border: #e2e8f0;
-      --border-focus: #3b82f6;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
-      --shadow: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.04);
-      --shadow-lg: 0 10px 25px -3px rgba(0,0,0,0.12);
-      --radius: 14px;
-      --radius-sm: 8px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --shadow: 0 4px 12px rgba(0,0,0,0.06);
+      --shadow-lg: 0 12px 30px rgba(0,0,0,0.12);
+      --radius: 16px;
+      --radius-sm: 10px;
     }
 
     * {
@@ -44,123 +42,423 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    /* DESKTOP AMBIENT CANVAS */
     body {
-      background: #e2e8f0;
+      background: radial-gradient(circle at 50% 15%, #1e1b4b 0%, #0a0e1a 100%);
       color: var(--text);
       min-height: 100vh;
       display: flex;
       justify-content: center;
-      padding: 0;
+      align-items: center;
+      padding: 20px 0;
       margin: 0;
+      overflow-x: hidden;
     }
 
-    /* MOBILE APP CONTAINER */
-    .app-container {
+    /* SMARTPHONE DEVICE FRAME */
+    .device-mockup {
       width: 100%;
-      max-width: 480px; /* Mobile App Viewport */
-      min-height: 100vh;
-      background: var(--bg);
+      max-width: 430px;
+      height: 900px;
+      max-height: 96vh;
+      background: #0f172a;
+      border-radius: 52px;
+      box-shadow: 0 25px 70px -15px rgba(0, 0, 0, 0.75), 0 0 0 11px #1e293b, 0 0 0 14px #334155;
+      position: relative;
       display: flex;
       flex-direction: column;
-      position: relative;
-      box-shadow: 0 0 25px rgba(0,0,0,0.1);
-      padding-bottom: 74px; /* Space for bottom nav */
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
     }
 
-    /* AUTH SCREENS (FULLSCREEN ONBOARDING) */
-    .auth-screen {
-      position: fixed;
+    /* TOP STATUS BAR (Dynamic Island + Time) */
+    .phone-status-bar {
+      height: 44px;
+      background: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 24px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #0f172a;
+      z-index: 80;
+      flex-shrink: 0;
+      border-bottom: 1px solid #f1f5f9;
+      user-select: none;
+    }
+
+    .phone-time {
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+
+    .dynamic-island {
+      width: 94px;
+      height: 24px;
+      background: #000000;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 10px;
+    }
+
+    .camera-lens {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #1e293b;
+    }
+
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+    }
+
+    /* SCREEN VIEWPORT */
+    .screen-viewport {
+      flex: 1;
+      overflow-y: auto;
+      background: var(--bg);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .screen-viewport::-webkit-scrollbar {
+      width: 4px;
+    }
+    .screen-viewport::-webkit-scrollbar-thumb {
+      background: rgba(0,0,0,0.1);
+      border-radius: 4px;
+    }
+
+    /* BOTTOM HOME INDICATOR BAR */
+    .home-indicator-bar {
+      height: 22px;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border-top: 1px solid #f1f5f9;
+      user-select: none;
+    }
+
+    .home-indicator {
+      width: 128px;
+      height: 4px;
+      background: #94a3b8;
+      border-radius: 3px;
+    }
+
+    /* RESPONSIVE FULLSCREEN ON MOBILE */
+    @media (max-width: 500px) {
+      body {
+        padding: 0;
+        background: #f8fafc;
+        align-items: stretch;
+      }
+      .device-mockup {
+        max-width: 100%;
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+      }
+      .phone-status-bar {
+        display: none;
+      }
+      .home-indicator-bar {
+        display: none;
+      }
+    }
+
+    /* ==========================================================================
+       AUTHENTICATION / LOCK / LOGIN SCREENS
+       ========================================================================== */
+    .auth-screen-layer {
+      position: absolute;
       inset: 0;
       background: #ffffff;
-      z-index: 100;
+      z-index: 90;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       padding: 24px;
-      max-width: 480px;
-      margin: 0 auto;
       overflow-y: auto;
     }
 
-    .auth-card {
+    /* SCREEN 1: SLEEK PIN LOCK SCREEN */
+    .lock-screen-box {
       width: 100%;
-      max-width: 380px;
-      background: #ffffff;
-      padding: 20px 8px;
+      max-width: 320px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin: auto 0;
     }
 
-    .auth-logo {
+    .lock-avatar-ring {
+      position: relative;
+      margin-bottom: 14px;
+    }
+
+    .lock-avatar {
+      width: 82px;
+      height: 82px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      color: white;
+      font-size: 2.2rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 25px rgba(124, 58, 237, 0.35);
+    }
+
+    .lock-badge {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      width: 28px;
+      height: 28px;
+      background: #ffffff;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+
+    .lock-greeting {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .lock-name {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 2px 0 4px 0;
+      letter-spacing: -0.01em;
+    }
+
+    .lock-subtitle {
+      font-size: 0.82rem;
+      color: #94a3b8;
+      margin-bottom: 22px;
+      font-weight: 500;
+    }
+
+    /* 4 PIN Dots */
+    .pin-dots-container {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 8px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .pin-dot-circle {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid #cbd5e1;
+      background: transparent;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .pin-dot-circle.filled {
+      background: #4f46e5;
+      border-color: #4f46e5;
+      transform: scale(1.18);
+      box-shadow: 0 0 10px rgba(79, 70, 229, 0.5);
+    }
+
+    .pin-dot-circle.error {
+      background: #ef4444 !important;
+      border-color: #ef4444 !important;
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+    }
+
+    .pin-dots-container.shake {
+      animation: shakeAnim 0.4s ease-in-out;
+    }
+
+    @keyframes shakeAnim {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-12px); }
+      40%, 80% { transform: translateX(12px); }
+    }
+
+    .pin-status-msg {
+      min-height: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #ef4444;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+
+    /* TOUCH NUMPAD */
+    .numpad-matrix {
+      display: grid;
+      grid-template-columns: repeat(3, 72px);
+      gap: 14px;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+
+    .numpad-key {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: 1px solid #e2e8f0;
+      background: #ffffff;
+      font-size: 1.55rem;
+      font-weight: 700;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.12s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+      user-select: none;
+    }
+
+    .numpad-key:hover {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+      transform: translateY(-1px);
+    }
+
+    .numpad-key:active {
+      background: #e2e8f0;
+      transform: scale(0.92);
+    }
+
+    .numpad-key.aux {
+      font-size: 0.85rem;
+      font-weight: 700;
+      background: transparent;
+      border-color: transparent;
+      box-shadow: none;
+      color: #64748b;
+    }
+    .numpad-key.aux:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+    }
+
+    .lock-footer-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.82rem;
+    }
+
+    .btn-text-action {
+      background: transparent;
+      border: none;
+      color: #4f46e5;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .btn-text-action:hover {
+      text-decoration: underline;
+    }
+
+    /* SCREEN 2: MINIMAL SIGN UP / ONBOARDING */
+    .onboarding-card {
+      width: 100%;
+      max-width: 340px;
+      display: flex;
+      flex-direction: column;
+      margin: auto 0;
+    }
+
+    .onboard-badge {
       width: 60px;
       height: 60px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      border-radius: 18px;
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
       color: white;
       font-size: 2rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 16px auto;
-      box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+      margin: 0 auto 14px auto;
+      box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
     }
 
-    .auth-title {
-      font-size: 1.4rem;
+    .onboard-heading {
+      font-size: 1.45rem;
       font-weight: 800;
       color: #0f172a;
       text-align: center;
       letter-spacing: -0.02em;
-      margin-bottom: 4px;
     }
 
-    .auth-subtitle {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      text-align: center;
-      margin-bottom: 24px;
-    }
-
-    .form-group {
-      margin-bottom: 16px;
-    }
-
-    .form-label {
-      display: block;
+    .onboard-sub {
       font-size: 0.82rem;
+      color: #64748b;
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .form-group-clean {
+      margin-bottom: 14px;
+    }
+
+    .form-label-clean {
+      display: block;
+      font-size: 0.8rem;
       font-weight: 700;
       color: #334155;
       margin-bottom: 6px;
     }
 
-    .form-input {
+    .input-clean {
       width: 100%;
       padding: 12px 14px;
       border: 1.5px solid var(--border);
-      border-radius: 10px;
+      border-radius: 12px;
       font-size: 0.95rem;
       font-weight: 600;
       color: #0f172a;
       outline: none;
-      transition: all 0.2s;
       background: #ffffff;
+      transition: all 0.2s;
     }
-
-    .form-input:focus {
+    .input-clean:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
     }
 
-    /* 4-digit PIN input container */
-    .pin-input-container {
+    .pin-boxes-row {
       display: flex;
       gap: 10px;
       justify-content: center;
-      margin-top: 6px;
     }
 
-    .pin-box {
+    .pin-input-cell {
       width: 52px;
-      height: 54px;
+      height: 52px;
       text-align: center;
       font-size: 1.5rem;
       font-weight: 800;
@@ -170,108 +468,47 @@
       background: #f8fafc;
       transition: all 0.2s;
     }
-
-    .pin-box:focus {
+    .pin-input-cell:focus {
       border-color: var(--primary);
       background: #ffffff;
-      box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
     }
 
-    /* Calendar Choice Radio Cards */
-    .choice-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-      margin-top: 8px;
-    }
-
-    .choice-card {
-      border: 2px solid var(--border);
-      border-radius: 12px;
-      padding: 12px 14px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      transition: all 0.2s;
-      background: #ffffff;
-    }
-
-    .choice-card.selected {
-      border-color: var(--primary);
-      background: var(--primary-light);
-    }
-
-    .choice-icon {
-      font-size: 1.6rem;
-    }
-
-    .choice-text h4 {
-      font-size: 0.92rem;
-      font-weight: 700;
-      color: #0f172a;
-    }
-
-    .choice-text p {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    /* BUTTONS */
-    .btn {
+    .btn-submit-action {
       width: 100%;
-      padding: 12px 16px;
-      border-radius: 10px;
-      font-size: 0.92rem;
+      padding: 13px;
+      background: var(--primary);
+      color: #ffffff;
+      border-radius: 12px;
+      font-size: 0.95rem;
       font-weight: 700;
-      cursor: pointer;
       border: none;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
       transition: all 0.2s;
+      margin-top: 10px;
     }
-
-    .btn-primary {
-      background: var(--primary);
-      color: #ffffff;
-      box-shadow: 0 3px 10px rgba(37,99,235,0.3);
-    }
-
-    .btn-primary:hover {
+    .btn-submit-action:hover {
       background: var(--primary-dark);
+      transform: translateY(-1px);
     }
 
-    .btn-secondary {
-      background: #f1f5f9;
-      color: #334155;
-      border: 1px solid var(--border);
+    /* ==========================================================================
+       MAIN APP SHELL
+       ========================================================================== */
+    .app-screen-shell {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      padding-bottom: 74px; /* Space for bottom nav */
     }
 
-    .btn-secondary:hover {
-      background: #e2e8f0;
-    }
-
-    .btn-link {
-      background: transparent;
-      color: var(--primary);
-      border: none;
-      font-size: 0.82rem;
-      font-weight: 700;
-      cursor: pointer;
-      padding: 8px;
-      margin-top: 8px;
-      text-align: center;
-      width: 100%;
-    }
-
-    .btn-link:hover {
-      text-decoration: underline;
-    }
-
-    /* APP TOP HEADER */
-    .app-header {
+    /* HEADER */
+    .app-top-header {
       background: #ffffff;
       padding: 12px 16px;
       display: flex;
@@ -283,55 +520,74 @@
       z-index: 30;
     }
 
-    .user-profile-badge {
+    .header-user-chip {
       display: flex;
       align-items: center;
       gap: 10px;
       cursor: pointer;
     }
 
-    .user-avatar {
-      width: 36px;
-      height: 36px;
+    .header-avatar {
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
-      background: var(--primary);
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
       color: white;
       font-weight: 800;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.95rem;
+      font-size: 1rem;
+      box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
     }
 
-    .user-details h2 {
-      font-size: 0.9rem;
+    .header-user-info h2 {
+      font-size: 0.92rem;
       font-weight: 800;
       color: #0f172a;
-      line-height: 1.2;
+      line-height: 1.15;
     }
-
-    .user-details span {
+    .header-user-info span {
       font-size: 0.72rem;
       color: var(--text-muted);
       font-weight: 600;
     }
 
-    .mode-pill {
-      background: var(--primary-light);
-      border: 1px solid var(--primary-border);
-      color: var(--primary);
-      padding: 4px 10px;
-      border-radius: 20px;
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pill-btn-header {
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      color: #1e293b;
+      padding: 5px 10px;
+      border-radius: 18px;
       font-size: 0.75rem;
       font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
+      transition: all 0.15s;
+    }
+    .pill-btn-header:hover {
+      background: #e2e8f0;
     }
 
-    /* 3-WAY CALENDAR MODE SWITCHER BAR */
-    .mode-switcher-bar {
+    .pill-btn-lock {
+      background: #fef2f2;
+      border-color: #fecaca;
+      color: #dc2626;
+    }
+    .pill-btn-lock:hover {
+      background: #fee2e2;
+    }
+
+    /* 3-WAY SEGMENTED MODE SWITCHER */
+    .segmented-mode-bar {
       background: #ffffff;
       padding: 8px 14px;
       display: flex;
@@ -339,13 +595,13 @@
       border-bottom: 1px solid var(--border);
     }
 
-    .mode-tab-btn {
+    .segment-tab {
       flex: 1;
-      padding: 7px 10px;
-      border-radius: 8px;
-      border: 1px solid transparent;
+      padding: 8px 6px;
+      border-radius: 10px;
+      border: none;
       background: #f1f5f9;
-      color: var(--text-muted);
+      color: #64748b;
       font-size: 0.78rem;
       font-weight: 700;
       cursor: pointer;
@@ -353,30 +609,58 @@
       align-items: center;
       justify-content: center;
       gap: 5px;
-      transition: all 0.2s;
+      transition: all 0.15s;
     }
-
-    .mode-tab-btn.active {
+    .segment-tab.active {
       background: var(--primary);
       color: #ffffff;
-      box-shadow: 0 2px 6px rgba(37,99,235,0.25);
+      box-shadow: 0 3px 8px rgba(79, 70, 229, 0.3);
     }
 
-    /* HOUSEHOLD WALLET & BALANCE BANNER */
-    .wallet-banner {
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    /* LUXURY WALLET CARD (Apple Card Style) */
+    .wallet-hero-card {
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 60%, #4338ca 100%);
       color: white;
       margin: 12px 14px 6px 14px;
-      padding: 14px 16px;
+      padding: 16px;
       border-radius: var(--radius);
       box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
     }
 
-    .btn-add-money-pill {
+    .wallet-hero-card::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .wallet-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .wallet-card-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #cbd5e1;
+    }
+
+    .btn-add-funds {
       background: #10b981;
       color: white;
       border: none;
-      padding: 6px 12px;
+      padding: 5px 12px;
       border-radius: 20px;
       font-size: 0.75rem;
       font-weight: 800;
@@ -384,67 +668,79 @@
       display: flex;
       align-items: center;
       gap: 4px;
-      box-shadow: 0 2px 6px rgba(16,185,129,0.35);
+      box-shadow: 0 2px 8px rgba(16,185,129,0.4);
       transition: all 0.15s;
     }
-
-    .btn-add-money-pill:hover {
+    .btn-add-funds:hover {
       background: #059669;
     }
 
-    .wallet-stats-grid {
+    .wallet-balance-row {
+      margin-bottom: 12px;
+    }
+
+    .wallet-balance-label {
+      font-size: 0.72rem;
+      color: #94a3b8;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .wallet-balance-num {
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .wallet-chips-grid {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       gap: 6px;
-      margin: 10px 0 6px 0;
+      margin-bottom: 10px;
     }
 
-    .wallet-stat-box {
+    .wallet-mini-chip {
       background: rgba(255,255,255,0.08);
       border-radius: 8px;
       padding: 6px 8px;
     }
-
-    .wallet-stat-box span {
+    .wallet-mini-chip span {
       font-size: 0.62rem;
       color: #cbd5e1;
       font-weight: 700;
       display: block;
       margin-bottom: 2px;
     }
-
-    .wallet-stat-box strong {
-      font-size: 0.95rem;
+    .wallet-mini-chip strong {
+      font-size: 0.92rem;
       font-weight: 800;
       display: block;
     }
+    .wallet-mini-chip.green strong { color: #4ade80; }
+    .wallet-mini-chip.red strong { color: #f87171; }
+    .wallet-mini-chip.blue strong { color: #93c5fd; }
 
-    .wallet-stat-box.green strong { color: #4ade80; }
-    .wallet-stat-box.red strong { color: #f87171; }
-    .wallet-stat-box.blue strong { color: #60a5fa; }
-
-    .wallet-progress-track {
+    .wallet-track {
       height: 6px;
       background: rgba(255,255,255,0.15);
       border-radius: 3px;
       overflow: hidden;
-      margin-top: 6px;
+      margin-top: 4px;
     }
 
-    .wallet-progress-fill {
+    .wallet-track-fill {
       height: 100%;
       background: linear-gradient(90deg, #10b981, #f59e0b);
       border-radius: 3px;
       transition: width 0.3s;
     }
 
-    /* APP SCREENS */
+    /* MAIN APP SCREENS */
     .app-screen {
       display: none;
       padding: 10px 14px 20px 14px;
       flex: 1;
     }
-
     .app-screen.active {
       display: block;
       animation: fadeIn 0.15s ease-out;
@@ -455,7 +751,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* GOOGLE CALENDAR CONTROLS */
+    /* GOOGLE CALENDAR MONTH HEADER */
     .cal-header-bar {
       display: flex;
       justify-content: space-between;
@@ -469,7 +765,6 @@
       color: #0f172a;
       letter-spacing: -0.02em;
     }
-
     .cal-title-wrap p {
       font-size: 0.72rem;
       color: var(--text-muted);
@@ -528,7 +823,6 @@
       margin-bottom: 4px;
       border-bottom: 1px solid #f1f5f9;
     }
-
     .weekdays-grid span:first-child {
       color: #ef4444; /* Sunday */
     }
@@ -554,19 +848,16 @@
       background: #ffffff;
       transition: all 0.15s ease;
     }
-
     .cal-day-cell:hover {
       background: #f8fafc;
       border-color: #cbd5e1;
     }
-
     .cal-day-cell.empty {
       background: transparent !important;
       border: none !important;
       cursor: default;
     }
 
-    /* Number badge */
     .day-num {
       width: 25px;
       height: 25px;
@@ -578,44 +869,30 @@
       justify-content: center;
       color: #1e293b;
     }
-
     .cal-day-cell.sunday .day-num {
       color: #ef4444;
     }
-
-    /* Today highlight: Classic Google blue circle */
     .cal-day-cell.today .day-num {
       background: var(--primary);
       color: #ffffff !important;
-      box-shadow: 0 2px 6px rgba(37,99,235,0.4);
+      box-shadow: 0 2px 6px rgba(79, 70, 229, 0.4);
     }
-
-    /* Selected cell border */
     .cal-day-cell.selected {
       border: 2px solid var(--primary);
       background: var(--primary-light);
     }
 
-    /* Tithi Subtitle inside cell (in Jain / Hindu mode) */
     .cell-tithi-txt {
       font-size: 0.58rem;
-      color: var(--gold);
+      color: #b45309;
       font-weight: 700;
       line-height: 1;
       text-align: center;
       white-space: nowrap;
       overflow: hidden;
-      max-width: 95%;
-      text-overflow: ellipsis;
+      max-width: 100%;
     }
 
-    /* Atham/Chaudas Green Highlight */
-    .cal-day-cell.atham-chaudas {
-      background: var(--vitrag-green) !important;
-      border-color: var(--vitrag-green-border);
-    }
-
-    /* Special Event Star / Badge */
     .cell-event-dot {
       width: 4px;
       height: 4px;
@@ -623,596 +900,105 @@
       border-radius: 50%;
     }
 
-    /* Expense pill inside cell */
+    .cal-day-cell.atham-chaudas {
+      background: #f0fdf4 !important;
+      border: 1px solid var(--vitrag-green-border);
+    }
+    .cal-day-cell.atham-chaudas .cell-tithi-txt {
+      color: #15803d !important;
+      font-weight: 800;
+    }
+
     .cell-expense-badge {
+      font-size: 0.62rem;
+      font-weight: 800;
+      color: var(--danger);
+      background: var(--danger-light);
+      padding: 1px 4px;
+      border-radius: 6px;
+      line-height: 1.1;
+      text-align: center;
+      max-width: 95%;
+      overflow: hidden;
+    }
+
+    .cell-income-badge {
       font-size: 0.6rem;
       font-weight: 800;
-      color: #b91c1c;
-      background: #fee2e2;
+      color: var(--accent-green);
+      background: var(--accent-green-light);
       padding: 1px 3px;
-      border-radius: 4px;
-      max-width: 95%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      border-radius: 6px;
       line-height: 1.1;
     }
 
-    /* Income pill inside cell */
-    .cell-income-badge {
-      font-size: 0.58rem;
-      font-weight: 800;
-      color: #15803d;
-      background: #dcfce7;
-      padding: 1px 3px;
-      border-radius: 4px;
-      max-width: 95%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      line-height: 1.1;
-    }
-
-    /* SELECTED DAY CARD */
-    .selected-card {
+    /* SELECTED DAY DETAILS CARD */
+    .selected-day-details-card {
+      margin-top: 12px;
       background: #ffffff;
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 14px;
-      margin-top: 12px;
       box-shadow: var(--shadow-sm);
     }
 
-    .selected-card-header {
+    .card-date-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      padding-bottom: 8px;
-      border-bottom: 1px solid #f1f5f9;
       margin-bottom: 10px;
     }
-
-    .selected-card-title h4 {
-      font-size: 0.95rem;
+    .card-date-title {
+      font-size: 1.05rem;
       font-weight: 800;
       color: #0f172a;
     }
-
-    .selected-card-title span {
+    .card-tithi-subtitle {
       font-size: 0.75rem;
-      color: var(--gold);
+      color: #b45309;
       font-weight: 700;
-    }
-
-    .selected-card-total span {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      display: block;
-      text-align: right;
-    }
-
-    .selected-card-total strong {
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: var(--danger);
-    }
-
-    .day-items-list {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-bottom: 12px;
     }
 
     .day-item-pill {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #f8fafc;
-      padding: 6px 10px;
-      border-radius: var(--radius-sm);
+      padding: 6px 0;
+      border-bottom: 1px solid #f1f5f9;
       font-size: 0.82rem;
     }
-
     .day-item-pill .name {
+      display: flex;
+      align-items: center;
+      gap: 6px;
       font-weight: 600;
-      color: #1e293b;
     }
-
     .day-item-pill .qty {
       font-size: 0.72rem;
       color: var(--text-muted);
-      margin-left: 4px;
     }
-
     .day-item-pill .cost {
       font-weight: 800;
-      color: #0f172a;
+      color: var(--danger);
     }
 
-    /* Money Received highlight on selected day */
-    .day-income-box {
-      background: #ecfdf5;
-      border: 1px solid #a7f3d0;
-      border-radius: var(--radius-sm);
-      padding: 8px 10px;
+    .card-total-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 2px dashed #f1f5f9;
     }
-
-    .empty-note {
-      text-align: center;
-      padding: 10px;
-      color: var(--text-muted);
+    .card-total-row span {
       font-size: 0.8rem;
-    }
-
-    /* ==========================================================================
-       EXPENSE ENTRY MODAL (POPS UP ON CLICKING DATE)
-       ========================================================================== */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 80;
-      display: none;
-      align-items: flex-end;
-      justify-content: center;
-      backdrop-filter: blur(2px);
-    }
-
-    .modal-overlay.active {
-      display: flex;
-    }
-
-    .modal-sheet {
-      width: 100%;
-      max-width: 480px;
-      background: #ffffff;
-      border-radius: 20px 20px 0 0;
-      padding: 16px 18px 24px 18px;
-      max-height: 88vh;
-      overflow-y: auto;
-      box-shadow: 0 -6px 25px rgba(0,0,0,0.2);
-      animation: slideSheet 0.22s ease-out;
-    }
-
-    @keyframes slideSheet {
-      from { transform: translateY(100%); }
-      to { transform: translateY(0); }
-    }
-
-    .sheet-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 14px;
-    }
-
-    .sheet-title-box h3 {
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: #0f172a;
-    }
-
-    .sheet-title-box span {
-      font-size: 0.75rem;
-      color: var(--gold);
-      font-weight: 700;
-    }
-
-    .close-btn {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      border: none;
-      background: #f1f5f9;
       color: var(--text-muted);
-      font-size: 1rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* Modal Items List */
-    .sheet-items-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .sheet-item-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 12px;
-      background: #f8fafc;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      gap: 10px;
-    }
-
-    .item-meta {
-      flex: 1;
-    }
-
-    .item-name {
-      font-size: 0.88rem;
       font-weight: 700;
-      color: #0f172a;
-      display: flex;
-      align-items: center;
-      gap: 5px;
     }
-
-    .item-rate-badge {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      font-weight: 500;
-      margin-top: 1px;
-    }
-
-    /* EDIT RATE BUTTON */
-    .btn-edit-rate {
-      background: #f1f5f9;
-      border: 1px solid var(--border);
-      color: var(--primary);
-      font-size: 0.7rem;
-      font-weight: 700;
-      padding: 2px 7px;
-      border-radius: 6px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-      margin-left: 6px;
-      transition: all 0.15s;
-    }
-
-    .btn-edit-rate:hover {
-      background: #dbeafe;
-      border-color: #93c5fd;
-    }
-
-    /* FIXED RATE: QUANTITY CONTROLS ONLY */
-    .qty-controls-wrap {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .stepper-btn {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      border: 1.5px solid var(--border);
-      background: #ffffff;
-      color: #0f172a;
+    .card-total-row strong {
       font-size: 1.15rem;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.1s;
-    }
-
-    .stepper-btn:active {
-      transform: scale(0.92);
-      background: #e2e8f0;
-    }
-
-    .qty-input-box {
-      width: 48px;
-      text-align: center;
-      padding: 6px 2px;
-      border: 1.5px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.95rem;
-      font-weight: 800;
-      color: var(--primary);
-      outline: none;
-      background: #ffffff;
-    }
-
-    .qty-input-box:focus {
-      border-color: var(--primary);
-    }
-
-    /* DIRECT AMOUNT INPUT */
-    .direct-amount-wrap {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .currency-symbol {
-      font-weight: 700;
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-
-    .amount-input {
-      width: 90px;
-      padding: 7px 8px;
-      text-align: right;
-      border: 1.5px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.95rem;
-      font-weight: 800;
-      outline: none;
-      color: #0f172a;
-    }
-
-    .amount-input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(37,99,235,0.15);
-    }
-
-    .item-subtotal-tag {
-      min-width: 65px;
-      text-align: right;
-      font-size: 0.92rem;
-      font-weight: 800;
       color: var(--danger);
-    }
-
-    /* INLINE ADD NEW CATEGORY CARD */
-    .add-category-card {
-      background: #f1f5f9;
-      border: 1.5px dashed #cbd5e1;
-      border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 16px;
-    }
-
-    .add-category-btn-trigger {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      width: 100%;
-      background: transparent;
-      border: none;
-      color: var(--primary);
-      font-size: 0.85rem;
-      font-weight: 700;
-      cursor: pointer;
-      padding: 4px;
-    }
-
-    .add-category-form {
-      display: none;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px solid var(--border);
-    }
-
-    .sheet-footer-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #f8fafc;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px 14px;
-      margin-top: 8px;
-    }
-
-    .sheet-total-label span {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      display: block;
-      font-weight: 600;
-    }
-
-    .sheet-total-label strong {
-      font-size: 1.35rem;
       font-weight: 800;
-      color: var(--danger);
-    }
-
-    /* ==========================================================================
-       TITHI & PANCHANG SCREEN
-       ========================================================================== */
-    .panchang-hero {
-      background: linear-gradient(135deg, #b45309 0%, #78350f 100%);
-      color: white;
-      border-radius: var(--radius);
-      padding: 16px;
-      margin-bottom: 12px;
-      box-shadow: var(--shadow);
-    }
-
-    .hero-top-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 6px;
-    }
-
-    .hero-badge {
-      background: rgba(255,255,255,0.22);
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 12px;
-    }
-
-    .hero-tithi {
-      font-size: 1.35rem;
-      font-weight: 800;
-      margin-bottom: 2px;
-    }
-
-    .hero-samvat {
-      font-size: 0.78rem;
-      opacity: 0.9;
-    }
-
-    .parva-alert {
-      background: var(--vitrag-green);
-      color: #166534;
-      border: 1px solid var(--vitrag-green-border);
-      border-radius: 10px;
-      padding: 8px 12px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      margin-top: 10px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .section-title {
-      font-size: 0.92rem;
-      font-weight: 800;
-      color: #0f172a;
-      margin: 14px 2px 8px 2px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .section-title small {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      font-weight: 500;
-    }
-
-    .pachkhan-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .pk-box {
-      background: #ffffff;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 8px 10px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .pk-box.highlight {
-      background: #fffbeb;
-      border-color: #fde68a;
-    }
-
-    .pk-box.accent {
-      background: #f0fdf4;
-      border-color: #bbf7d0;
-    }
-
-    .pk-box .lbl {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-
-    .pk-box .val {
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: #0f172a;
-    }
-
-    .pk-box.highlight .val { color: #b45309; }
-    .pk-box.accent .val { color: #15803d; }
-
-    /* CHOGHADIYA TIMELINE */
-    .chog-timeline {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      max-height: 220px;
-      overflow-y: auto;
-    }
-
-    .chog-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 5px 8px;
-      border-radius: 6px;
-      font-size: 0.78rem;
-    }
-
-    .chog-row.active {
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      font-weight: 800;
-    }
-
-    .chog-row.best { color: #166534; }
-    .chog-row.good { color: #15803d; }
-    .chog-row.neutral { color: #b45309; }
-    .chog-row.bad { color: #b91c1c; }
-
-    /* REPORTS */
-    .stat-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 6px;
-      margin-bottom: 12px;
-    }
-
-    .stat-card {
-      background: #ffffff;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 8px 10px;
-    }
-
-    .stat-card span {
-      font-size: 0.65rem;
-      color: var(--text-muted);
-      font-weight: 700;
-      display: block;
-    }
-
-    .stat-card strong {
-      font-size: 1.05rem;
-      font-weight: 800;
-      display: block;
-    }
-
-    .stat-card.green strong { color: #10b981; }
-    .stat-card.red strong { color: #ef4444; }
-    .stat-card.blue strong { color: #2563eb; }
-
-    .bar-row {
-      margin-bottom: 10px;
-    }
-
-    .bar-header {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.78rem;
-      font-weight: 700;
-      margin-bottom: 3px;
-    }
-
-    .bar-track {
-      height: 8px;
-      background: #f1f5f9;
-      border-radius: 4px;
-      overflow: hidden;
-    }
-
-    .bar-fill {
-      height: 100%;
-      background: var(--danger);
-      border-radius: 4px;
     }
 
     /* BOTTOM NAV BAR */
@@ -1222,15 +1008,22 @@
       left: 50%;
       transform: translateX(-50%);
       width: 100%;
-      max-width: 480px;
+      max-width: 430px;
       height: 64px;
-      background: #ffffff;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(16px);
       border-top: 1px solid var(--border);
       display: flex;
       justify-content: space-around;
       align-items: center;
       z-index: 50;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+      box-shadow: 0 -4px 15px rgba(0,0,0,0.04);
+    }
+
+    @media (max-width: 500px) {
+      .bottom-nav {
+        max-width: 100%;
+      }
     }
 
     .nav-tab-btn {
@@ -1249,14 +1042,349 @@
       font-weight: 700;
       transition: all 0.15s;
     }
-
     .nav-tab-btn.active {
       color: var(--primary);
     }
-
     .nav-tab-icon {
       font-size: 1.3rem;
       line-height: 1;
+    }
+
+    /* MODAL SHEETS */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-sheet {
+      background: #ffffff;
+      width: 100%;
+      max-width: 430px;
+      border-radius: 24px 24px 0 0;
+      padding: 16px 18px 24px 18px;
+      max-height: 82vh;
+      overflow-y: auto;
+      box-shadow: 0 -10px 30px rgba(0,0,0,0.2);
+      animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .sheet-drag-handle {
+      width: 42px;
+      height: 4px;
+      background: #cbd5e1;
+      border-radius: 2px;
+      margin: 0 auto 12px auto;
+    }
+
+    .sheet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sheet-title-box h3 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #0f172a;
+    }
+    .sheet-title-box span {
+      font-size: 0.75rem;
+      color: #b45309;
+      font-weight: 700;
+    }
+
+    .close-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: #f8fafc;
+      font-size: 0.9rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sheet-items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .sheet-item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      gap: 8px;
+    }
+
+    .item-meta {
+      flex: 1;
+    }
+    .item-name {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: #0f172a;
+    }
+    .item-rate-badge {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      display: inline-block;
+      margin-right: 6px;
+    }
+    .btn-edit-rate {
+      background: transparent;
+      border: none;
+      color: var(--primary);
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 1px 4px;
+    }
+    .btn-edit-rate:hover {
+      text-decoration: underline;
+    }
+
+    /* STEPPERS */
+    .qty-controls-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stepper-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      font-size: 1.1rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #1e293b;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .stepper-btn:active {
+      background: #e2e8f0;
+      transform: scale(0.95);
+    }
+
+    .qty-input-box {
+      width: 50px;
+      height: 32px;
+      text-align: center;
+      font-size: 0.95rem;
+      font-weight: 800;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      outline: none;
+      background: #ffffff;
+    }
+
+    .direct-amount-wrap {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 4px 8px;
+      width: 105px;
+    }
+    .currency-symbol {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: var(--danger);
+    }
+    .amount-input {
+      width: 100%;
+      border: none;
+      outline: none;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .item-subtotal-tag {
+      min-width: 60px;
+      text-align: right;
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: var(--danger);
+    }
+
+    .sheet-footer-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-top: 10px;
+    }
+
+    .sheet-total-label span {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      display: block;
+      font-weight: 600;
+    }
+    .sheet-total-label strong {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--danger);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.15s;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(79, 70, 229, 0.3);
+    }
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+    .btn-secondary {
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid var(--border);
+    }
+
+    /* PANCHANG */
+    .panchang-hero {
+      background: linear-gradient(135deg, #b45309 0%, #78350f 100%);
+      color: white;
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .pachkhan-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .pk-box {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .pk-box span { font-size: 0.75rem; color: #64748b; font-weight: 700; }
+    .pk-box strong { font-size: 0.92rem; color: #b45309; font-weight: 800; }
+
+    .chog-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 7px 10px;
+      border-radius: 8px;
+      margin-bottom: 5px;
+      font-size: 0.78rem;
+    }
+    .chog-row.active {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      font-weight: 800;
+    }
+    .chog-row.best { color: #166534; }
+    .chog-row.good { color: #15803d; }
+    .chog-row.neutral { color: #b45309; }
+    .chog-row.bad { color: #b91c1c; }
+
+    /* REPORTS */
+    .stat-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .stat-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+    }
+    .stat-card span {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      display: block;
+    }
+    .stat-card strong {
+      font-size: 1.05rem;
+      font-weight: 800;
+      display: block;
+    }
+    .stat-card.green strong { color: #10b981; }
+    .stat-card.red strong { color: #ef4444; }
+    .stat-card.blue strong { color: #4f46e5; }
+
+    .bar-row { margin-bottom: 10px; }
+    .bar-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+    .bar-track {
+      height: 8px;
+      background: #f1f5f9;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      background: var(--danger);
+      border-radius: 4px;
     }
 
     /* TOAST */
@@ -1271,7 +1399,7 @@
       border-radius: 20px;
       font-size: 0.8rem;
       font-weight: 700;
-      z-index: 95;
+      z-index: 120;
       display: none;
       box-shadow: var(--shadow-lg);
     }
@@ -1279,463 +1407,451 @@
 </head>
 <body>
 
-  <!-- ======================================================================
-       ONBOARDING / AUTH SCREENS (FULLSCREEN UNTIL LOGGED IN)
-       ====================================================================== -->
+  <!-- SMARTPHONE DEVICE WRAPPER -->
+  <div class="device-mockup">
 
-  <!-- SCREEN A: SIGN UP / CREATE PROFILE -->
-  <div class="auth-screen" id="screenSignUp" style="display:none;">
-    <div class="auth-card">
-      <div class="auth-logo">👤</div>
-      <h2 class="auth-title">Create Profile</h2>
-      <p class="auth-subtitle">Set up your household account & 4-digit security PIN</p>
-
-      <div class="form-group">
-        <label class="form-label">Full Name</label>
-        <input type="text" id="regName" class="form-input" placeholder="e.g. Honey Shah" autocomplete="name">
+    <!-- IPHONE STATUS BAR (REAL LIVE TIME) -->
+    <div class="phone-status-bar">
+      <span class="phone-time" id="statusTimeClock">9:41</span>
+      <div class="dynamic-island">
+        <span class="camera-lens"></span>
       </div>
-
-      <div class="form-group">
-        <label class="form-label">Mobile Number</label>
-        <input type="tel" id="regMobile" class="form-input" placeholder="10-digit mobile number" maxlength="10">
+      <div class="status-icons">
+        <span>5G</span>
+        <span>100% 🔋</span>
       </div>
+    </div>
 
-      <div class="form-group">
-        <label class="form-label">Set 4-Digit Security PIN</label>
-        <div class="pin-input-container">
-          <input type="password" maxlength="1" class="pin-box reg-pin" id="regPin1" oninput="movePinFocus(this, 'regPin2')">
-          <input type="password" maxlength="1" class="pin-box reg-pin" id="regPin2" oninput="movePinFocus(this, 'regPin3')">
-          <input type="password" maxlength="1" class="pin-box reg-pin" id="regPin3" oninput="movePinFocus(this, 'regPin4')">
-          <input type="password" maxlength="1" class="pin-box reg-pin" id="regPin4">
-        </div>
-      </div>
+    <!-- INNER SCREEN VIEWPORT -->
+    <div class="screen-viewport">
 
-      <div class="form-group">
-        <label class="form-label">Confirm 4-Digit PIN</label>
-        <div class="pin-input-container">
-          <input type="password" maxlength="1" class="pin-box conf-pin" id="confPin1" oninput="movePinFocus(this, 'confPin2')">
-          <input type="password" maxlength="1" class="pin-box conf-pin" id="confPin2" oninput="movePinFocus(this, 'confPin3')">
-          <input type="password" maxlength="1" class="pin-box conf-pin" id="confPin3" oninput="movePinFocus(this, 'confPin4')">
-          <input type="password" maxlength="1" class="pin-box conf-pin" id="confPin4">
-        </div>
-      </div>
-
-      <!-- ONBOARDING RATE CUSTOMIZATION -->
-      <div class="form-group" style="background:#f8fafc; border:1px solid var(--border); border-radius:12px; padding:12px;">
-        <label class="form-label" style="margin-bottom:4px;">Customize Daily Rates (Optional)</label>
-        <p style="font-size:0.72rem; color:var(--text-muted); margin-bottom:8px;">Set your household rates. You can edit or add items anytime.</p>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-          <div>
-            <span style="font-size:0.72rem; color:var(--text-muted); font-weight:700;">🥛 Milk Rate (₹/L)</span>
-            <input type="number" id="regMilkRate" class="form-input" value="32" style="padding:8px 10px;">
+      <!-- ======================================================================
+           AUTH SCREEN 1: SLEEK 4-DIGIT PIN LOCK / LOGIN SCREEN
+           ====================================================================== -->
+      <div class="auth-screen-layer" id="screenSignIn" style="display:none;">
+        <div class="lock-screen-box">
+          
+          <div class="lock-avatar-ring">
+            <div class="lock-avatar" id="lockAvatar">H</div>
+            <div class="lock-badge">🔒</div>
           </div>
-          <div>
-            <span style="font-size:0.72rem; color:var(--text-muted); font-weight:700;">🍱 Tiffin Rate (₹)</span>
-            <input type="number" id="regTiffinRate" class="form-input" value="120" style="padding:8px 10px;">
+
+          <span class="lock-greeting" id="lockGreeting">Welcome back</span>
+          <h2 class="lock-name" id="lockUserName">Honey Shah</h2>
+          <p class="lock-subtitle">Enter 4-Digit Security PIN</p>
+
+          <!-- 4 PIN Dots Indicator -->
+          <div class="pin-dots-container" id="pinDotsRow">
+            <div class="pin-dot-circle" id="pDot1"></div>
+            <div class="pin-dot-circle" id="pDot2"></div>
+            <div class="pin-dot-circle" id="pDot3"></div>
+            <div class="pin-dot-circle" id="pDot4"></div>
           </div>
+          
+          <div class="pin-status-msg" id="pinErrorMsg"></div>
+
+          <!-- TOUCH NUMPAD -->
+          <div class="numpad-matrix">
+            <button class="numpad-key" onclick="pressNumpad('1')">1</button>
+            <button class="numpad-key" onclick="pressNumpad('2')">2</button>
+            <button class="numpad-key" onclick="pressNumpad('3')">3</button>
+            <button class="numpad-key" onclick="pressNumpad('4')">4</button>
+            <button class="numpad-key" onclick="pressNumpad('5')">5</button>
+            <button class="numpad-key" onclick="pressNumpad('6')">6</button>
+            <button class="numpad-key" onclick="pressNumpad('7')">7</button>
+            <button class="numpad-key" onclick="pressNumpad('8')">8</button>
+            <button class="numpad-key" onclick="pressNumpad('9')">9</button>
+            <button class="numpad-key aux" onclick="clearNumpad()">Clear</button>
+            <button class="numpad-key" onclick="pressNumpad('0')">0</button>
+            <button class="numpad-key aux" onclick="backspaceNumpad()">⌫</button>
+          </div>
+
+          <div class="lock-footer-row">
+            <button class="btn-text-action" onclick="showAuthScreen('forgotPin')">Forgot PIN?</button>
+            <span style="color:#cbd5e1;">•</span>
+            <button class="btn-text-action" onclick="showAuthScreen('signUp')">Switch / New Profile</button>
+          </div>
+
         </div>
       </div>
 
-      <div class="form-group">
-        <label class="form-label">Choose Preferred Calendar Mode</label>
-        <div class="choice-grid">
-          <div class="choice-card selected" id="optCalEnglish" onclick="selectCalModeChoice('english')">
-            <div class="choice-icon">📅</div>
-            <div class="choice-text">
-              <h4>English Calendar</h4>
-              <p>Google Calendar style with clean dates & daily expenses</p>
+      <!-- ======================================================================
+           AUTH SCREEN 2: CLEAN MINIMAL ONBOARDING (SIGN UP)
+           ====================================================================== -->
+      <div class="auth-screen-layer" id="screenSignUp" style="display:none;">
+        <div class="onboarding-card">
+          <div class="onboard-badge">🗓️</div>
+          <h2 class="onboard-heading">Create Profile</h2>
+          <p class="onboard-sub">Set up your household account in 15 seconds</p>
+
+          <div class="form-group-clean">
+            <label class="form-label-clean">👤 Full Name</label>
+            <input type="text" id="regName" class="input-clean" placeholder="e.g. Honey Shah" autocomplete="name">
+          </div>
+
+          <div class="form-group-clean">
+            <label class="form-label-clean">📱 Mobile Number</label>
+            <input type="tel" id="regMobile" class="input-clean" placeholder="10-digit mobile number" maxlength="10">
+          </div>
+
+          <div class="form-group-clean">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <label class="form-label-clean" style="margin-bottom:0;">🔒 Set 4-Digit PIN</label>
+              <span id="regPinPeekText" style="font-size:0.72rem; color:var(--primary); font-weight:700; cursor:pointer;" onclick="toggleRegPinPeek()">👁️ Show</span>
+            </div>
+            <div class="pin-boxes-row">
+              <input type="password" maxlength="1" class="pin-input-cell reg-pin-box" id="regPin1" inputmode="numeric" oninput="movePinFocus(this, 'regPin2')">
+              <input type="password" maxlength="1" class="pin-input-cell reg-pin-box" id="regPin2" inputmode="numeric" oninput="movePinFocus(this, 'regPin3')">
+              <input type="password" maxlength="1" class="pin-input-cell reg-pin-box" id="regPin3" inputmode="numeric" oninput="movePinFocus(this, 'regPin4')">
+              <input type="password" maxlength="1" class="pin-input-cell reg-pin-box" id="regPin4" inputmode="numeric">
             </div>
           </div>
-          <div class="choice-card" id="optCalJain" onclick="selectCalModeChoice('jain')">
-            <div class="choice-icon">📿</div>
-            <div class="choice-text">
-              <h4>Jain Panchang</h4>
-              <p>Pachkhan timings, Atham/Chaudas green alerts & Kalyanaks</p>
+
+          <button class="btn-submit-action" onclick="handleRegisterProfile()">
+            🚀 Create Profile & Start
+          </button>
+
+          <div style="text-align:center; margin-top:14px;">
+            <button class="btn-text-action" onclick="showAuthScreen('signIn')">
+              Already have a profile? Unlock with PIN
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================================================================
+           AUTH SCREEN 3: RESET FORGOT PIN
+           ====================================================================== -->
+      <div class="auth-screen-layer" id="screenForgotPin" style="display:none;">
+        <div class="onboarding-card">
+          <div class="onboard-badge">🔑</div>
+          <h2 class="onboard-heading">Reset Security PIN</h2>
+          <p class="onboard-sub">Verify your registered mobile number</p>
+
+          <div class="form-group-clean">
+            <label class="form-label-clean">📱 Registered Mobile</label>
+            <input type="tel" id="forgotMobile" class="input-clean" placeholder="Enter 10-digit mobile" maxlength="10">
+          </div>
+
+          <div class="form-group-clean">
+            <label class="form-label-clean">🔒 Set New 4-Digit PIN</label>
+            <div class="pin-boxes-row">
+              <input type="password" maxlength="1" class="pin-input-cell reset-pin-box" id="resetPin1" inputmode="numeric" oninput="movePinFocus(this, 'resetPin2')">
+              <input type="password" maxlength="1" class="pin-input-cell reset-pin-box" id="resetPin2" inputmode="numeric" oninput="movePinFocus(this, 'resetPin3')">
+              <input type="password" maxlength="1" class="pin-input-cell reset-pin-box" id="resetPin3" inputmode="numeric" oninput="movePinFocus(this, 'resetPin4')">
+              <input type="password" maxlength="1" class="pin-input-cell reset-pin-box" id="resetPin4" inputmode="numeric">
             </div>
           </div>
-          <div class="choice-card" id="optCalHindu" onclick="selectCalModeChoice('hindu')">
-            <div class="choice-icon">🕉️</div>
-            <div class="choice-text">
-              <h4>Hindu Panchang</h4>
-              <p>Tithi, Ekadashi, Pradosh, Poonam, Amas & Choghadiya</p>
+
+          <button class="btn-submit-action" onclick="handleResetPin()">
+            Reset PIN & Unlock
+          </button>
+
+          <div style="text-align:center; margin-top:14px;">
+            <button class="btn-text-action" onclick="showAuthScreen('signIn')">
+              Back to Sign In
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================================================================
+           MAIN APPLICATION SHELL (VISIBLE ONCE LOGGED IN)
+           ====================================================================== -->
+      <div class="app-screen-shell" id="mainAppShell" style="display:none;">
+
+        <!-- TOP APP BAR -->
+        <header class="app-top-header">
+          <div class="header-user-chip" onclick="switchNavTab('profile')" title="View Profile">
+            <div class="header-avatar" id="headerUserAvatar">H</div>
+            <div class="header-user-info">
+              <h2 id="headerUserName">Honey Shah</h2>
+              <span id="headerUserMobile">+91 9876543210</span>
             </div>
           </div>
+
+          <div class="header-actions">
+            <button class="pill-btn-header" onclick="openCityModal()" id="headerCityBtn">
+              📍 <span id="headerCityLabel">Ahmedabad</span>
+            </button>
+            <button class="pill-btn-header pill-btn-lock" onclick="lockApp()" title="Lock App">
+              🔒 Lock
+            </button>
+          </div>
+        </header>
+
+        <!-- 3-WAY CALENDAR MODE SWITCHER BAR (ENGLISH | JAIN | HINDU) -->
+        <div class="segmented-mode-bar">
+          <button class="segment-tab active" id="modeBtnEnglish" onclick="setAppCalendarMode('english')">
+            📅 English
+          </button>
+          <button class="segment-tab" id="modeBtnJain" onclick="setAppCalendarMode('jain')">
+            📿 Jain
+          </button>
+          <button class="segment-tab" id="modeBtnHindu" onclick="setAppCalendarMode('hindu')">
+            🕉️ Hindu
+          </button>
         </div>
-      </div>
 
-      <button class="btn btn-primary" onclick="handleRegisterProfile()">Create Profile & Start</button>
-      <button class="btn-link" onclick="showAuthScreen('signIn')">Already have a profile? Sign In</button>
-    </div>
-  </div>
+        <!-- LUXURY FINTECH WALLET BANNER -->
+        <div class="wallet-hero-card">
+          <div class="wallet-card-top">
+            <span class="wallet-card-title" id="bannerMonthTitle">OCTOBER 2026 WALLET</span>
+            <button class="btn-add-funds" onclick="openIncomeModal()">
+              ➕ Add Money
+            </button>
+          </div>
 
-  <!-- SCREEN B: SIGN IN -->
-  <div class="auth-screen" id="screenSignIn" style="display:none;">
-    <div class="auth-card">
-      <div class="auth-logo">🔒</div>
-      <h2 class="auth-title">Welcome Back</h2>
-      <p class="auth-subtitle">Enter your 4-digit security PIN to access your diary</p>
+          <div class="wallet-balance-row">
+            <span class="wallet-balance-label">REMAINING WALLET BALANCE</span>
+            <div class="wallet-balance-num" id="bannerRemainingBalance">₹0</div>
+          </div>
 
-      <div class="form-group">
-        <label class="form-label">Mobile Number</label>
-        <input type="tel" id="loginMobile" class="form-input" placeholder="Registered 10-digit mobile" maxlength="10">
-      </div>
+          <div class="wallet-chips-grid">
+            <div class="wallet-mini-chip green">
+              <span>RECEIVED</span>
+              <strong id="bannerTotalIncome">₹0</strong>
+            </div>
+            <div class="wallet-mini-chip red">
+              <span>EXPENSES</span>
+              <strong id="bannerMonthTotal">₹0</strong>
+            </div>
+            <div class="wallet-mini-chip blue">
+              <span>TODAY'S SPEND</span>
+              <strong id="bannerTodayTotal">₹0</strong>
+            </div>
+          </div>
 
-      <div class="form-group">
-        <label class="form-label">4-Digit Security PIN</label>
-        <div class="pin-input-container">
-          <input type="password" maxlength="1" class="pin-box login-pin" id="loginPin1" oninput="movePinFocus(this, 'loginPin2')">
-          <input type="password" maxlength="1" class="pin-box login-pin" id="loginPin2" oninput="movePinFocus(this, 'loginPin3')">
-          <input type="password" maxlength="1" class="pin-box login-pin" id="loginPin3" oninput="movePinFocus(this, 'loginPin4')">
-          <input type="password" maxlength="1" class="pin-box login-pin" id="loginPin4">
+          <div class="wallet-track">
+            <div class="wallet-track-fill" id="walletBarFill" style="width: 0%;"></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-top:4px; font-size:0.65rem; color:#94a3b8;">
+            <span id="walletPctUsed">0% spent</span>
+            <span id="walletDaysRemaining">31 days</span>
+          </div>
         </div>
+
+        <!-- ====================================================================
+             TAB 1: CALENDAR VIEW (GOOGLE CALENDAR STYLE + DATE EXPENSE POPUP)
+             ==================================================================== -->
+        <section class="app-screen active" id="screenCalendar">
+          
+          <div class="cal-header-bar">
+            <div class="cal-title-wrap">
+              <h3 id="calViewTitle">October 2026</h3>
+              <p id="calViewSubtitle">Standard Google Calendar View</p>
+            </div>
+            <div class="cal-nav-buttons">
+              <button class="btn-today-pill" onclick="jumpToday()">Today</button>
+              <button class="btn-nav-arrow" onclick="navMonth(-1)">‹</button>
+              <button class="btn-nav-arrow" onclick="navMonth(1)">›</button>
+            </div>
+          </div>
+
+          <!-- CALENDAR GRID CARD -->
+          <div class="calendar-card">
+            <div class="weekdays-grid">
+              <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+            </div>
+            <div class="days-grid" id="mainDaysGrid"></div>
+          </div>
+
+          <!-- SELECTED DAY DETAILS CARD -->
+          <div class="selected-day-details-card">
+            <div class="card-date-header">
+              <div>
+                <div class="card-date-title" id="selectedCardDateLabel">Wednesday, 7 October 2026</div>
+                <div class="card-tithi-subtitle" id="selectedCardTithiLabel">Aso Vad Ekadashi</div>
+              </div>
+              <button class="btn btn-primary" style="width:auto; padding:6px 14px; font-size:0.78rem;" onclick="openExpenseModal(selectedDateKey)">
+                ✏️ Edit Expenses
+              </button>
+            </div>
+
+            <div id="selectedCardIncomeBox" style="display:none; margin-bottom:8px;"></div>
+            <div id="selectedCardItemsList"></div>
+
+            <div class="card-total-row">
+              <span>DAY'S TOTAL EXPENSE</span>
+              <strong id="selectedCardDayTotal">₹0</strong>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ====================================================================
+             TAB 2: PANCHANG & SPIRITUAL SCREEN
+             ==================================================================== -->
+        <section class="app-screen" id="screenPanchang">
+          
+          <div class="panchang-hero">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <span style="font-size:0.75rem; background:rgba(255,255,255,0.2); padding:3px 8px; border-radius:12px; font-weight:700;" id="panchangCityText">📍 Ahmedabad</span>
+              <span style="font-size:0.75rem; font-weight:700;" id="panchangHeroDateText">7 October 2026</span>
+            </div>
+            <div style="font-size:1.35rem; font-weight:800;" id="panchangHeroTithiText">Aso Vad Ekadashi</div>
+            <div style="font-size:0.78rem; opacity:0.9;" id="panchangHeroSamvatText">Vikram Samvat 2082 • Veer Samvat 2552</div>
+            <div id="panchangHeroParvaBox" style="display:none; background:#dcfce7; color:#166534; padding:6px 10px; border-radius:8px; font-size:0.8rem; font-weight:700; margin-top:8px;">
+              🌱 Lilotri Tyag Parva (Green Veg Abstinence Day)
+            </div>
+          </div>
+
+          <div style="font-size:0.9rem; font-weight:800; color:#0f172a; margin:14px 2px 8px 2px;">
+            📿 8 Indian Pachkhan Timings (Melb & India Standard)
+          </div>
+          <div class="pachkhan-grid">
+            <div class="pk-box"><span>1. Sunrise (સૂર્યોદય)</span><strong id="pkSunrise">06:33 AM</strong></div>
+            <div class="pk-box"><span>2. Navkarshi (નવકારશી)</span><strong id="pkNavkarshi">07:21 AM</strong></div>
+            <div class="pk-box"><span>3. Porsi (પોરિસી)</span><strong id="pkPorsi">09:28 AM</strong></div>
+            <div class="pk-box"><span>4. Sadh Porsi (સાઢ પોરિસી)</span><strong id="pkSadhporsi">10:55 AM</strong></div>
+            <div class="pk-box"><span>5. Purimaddha (પુરિમડ્ઢ)</span><strong id="pkPurimaddha">12:23 PM</strong></div>
+            <div class="pk-box"><span>6. Avaddha (અવડ્ઢ)</span><strong id="pkAvaddha">01:50 PM</strong></div>
+            <div class="pk-box"><span>7. Sunset (સૂર્યાસ્ત)</span><strong id="pkSunset">06:12 PM</strong></div>
+            <div class="pk-box"><span>8. Chauvihar (ચૌવિહાર)</span><strong id="pkChauvihar">06:12 PM</strong></div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin:14px 2px 8px 2px;">
+            <span style="font-size:0.9rem; font-weight:800; color:#0f172a;">🕉️ Day & Night Choghadiya</span>
+            <span id="activeChogBadge" style="font-size:0.72rem; color:#2563eb; font-weight:700; background:#eff6ff; padding:2px 8px; border-radius:12px;">Live</span>
+          </div>
+          <div class="calendar-card" style="padding:10px;" id="choghadiyaTimeline"></div>
+
+          <div style="font-size:0.9rem; font-weight:800; color:#0f172a; margin:14px 2px 8px 2px;">
+            🌟 October 2026 Parva & Kalyanaks
+          </div>
+          <div class="calendar-card" style="padding:10px;" id="panchangKalyanakContainer"></div>
+
+        </section>
+
+        <!-- ====================================================================
+             TAB 3: REPORTS & ANALYTICS
+             ==================================================================== -->
+        <section class="app-screen" id="screenReports">
+          
+          <div class="stat-row">
+            <div class="stat-card green">
+              <span>INCOME RECEIVED</span>
+              <strong id="repTotalIncome">+₹0</strong>
+            </div>
+            <div class="stat-card red">
+              <span>TOTAL EXPENSES</span>
+              <strong id="repTotalSpend">-₹0</strong>
+            </div>
+            <div class="stat-card blue">
+              <span>NET BALANCE</span>
+              <strong id="repNetBalance">₹0</strong>
+            </div>
+          </div>
+
+          <div class="calendar-card" style="padding:14px; margin-bottom:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+              <h4 style="font-size:0.92rem; font-weight:800;">Expense Categories Breakdown</h4>
+              <button class="btn btn-secondary" style="width:auto; padding:4px 10px; font-size:0.75rem;" onclick="exportExcel()">
+                📥 Excel / CSV
+              </button>
+            </div>
+            <div id="categoryProgressBars"></div>
+          </div>
+
+          <div class="calendar-card" style="padding:14px; margin-bottom:14px;">
+            <h4 style="font-size:0.92rem; font-weight:800; margin-bottom:10px;">💵 Money Received Transactions</h4>
+            <div id="reportsIncomeList"></div>
+          </div>
+
+          <div class="calendar-card" style="padding:14px;">
+            <h4 style="font-size:0.92rem; font-weight:800; margin-bottom:10px;">Daily Expenses Ledger</h4>
+            <div style="max-height: 250px; overflow-y: auto;" id="dailyLedgerList"></div>
+          </div>
+
+        </section>
+
+        <!-- ====================================================================
+             TAB 4: PROFILE & SETTINGS
+             ==================================================================== -->
+        <section class="app-screen" id="screenProfile">
+          
+          <div class="calendar-card" style="padding:16px; margin-bottom:14px; text-align:center;">
+            <div class="header-avatar" style="width:64px; height:64px; font-size:1.6rem; margin:0 auto 10px auto;" id="profileLargeAvatar">H</div>
+            <h3 id="profileLargeName" style="font-size:1.15rem; font-weight:800;">Honey Shah</h3>
+            <p id="profileLargeMobile" style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">+91 9876543210</p>
+            <div style="display:flex; justify-content:center; gap:8px;">
+              <button class="btn btn-secondary" style="width:auto; padding:6px 14px; font-size:0.78rem;" onclick="lockApp()">
+                🔒 Lock Diary
+              </button>
+              <button class="btn btn-secondary" style="width:auto; padding:6px 14px; font-size:0.78rem;" onclick="handleSignOut()">
+                🚪 Sign Out
+              </button>
+            </div>
+          </div>
+
+          <div class="calendar-card" style="padding:14px; margin-bottom:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <div>
+                <h4 style="font-size:0.9rem; font-weight:800;">⚙️ Items & Daily Rates Master</h4>
+                <span style="font-size:0.72rem; color:var(--text-muted);">Customize milk, tiffin, and other items</span>
+              </div>
+              <button class="btn btn-secondary" style="width:auto; padding:5px 10px; font-size:0.75rem;" onclick="openAddNewItemModal()">
+                ➕ Add Item
+              </button>
+            </div>
+            <div id="profileItemsMasterList" style="display:flex; flex-direction:column; gap:8px;"></div>
+          </div>
+
+          <div class="calendar-card" style="padding:14px; margin-bottom:14px;">
+            <h4 style="font-size:0.9rem; font-weight:800; margin-bottom:8px;">Default Calendar Mode</h4>
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
+              <button class="btn btn-secondary" id="setChoiceEnglish" onclick="setAppCalendarMode('english')">📅 English</button>
+              <button class="btn btn-secondary" id="setChoiceJain" onclick="setAppCalendarMode('jain')">📿 Jain</button>
+              <button class="btn btn-secondary" id="setChoiceHindu" onclick="setAppCalendarMode('hindu')">🕉️ Hindu</button>
+            </div>
+          </div>
+
+          <div class="calendar-card" style="padding:14px;">
+            <h4 style="font-size:0.9rem; font-weight:800; margin-bottom:6px;">Data Backup</h4>
+            <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:12px;">Saved locally on this device. Download JSON backup anytime.</p>
+            <button class="btn btn-secondary" onclick="exportBackupJSON()">💾 Download Data Backup (JSON)</button>
+          </div>
+
+        </section>
+
+        <!-- FLOATING BOTTOM NAVIGATION BAR -->
+        <nav class="bottom-nav">
+          <button class="nav-tab-btn active" id="navBtnCalendar" onclick="switchNavTab('calendar')">
+            <span class="nav-tab-icon">📅</span>
+            <span>Calendar</span>
+          </button>
+          <button class="nav-tab-btn" id="navBtnPanchang" onclick="switchNavTab('panchang')">
+            <span class="nav-tab-icon">📿</span>
+            <span>Panchang</span>
+          </button>
+          <button class="nav-tab-btn" id="navBtnReports" onclick="switchNavTab('reports')">
+            <span class="nav-tab-icon">📊</span>
+            <span>Reports</span>
+          </button>
+          <button class="nav-tab-btn" id="navBtnProfile" onclick="switchNavTab('profile')">
+            <span class="nav-tab-icon">👤</span>
+            <span>Profile</span>
+          </button>
+        </nav>
+
       </div>
 
-      <button class="btn btn-primary" onclick="handleSignIn()">Sign In</button>
-      <button class="btn-link" onclick="showAuthScreen('forgotPin')">Forgot PIN?</button>
-      <button class="btn-link" onclick="showAuthScreen('signUp')">+ Create New Profile</button>
     </div>
-  </div>
 
-  <!-- SCREEN C: FORGOT PIN -->
-  <div class="auth-screen" id="screenForgotPin" style="display:none;">
-    <div class="auth-card">
-      <div class="auth-logo">🔑</div>
-      <h2 class="auth-title">Reset Security PIN</h2>
-      <p class="auth-subtitle">Verify your registered mobile number to reset PIN</p>
-
-      <div class="form-group">
-        <label class="form-label">Registered Mobile Number</label>
-        <input type="tel" id="forgotMobile" class="form-input" placeholder="Enter your 10-digit mobile" maxlength="10">
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Set New 4-Digit PIN</label>
-        <div class="pin-input-container">
-          <input type="password" maxlength="1" class="pin-box reset-pin" id="resetPin1" oninput="movePinFocus(this, 'resetPin2')">
-          <input type="password" maxlength="1" class="pin-box reset-pin" id="resetPin2" oninput="movePinFocus(this, 'resetPin3')">
-          <input type="password" maxlength="1" class="pin-box reset-pin" id="resetPin3" oninput="movePinFocus(this, 'resetPin4')">
-          <input type="password" maxlength="1" class="pin-box reset-pin" id="resetPin4">
-        </div>
-      </div>
-
-      <button class="btn btn-primary" onclick="handleResetPin()">Reset PIN & Login</button>
-      <button class="btn-link" onclick="showAuthScreen('signIn')">Back to Sign In</button>
+    <!-- IPHONE HOME INDICATOR -->
+    <div class="home-indicator-bar">
+      <div class="home-indicator"></div>
     </div>
-  </div>
 
+  </div>
 
   <!-- ======================================================================
-       MAIN APPLICATION SHELL (VISIBLE ONCE LOGGED IN)
-       ====================================================================== -->
-  <div class="app-container" id="mainAppShell" style="display:none;">
-
-    <!-- TOP APP BAR -->
-    <header class="app-header">
-      <div class="user-profile-badge" onclick="switchNavTab('profile')" title="View Profile">
-        <div class="user-avatar" id="headerUserAvatar">H</div>
-        <div class="user-details">
-          <h2 id="headerUserName">Honey Shah</h2>
-          <span id="headerUserMobile">+91 9876543210</span>
-        </div>
-      </div>
-
-      <div class="header-right-actions">
-        <button class="mode-pill" onclick="openCityModal()" id="headerCityBtn">
-          📍 <span id="headerCityLabel">Songadh</span>
-        </button>
-      </div>
-    </header>
-
-    <!-- CALENDAR MODE SWITCHER BAR (ENGLISH | JAIN | HINDU) -->
-    <div class="mode-switcher-bar">
-      <button class="mode-tab-btn active" id="modeBtnEnglish" onclick="setAppCalendarMode('english')">
-        📅 English
-      </button>
-      <button class="mode-tab-btn" id="modeBtnJain" onclick="setAppCalendarMode('jain')">
-        📿 Jain
-      </button>
-      <button class="mode-tab-btn" id="modeBtnHindu" onclick="setAppCalendarMode('hindu')">
-        🕉️ Hindu
-      </button>
-    </div>
-
-    <!-- MONTH HOUSEHOLD WALLET & BALANCE CARD -->
-    <div class="wallet-banner">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <div>
-          <span style="font-size:0.68rem; color:#94a3b8; text-transform:uppercase; font-weight:700; letter-spacing:0.04em;" id="bannerMonthTitle">OCTOBER 2026 HOUSEHOLD WALLET</span>
-          <div style="font-size:1.25rem; font-weight:800; color:#ffffff;" id="bannerRemainingBalance">Balance: ₹0</div>
-        </div>
-        <button class="btn-add-money-pill" onclick="openIncomeModal(selectedDateKey)">
-          ➕ Add Money Received
-        </button>
-      </div>
-
-      <div class="wallet-stats-grid">
-        <div class="wallet-stat-box green">
-          <span>RECEIVED (INCOME)</span>
-          <strong id="bannerTotalIncome">₹0</strong>
-        </div>
-        <div class="wallet-stat-box red">
-          <span>TOTAL SPENT</span>
-          <strong id="bannerMonthTotal">₹0</strong>
-        </div>
-        <div class="wallet-stat-box blue">
-          <span>TODAY'S SPEND</span>
-          <strong id="bannerTodayTotal">₹0</strong>
-        </div>
-      </div>
-
-      <div class="wallet-progress-track">
-        <div class="wallet-progress-fill" id="walletBarFill" style="width: 0%;"></div>
-      </div>
-      <div style="display:flex; justify-content:space-between; font-size:0.68rem; color:#cbd5e1; margin-top:3px;">
-        <span id="walletPctUsed">0% spent</span>
-        <span id="walletDaysRemaining">31 days in month</span>
-      </div>
-    </div>
-
-    <!-- SCREEN 1: CALENDAR VIEW (CLICKING ANY DATE DIRECTLY OPENS EXPENSE WINDOW!) -->
-    <main class="app-screen active" id="screenCalendar">
-      
-      <div class="cal-header-bar">
-        <div class="cal-title-wrap">
-          <h3 id="calViewTitle">October 2026</h3>
-          <p id="calViewSubtitle">Vikram Samvat 2082 • Veer Samvat 2552</p>
-        </div>
-        <div class="cal-nav-buttons">
-          <button class="btn-today-pill" onclick="jumpToday()">Today</button>
-          <button class="btn-nav-arrow" onclick="navMonth(-1)" title="Previous Month">◀</button>
-          <button class="btn-nav-arrow" onclick="navMonth(1)" title="Next Month">▶</button>
-        </div>
-      </div>
-
-      <div class="calendar-card">
-        <div class="weekdays-grid">
-          <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
-        </div>
-        <div class="days-grid" id="mainDaysGrid"></div>
-      </div>
-
-      <!-- SELECTED DATE SUMMARY CARD -->
-      <div class="selected-card">
-        <div class="selected-card-header">
-          <div class="selected-card-title">
-            <h4 id="selectedCardDateLabel">Wednesday, 7 October 2026</h4>
-            <span id="selectedCardTithiLabel">Aso Vad Ekadashi</span>
-          </div>
-          <div class="selected-card-total">
-            <span>Day Total Spent</span>
-            <strong id="selectedCardDayTotal">₹0</strong>
-          </div>
-        </div>
-
-        <!-- MONEY RECEIVED ON THIS DAY (IF ANY) -->
-        <div id="selectedCardIncomeBox" style="display:none;"></div>
-
-        <div class="day-items-list" id="selectedCardItemsList">
-          <div class="empty-note">Tap any date above to add or view expenses.</div>
-        </div>
-
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-          <button class="btn btn-primary" onclick="openExpenseModal(selectedDateKey)">
-            ✏️ Expenses
-          </button>
-          <button class="btn btn-secondary" style="background:#ecfdf5; color:#047857; border-color:#a7f3d0;" onclick="openIncomeModal(selectedDateKey)">
-            ➕ Received Money
-          </button>
-        </div>
-      </div>
-
-    </main>
-
-    <!-- SCREEN 2: PANCHANG & SPIRITUAL TIMINGS (DEDICATED HEAD) -->
-    <section class="app-screen" id="screenPanchang">
-      
-      <div class="panchang-hero">
-        <div class="hero-top-row">
-          <span class="hero-badge" id="panchangHeroDateText">7 Oct 2026</span>
-          <span class="hero-badge" id="panchangCityText">📍 Songadh</span>
-        </div>
-        <div class="hero-tithi" id="panchangHeroTithiText">Aso Vad Ekadashi</div>
-        <div class="hero-samvat" id="panchangHeroSamvatText">Vikram Samvat 2082 • Veer Nirvana Samvat 2552</div>
-
-        <div class="parva-alert" id="panchangHeroParvaBox" style="display:none;">
-          🌱 Atham / Chaudas Parva — Lilotri Tyag (Green Vegetable Abstinence) Day
-        </div>
-      </div>
-
-      <!-- 8 PACHKHAN TIMINGS (INDIA CALCULATED) -->
-      <div class="section-title">
-        <span>⏱️ Pachkhan Timings (MSJS / Songadh)</span>
-        <small>Indian Solar Calculation</small>
-      </div>
-
-      <div class="pachkhan-grid">
-        <div class="pk-box"><span class="lbl">🌅 Sunrise</span><span class="val" id="pkSunrise">06:28 AM</span></div>
-        <div class="pk-box accent"><span class="lbl">🌇 Sunset / Chauvihar</span><span class="val" id="pkSunset">06:14 PM</span></div>
-        <div class="pk-box highlight"><span class="lbl">⏳ Navkarshi</span><span class="val" id="pkNavkarshi">07:16 AM</span></div>
-        <div class="pk-box"><span class="lbl">⏱️ Porsi</span><span class="val" id="pkPorsi">09:24 AM</span></div>
-        <div class="pk-box"><span class="lbl">⏱️ Sadh Porsi</span><span class="val" id="pkSadhporsi">10:52 AM</span></div>
-        <div class="pk-box highlight"><span class="lbl">☀️ Purimaddha</span><span class="val" id="pkPurimaddha">12:21 PM</span></div>
-        <div class="pk-box"><span class="lbl">⏱️ Avaddha</span><span class="val" id="pkAvaddha">03:17 PM</span></div>
-        <div class="pk-box accent"><span class="lbl">🍵 Chauvihar</span><span class="val" id="pkChauvihar">06:14 PM</span></div>
-      </div>
-
-      <!-- CHOGHADIYA -->
-      <div class="section-title">
-        <span>✨ Choghadiya Muhurat (Prokerala)</span>
-        <small id="activeChogBadge" style="color:var(--primary); font-weight:700;">Live: Amrit</small>
-      </div>
-
-      <div class="calendar-card" style="padding:10px;">
-        <div class="chog-timeline" id="choghadiyaTimeline"></div>
-      </div>
-
-      <!-- MONTH KALYANAKS & FESTIVALS -->
-      <div class="section-title">
-        <span>📜 Tirthankar Kalyanaks & Parva List</span>
-        <small>Vitragvani Standard</small>
-      </div>
-
-      <div class="calendar-card" style="padding:12px;" id="panchangKalyanakContainer"></div>
-
-    </section>
-
-    <!-- SCREEN 3: REPORTS & EXCEL EXPORT -->
-    <section class="app-screen" id="screenReports">
-      
-      <!-- FINANCIAL SUMMARY -->
-      <div class="stat-row">
-        <div class="stat-card green">
-          <span>Total Received</span>
-          <strong id="repTotalIncome">₹0</strong>
-        </div>
-        <div class="stat-card red">
-          <span>Total Spent</span>
-          <strong id="repTotalSpend">₹0</strong>
-        </div>
-        <div class="stat-card blue">
-          <span>Net Balance</span>
-          <strong id="repNetBalance">₹0</strong>
-        </div>
-      </div>
-
-      <!-- MONEY RECEIVED / INFLOW TRANSACTIONS LIST -->
-      <div class="calendar-card" style="padding:14px; margin-bottom:12px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-          <div>
-            <h4 style="font-size:0.92rem; font-weight:800; color:#059669;">💵 Money Received Records</h4>
-            <span style="font-size:0.72rem; color:var(--text-muted);">Opening budget, salary, cash received</span>
-          </div>
-          <button class="btn btn-secondary" style="width:auto; padding:4px 10px; font-size:0.75rem; background:#ecfdf5; color:#059669; border-color:#a7f3d0;" onclick="openIncomeModal(selectedDateKey)">
-            ➕ Add Money
-          </button>
-        </div>
-        <div id="reportsIncomeList"></div>
-      </div>
-
-      <!-- EXPENSE BREAKDOWN -->
-      <div class="calendar-card" style="padding:14px; margin-bottom:12px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-          <h4 style="font-size:0.92rem; font-weight:800;">Expense Category Breakdown</h4>
-          <button class="btn btn-secondary" style="width:auto; padding:6px 12px; font-size:0.75rem;" onclick="exportExcel()">
-            📥 Download Excel (CSV)
-          </button>
-        </div>
-        <div id="categoryProgressBars"></div>
-      </div>
-
-      <div class="calendar-card" style="padding:14px;">
-        <h4 style="font-size:0.92rem; font-weight:800; margin-bottom:10px;">Daily Expenses Ledger</h4>
-        <div style="max-height: 250px; overflow-y: auto;" id="dailyLedgerList"></div>
-      </div>
-
-    </section>
-
-    <!-- SCREEN 4: USER PROFILE & SETTINGS -->
-    <section class="app-screen" id="screenProfile">
-      
-      <div class="calendar-card" style="padding:16px; margin-bottom:14px; text-align:center;">
-        <div class="user-avatar" style="width:64px; height:64px; font-size:1.6rem; margin:0 auto 10px auto;" id="profileLargeAvatar">H</div>
-        <h3 id="profileLargeName" style="font-size:1.15rem; font-weight:800;">Honey Shah</h3>
-        <p id="profileLargeMobile" style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">+91 9876543210</p>
-        <button class="btn btn-secondary" style="width:auto; margin:0 auto; padding:6px 16px; font-size:0.78rem;" onclick="handleSignOut()">
-          🚪 Sign Out / Switch Profile
-        </button>
-      </div>
-
-      <!-- MANAGE ITEMS & DAILY RATES MASTER -->
-      <div class="calendar-card" style="padding:14px; margin-bottom:14px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-          <div>
-            <h4 style="font-size:0.9rem; font-weight:800;">⚙️ Items & Daily Rates Master</h4>
-            <span style="font-size:0.72rem; color:var(--text-muted);">Customize your rates, units, and custom items</span>
-          </div>
-          <button class="btn btn-secondary" style="width:auto; padding:5px 10px; font-size:0.75rem;" onclick="openAddNewItemModal()">
-            ➕ Add Item
-          </button>
-        </div>
-        <div id="profileItemsMasterList" style="display:flex; flex-direction:column; gap:8px;"></div>
-      </div>
-
-      <div class="calendar-card" style="padding:14px; margin-bottom:14px;">
-        <h4 style="font-size:0.9rem; font-weight:800; margin-bottom:8px;">Default Calendar Mode</h4>
-        <div class="choice-grid">
-          <div class="choice-card" id="setChoiceEnglish" onclick="setAppCalendarMode('english')">
-            <div class="choice-icon">📅</div>
-            <div class="choice-text"><h4>English Calendar</h4><p>Google Calendar style</p></div>
-          </div>
-          <div class="choice-card" id="setChoiceJain" onclick="setAppCalendarMode('jain')">
-            <div class="choice-icon">📿</div>
-            <div class="choice-text"><h4>Jain Panchang</h4><p>Pachkhan & Atham/Chaudas</p></div>
-          </div>
-          <div class="choice-card" id="setChoiceHindu" onclick="setAppCalendarMode('hindu')">
-            <div class="choice-icon">🕉️</div>
-            <div class="choice-text"><h4>Hindu Panchang</h4><p>Ekadashi, Tithi & Choghadiya</p></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="calendar-card" style="padding:14px;">
-        <h4 style="font-size:0.9rem; font-weight:800; margin-bottom:6px;">Data Safety & Backup</h4>
-        <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:12px;">
-          Your entries are saved 100% locally on your computer. Download backup anytime.
-        </p>
-        <button class="btn btn-secondary" onclick="exportBackupJSON()">💾 Download Data Backup (JSON)</button>
-      </div>
-
-    </section>
-
-    <!-- FIXED BOTTOM NAVIGATION BAR -->
-    <nav class="bottom-nav">
-      <button class="nav-tab-btn active" id="navBtnCalendar" onclick="switchNavTab('calendar')">
-        <span class="nav-tab-icon">📅</span>
-        <span>Calendar</span>
-      </button>
-      <button class="nav-tab-btn" id="navBtnPanchang" onclick="switchNavTab('panchang')">
-        <span class="nav-tab-icon">📿</span>
-        <span>Panchang</span>
-      </button>
-      <button class="nav-tab-btn" id="navBtnReports" onclick="switchNavTab('reports')">
-        <span class="nav-tab-icon">📊</span>
-        <span>Reports</span>
-      </button>
-      <button class="nav-tab-btn" id="navBtnProfile" onclick="switchNavTab('profile')">
-        <span class="nav-tab-icon">👤</span>
-        <span>Profile</span>
-      </button>
-    </nav>
-
-  </div>
-
-
-  <!-- ======================================================================
-       POPUP WINDOW: EXPENSE ENTRY WINDOW (DIRECTLY OPENS WHEN CLICKING DATE)
+       POPUP MODAL: EXPENSE ENTRY WINDOW (DIRECTLY OPENS ON CLICKING ANY DATE)
        ====================================================================== -->
   <div class="modal-overlay" id="expenseModalOverlay" onclick="closeExpenseModalOnBackdrop(event)">
     <div class="modal-sheet" onclick="event.stopPropagation()">
-      
+      <div class="sheet-drag-handle"></div>
+
       <div class="sheet-header">
         <div class="sheet-title-box">
           <h3 id="modalDateHeading">7 October 2026</h3>
@@ -1744,35 +1860,32 @@
         <button class="close-btn" onclick="closeExpenseModal()">✕</button>
       </div>
 
-      <!-- MONEY RECEIVED NOTICE ON THIS DATE (IF ANY) -->
       <div id="modalIncomeNotice" style="display:none; margin-bottom:12px;"></div>
 
-      <!-- LIST OF EXPENSE ACCOUNTS -->
       <div class="sheet-items-list" id="modalItemsListContainer"></div>
 
-      <!-- INLINE ADD NEW CUSTOM ITEM / CATEGORY -->
-      <div class="add-category-card">
-        <button class="add-category-btn-trigger" id="toggleAddCategoryBtn" onclick="toggleAddCategoryForm()">
+      <!-- INLINE ADD CUSTOM ITEM -->
+      <div style="background:#f1f5f9; border:1.5px dashed #cbd5e1; border-radius:12px; padding:10px; margin-bottom:14px;">
+        <button style="width:100%; background:none; border:none; color:var(--primary); font-size:0.85rem; font-weight:700; cursor:pointer;" onclick="toggleAddCategoryForm()">
           ➕ Add New Custom Expense Item
         </button>
-        <div class="add-category-form" id="newCategoryForm">
-          <input type="text" id="newCatName" class="form-input" placeholder="Item Name (e.g. Laundry, Doctor, Rent, Water Jar)">
-          <div style="display:flex; gap:8px;">
-            <select id="newCatType" class="form-input" onchange="toggleRateInputVisibility(this.value)" style="flex:1;">
+        <div id="newCategoryForm" style="display:none; flex-direction:column; gap:8px; margin-top:8px; padding-top:8px; border-top:1px solid var(--border);">
+          <input type="text" id="newCatName" class="input-clean" placeholder="Item Name (e.g. Laundry, Doctor, Snacks)">
+          <div style="display:flex; gap:6px;">
+            <select id="newCatType" class="input-clean" onchange="toggleRateInputVisibility(this.value)" style="flex:1;">
               <option value="direct">Direct Amount (₹)</option>
               <option value="fixed">Fixed Rate (Qty × Rate)</option>
             </select>
-            <input type="number" id="newCatRate" class="form-input" placeholder="Rate ₹" style="flex:1; display:none;">
-            <input type="text" id="newCatUnit" class="form-input" placeholder="Unit (kg/ltr/can)" style="flex:1; display:none;">
+            <input type="number" id="newCatRate" class="input-clean" placeholder="Rate ₹" style="flex:1; display:none;">
+            <input type="text" id="newCatUnit" class="input-clean" placeholder="Unit" style="flex:1; display:none;">
           </div>
-          <div style="display:flex; gap:8px;">
-            <button class="btn btn-primary" style="flex:1;" onclick="submitNewCategory()">Add Item</button>
-            <button class="btn btn-secondary" style="width:80px;" onclick="toggleAddCategoryForm()">Cancel</button>
+          <div style="display:flex; gap:6px;">
+            <button class="btn btn-primary" style="flex:1;" onclick="submitNewCategory()">Add</button>
+            <button class="btn btn-secondary" style="width:70px;" onclick="toggleAddCategoryForm()">Cancel</button>
           </div>
         </div>
       </div>
 
-      <!-- FOOTER WITH LIVE TOTAL & SAVE -->
       <div class="sheet-footer-bar">
         <div class="sheet-total-label">
           <span>DAY'S EXPENSE:</span>
@@ -1782,47 +1895,47 @@
           <button class="btn btn-secondary" style="width:auto; padding:8px 12px; font-size:0.75rem;" onclick="copyYesterdayToModal()">
             ⚡ Repeat Yesterday
           </button>
-          <button class="btn btn-primary" style="width:auto; padding:8px 20px;" onclick="saveModalExpenses()">
+          <button class="btn btn-primary" style="width:auto; padding:8px 18px;" onclick="saveModalExpenses()">
             💾 Save
           </button>
         </div>
       </div>
-
     </div>
   </div>
 
-
   <!-- ======================================================================
-       POPUP WINDOW: ADD MONEY RECEIVED (INCOME / BUDGET ENTRY MODAL)
+       POPUP MODAL: ADD MONEY RECEIVED (INCOME / BUDGET)
        ====================================================================== -->
   <div class="modal-overlay" id="incomeModalOverlay" onclick="closeIncomeModalOnBackdrop(event)">
     <div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="sheet-drag-handle"></div>
+
       <div class="sheet-header">
         <div class="sheet-title-box">
-          <h3 style="color:#059669; font-size:1.15rem;">💵 Add Money Received (Income)</h3>
-          <span style="color:var(--text-muted); font-size:0.75rem;">Beginning of month budget, salary, cash received</span>
+          <h3 style="color:#059669;">💵 Add Money Received (Income)</h3>
+          <span style="color:var(--text-muted); font-size:0.75rem;">Household allowance, salary, deposit</span>
         </div>
         <button class="close-btn" onclick="closeIncomeModal()">✕</button>
       </div>
 
       <input type="hidden" id="incomeEditId">
 
-      <div class="form-group">
-        <label class="form-label">Date Received</label>
-        <input type="date" id="incomeDateInput" class="form-input">
+      <div class="form-group-clean">
+        <label class="form-label-clean">Date Received</label>
+        <input type="date" id="incomeDateInput" class="input-clean">
       </div>
 
-      <div class="form-group">
-        <label class="form-label">Amount Received (₹)</label>
+      <div class="form-group-clean">
+        <label class="form-label-clean">Amount Received (₹)</label>
         <div style="position:relative; display:flex; align-items:center;">
           <span style="position:absolute; left:14px; font-weight:800; font-size:1.2rem; color:#059669;">₹</span>
-          <input type="number" id="incomeAmountInput" class="form-input" placeholder="e.g. 50000" style="padding-left:36px; font-size:1.15rem; font-weight:800; color:#059669;">
+          <input type="number" id="incomeAmountInput" class="input-clean" placeholder="e.g. 50000" style="padding-left:36px; font-size:1.15rem; font-weight:800; color:#059669;">
         </div>
       </div>
 
-      <div class="form-group">
-        <label class="form-label">Source / Title</label>
-        <select id="incomeSourceSelect" class="form-input" onchange="toggleCustomIncomeSource(this.value)">
+      <div class="form-group-clean">
+        <label class="form-label-clean">Source / Title</label>
+        <select id="incomeSourceSelect" class="input-clean" onchange="toggleCustomIncomeSource(this.value)">
           <option value="Monthly Salary / Household Budget">Monthly Salary / Household Budget</option>
           <option value="Cash from Husband / Family">Cash from Husband / Family</option>
           <option value="Bank Transfer / UPI Deposit">Bank Transfer / UPI Deposit</option>
@@ -1831,171 +1944,158 @@
           <option value="Gift / Bonus">Gift / Bonus</option>
           <option value="CUSTOM">Custom Source...</option>
         </select>
-        <input type="text" id="incomeCustomSourceInput" class="form-input" placeholder="Enter custom source name" style="display:none; margin-top:8px;">
+        <input type="text" id="incomeCustomSourceInput" class="input-clean" placeholder="Enter custom source name" style="display:none; margin-top:8px;">
       </div>
 
-      <div class="form-group">
-        <label class="form-label">Payment Mode</label>
-        <select id="incomeModeSelect" class="form-input">
+      <div class="form-group-clean">
+        <label class="form-label-clean">Payment Mode</label>
+        <select id="incomeModeSelect" class="input-clean">
           <option value="Cash">Cash in Hand</option>
           <option value="Bank / UPI">Bank Transfer / GPay / PhonePe (UPI)</option>
           <option value="Cheque">Cheque</option>
         </select>
       </div>
 
-      <div class="form-group">
-        <label class="form-label">Notes (Optional)</label>
-        <input type="text" id="incomeNotesInput" class="form-input" placeholder="e.g. October monthly household allowance">
+      <div class="form-group-clean">
+        <label class="form-label-clean">Notes (Optional)</label>
+        <input type="text" id="incomeNotesInput" class="input-clean" placeholder="e.g. October monthly household allowance">
       </div>
 
-      <div style="display:flex; gap:10px; margin-top:16px;">
-        <button class="btn btn-primary" style="background:#059669; box-shadow:0 3px 10px rgba(5,150,105,0.3); flex:2;" onclick="saveIncomeEntry()">
-          💾 Save Money Received
-        </button>
-        <button class="btn btn-secondary" style="flex:1;" onclick="closeIncomeModal()">Cancel</button>
-      </div>
+      <button class="btn btn-primary" style="background:#059669; padding:12px; margin-top:10px;" onclick="saveIncomeEntry()">
+        💵 Save Money Received
+      </button>
     </div>
   </div>
 
-
   <!-- ======================================================================
-       EDIT ITEM & RATE MODAL (FOR EDITING ANY ITEM'S RATE, UNIT, NAME)
+       POPUP MODAL: EDIT ITEM & RATE MASTER
        ====================================================================== -->
   <div class="modal-overlay" id="editItemModalOverlay" onclick="closeEditItemModalOnBackdrop(event)">
     <div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="sheet-drag-handle"></div>
+
       <div class="sheet-header">
-        <h3 id="editItemModalHeading" style="font-size:1.05rem; font-weight:800;">⚙️ Edit Item & Rate</h3>
+        <div class="sheet-title-box">
+          <h3 id="editItemModalHeading">⚙️ Edit Item</h3>
+          <span style="color:var(--text-muted); font-size:0.75rem;">Modify rate, unit, or name</span>
+        </div>
         <button class="close-btn" onclick="closeEditItemModal()">✕</button>
       </div>
 
       <input type="hidden" id="editItemId">
-      
-      <div class="form-group">
-        <label class="form-label">Item Name</label>
-        <input type="text" id="editItemName" class="form-input" placeholder="e.g. Milk, Tiffin, Water Jar">
+
+      <div class="form-group-clean">
+        <label class="form-label-clean">Item Name</label>
+        <input type="text" id="editItemName" class="input-clean">
       </div>
 
-      <div class="form-group">
-        <label class="form-label">Pricing Type</label>
-        <select id="editItemType" class="form-input" onchange="toggleEditItemTypeFields(this.value)">
-          <option value="fixed">Fixed Rate (Quantity × Rate = Total ₹)</option>
-          <option value="direct">Direct Amount (Type ₹ Directly)</option>
+      <div class="form-group-clean">
+        <label class="form-label-clean">Expense Type</label>
+        <select id="editItemType" class="input-clean" onchange="toggleEditItemTypeFields(this.value)">
+          <option value="fixed">Fixed Rate (Calculated: Qty × Rate)</option>
+          <option value="direct">Direct Amount (Variable ₹)</option>
         </select>
       </div>
 
       <div id="editFixedRateGroup">
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:12px;">
           <div>
-            <label class="form-label">Rate (₹)</label>
-            <input type="number" id="editItemRate" class="form-input" placeholder="e.g. 32">
+            <label class="form-label-clean">Rate (₹)</label>
+            <input type="number" id="editItemRate" class="input-clean" placeholder="e.g. 32">
           </div>
           <div>
-            <label class="form-label">Unit</label>
-            <input type="text" id="editItemUnit" class="form-input" placeholder="e.g. Liter, Meal, Jar">
+            <label class="form-label-clean">Unit Name</label>
+            <input type="text" id="editItemUnit" class="input-clean" placeholder="Liter, Meal, etc.">
           </div>
         </div>
-
-        <div class="form-group">
-          <label class="form-label">Quantity Stepper (+ / - by)</label>
-          <select id="editItemStep" class="form-input">
-            <option value="0.5">0.5 (Half - e.g. 0.5L, 1L, 1.5L)</option>
-            <option value="1">1 (Whole - e.g. 1, 2, 3)</option>
-            <option value="2">2</option>
-            <option value="5">5</option>
-          </select>
+        <div class="form-group-clean">
+          <label class="form-label-clean">Stepper Increment (+ / - Step)</label>
+          <input type="number" step="any" id="editItemStep" class="input-clean" placeholder="1 or 0.5">
         </div>
       </div>
 
-      <div style="display:flex; gap:10px; margin-top:16px;">
-        <button class="btn btn-primary" style="flex:2;" onclick="saveEditedItem()">Save Rate</button>
-        <button class="btn btn-secondary" style="flex:1; color:#ef4444; border-color:#fca5a5;" onclick="deleteEditedItem()">Delete Item</button>
+      <div style="display:flex; gap:10px; margin-top:14px;">
+        <button class="btn btn-primary" style="flex:1;" onclick="saveEditedItem()">💾 Save Changes</button>
+        <button class="btn btn-secondary" style="width:80px; color:#ef4444;" onclick="deleteEditedItem()">🗑️ Delete</button>
       </div>
     </div>
   </div>
-
-
-  <!-- CITY PICKER MODAL -->
-  <div class="modal-overlay" id="cityModalOverlay" onclick="closeCityModalOnBackdrop(event)">
-    <div class="modal-sheet" onclick="event.stopPropagation()">
-      <div class="sheet-header">
-        <h3 style="font-size:1.05rem; font-weight:800;">📍 Select Indian City / Tirtha</h3>
-        <button class="close-btn" onclick="closeCityModal()">✕</button>
-      </div>
-      <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:12px;">
-        Pachkhan, Sunrise, Sunset and Choghadiya will be calculated for this location:
-      </p>
-      <div id="cityOptionGrid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;"></div>
-      <button class="btn btn-secondary" onclick="detectGPSLocation()">📡 Detect My Live GPS Location</button>
-    </div>
-  </div>
-
-  <div class="toast" id="toastMessage">Saved successfully!</div>
-
 
   <!-- ======================================================================
-       JAVASCRIPT: 100% ROBUST & ACCURATE LOGIC
+       POPUP MODAL: CITY SELECTOR
+       ====================================================================== -->
+  <div class="modal-overlay" id="cityModalOverlay" onclick="closeCityModalOnBackdrop(event)">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="sheet-drag-handle"></div>
+
+      <div class="sheet-header">
+        <div class="sheet-title-box">
+          <h3>📍 Select Location (India)</h3>
+          <span style="color:var(--text-muted); font-size:0.75rem;">For accurate astronomical Pachkhan & Choghadiya</span>
+        </div>
+        <button class="close-btn" onclick="closeCityModal()">✕</button>
+      </div>
+
+      <button class="btn btn-secondary" style="margin-bottom:12px; border:1px solid #93c5fd; color:#2563eb;" onclick="detectGPSLocation()">
+        📡 Use My Current GPS Location
+      </button>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;" id="cityOptionGrid"></div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="toastMessage">Saved!</div>
+
+  <!-- ======================================================================
+       APPLICATION JAVASCRIPT
        ====================================================================== -->
   <script>
-    /* ==========================================================================
-       1. DATA STRUCTURES & INDIAN CITIES
-       ========================================================================== */
+    /* LIVE PHONE CLOCK */
+    function updatePhoneClock() {
+      const now = new Date();
+      let hh = now.getHours();
+      let mm = now.getMinutes();
+      const el = document.getElementById('statusTimeClock');
+      if (el) el.innerText = `${hh % 12 || 12}:${String(mm).padStart(2, '0')}`;
+    }
+    setInterval(updatePhoneClock, 1000);
+    updatePhoneClock();
+
+    /* ASTRONOMICAL DATA & CITIES */
     const INDIAN_CITIES = {
-      songadh: { name: "Songadh (Saurashtra)", lat: 21.5035, lng: 71.7695 },
-      ahmedabad: { name: "Ahmedabad (Gujarat)", lat: 23.0225, lng: 72.5714 },
-      mumbai: { name: "Mumbai (Maharashtra)", lat: 18.9220, lng: 72.8347 },
-      surat: { name: "Surat (Gujarat)", lat: 21.1702, lng: 72.8311 },
-      palitana: { name: "Palitana (Shatrunjay)", lat: 21.5222, lng: 71.8286 },
-      bhavnagar: { name: "Bhavnagar (Gujarat)", lat: 21.7645, lng: 72.1519 },
-      rajkot: { name: "Rajkot (Saurashtra)", lat: 22.3039, lng: 70.8022 },
-      vadodara: { name: "Vadodara (Gujarat)", lat: 22.3072, lng: 73.1812 },
-      delhi: { name: "New Delhi (NCR)", lat: 28.6139, lng: 77.2090 },
-      pune: { name: "Pune (Maharashtra)", lat: 18.5204, lng: 73.8567 }
+      'ahmedabad': { name: 'Ahmedabad (Gujarat)', lat: 23.0225, lng: 72.5714 },
+      'mumbai':    { name: 'Mumbai (Maharashtra)', lat: 18.9220, lng: 72.8347 },
+      'surat':     { name: 'Surat (Gujarat)', lat: 21.1702, lng: 72.8311 },
+      'palitana':  { name: 'Palitana (Siddhachal)', lat: 21.5222, lng: 71.8267 },
+      'songadh':   { name: 'Songadh (Saurashtra)', lat: 21.7050, lng: 71.7420 },
+      'rajkot':    { name: 'Rajkot (Saurashtra)', lat: 22.3039, lng: 70.8022 },
+      'vadodara':  { name: 'Vadodara (Gujarat)', lat: 22.3072, lng: 73.1812 },
+      'delhi':     { name: 'Delhi (NCR)', lat: 28.6139, lng: 77.2090 }
     };
 
-    let selectedCityKey = localStorage.getItem('app_city_key') || 'songadh';
-    let currentCity = INDIAN_CITIES[selectedCityKey] || INDIAN_CITIES.songadh;
+    let selectedCityKey = localStorage.getItem('app_city_key') || 'ahmedabad';
+    let currentCity = INDIAN_CITIES[selectedCityKey] || INDIAN_CITIES['ahmedabad'];
 
-    /* SOLAR CALCULATIONS FOR INDIA (IST UTC+05:30) */
     function calculateSolarTimes(year, month, day, lat, lng) {
-      const tzOffset = 5.5; // IST
-      const dateObj = new Date(year, month, day);
-      const startOfYear = new Date(year, 0, 0);
-      const N = Math.floor((dateObj - startOfYear) / (1000 * 60 * 60 * 24));
-      const lngHour = lng / 15.0;
+      const d = new Date(Date.UTC(year, month, day));
+      const dayOfYear = Math.floor((d - new Date(Date.UTC(year, 0, 0))) / 86400000);
+      const B = (360 / 365) * (dayOfYear - 81) * (Math.PI / 180);
+      const EoT = 9.87 * Math.sin(2 * B) - 7.53 * Math.cos(B) - 1.5 * Math.sin(B);
+      const decl = 23.45 * Math.sin((360 / 365) * (dayOfYear - 81) * (Math.PI / 180)) * (Math.PI / 180);
+      const latRad = lat * (Math.PI / 180);
+      const cosHA = (Math.sin(-0.833 * Math.PI / 180) - Math.sin(latRad) * Math.sin(decl)) / (Math.cos(latRad) * Math.cos(decl));
 
-      function getSolarMinutes(isSunrise) {
-        const t = N + ((isSunrise ? 6.0 : 18.0) - lngHour) / 24.0;
-        const M = (0.9856 * t) - 3.289;
-        const Mrad = M * Math.PI / 180.0;
-        let L = M + (1.916 * Math.sin(Mrad)) + (0.020 * Math.sin(2 * Mrad)) + 282.634;
-        L = (L % 360 + 360) % 360;
-        const Lrad = L * Math.PI / 180.0;
-        let RA = Math.atan(0.91764 * Math.tan(Lrad)) * 180.0 / Math.PI;
-        RA = (RA % 360 + 360) % 360;
-        const Lquad = Math.floor(L / 90.0) * 90;
-        const RAquad = Math.floor(RA / 90.0) * 90;
-        RA = (RA + (Lquad - RAquad)) / 15.0;
+      let haMins = 360;
+      if (cosHA <= -1) haMins = 720;
+      else if (cosHA >= 1) haMins = 0;
+      else haMins = (Math.acos(cosHA) * 180 / Math.PI) * 4;
 
-        const sinDec = 0.39782 * Math.sin(Lrad);
-        const cosDec = Math.cos(Math.asin(sinDec));
-        const zenithRad = 90.833 * Math.PI / 180.0;
-        const latRad = lat * Math.PI / 180.0;
-
-        const cosH = (Math.cos(zenithRad) - (sinDec * Math.sin(latRad))) / (cosDec * Math.cos(latRad));
-        if (cosH > 1 || cosH < -1) return null;
-
-        let H = Math.acos(cosH) * 180.0 / Math.PI;
-        if (isSunrise) H = 360.0 - H;
-        H = H / 15.0;
-
-        const T = H + RA - (0.06571 * t) - 6.622;
-        const UT = (T - lngHour + 24) % 24;
-        const localT = (UT + tzOffset + 24) % 24;
-        return Math.round(localT * 60);
-      }
-
-      const srMin = getSolarMinutes(true);
-      const ssMin = getSolarMinutes(false);
+      const solarNoonUTC = 720 - (4 * lng) - EoT;
+      const srUTC = solarNoonUTC - haMins;
+      const ssUTC = solarNoonUTC + haMins;
+      const srMin = Math.round(srUTC + 330); // IST +5:30
+      const ssMin = Math.round(ssUTC + 330);
 
       function fmtTime(totalMins) {
         if (!totalMins) return '--:--';
@@ -2007,27 +2107,20 @@
       }
 
       const daytimeMins = ssMin - srMin;
-      const navkarshiMin = srMin + 48; // 2 Ghadis (48 min)
-      const porsiMin = srMin + Math.round(daytimeMins / 4.0);
-      const sadhporsiMin = srMin + Math.round(daytimeMins * 3.0 / 8.0);
-      const purimaddhaMin = srMin + Math.round(daytimeMins / 2.0);
-      const avaddhaMin = srMin + Math.round(daytimeMins * 3.0 / 4.0);
-
       return {
-        srMin,
-        ssMin,
+        srMin, ssMin,
         sunrise: fmtTime(srMin),
         sunset: fmtTime(ssMin),
-        navkarshi: fmtTime(navkarshiMin),
-        porsi: fmtTime(porsiMin),
-        sadhporsi: fmtTime(sadhporsiMin),
-        purimaddha: fmtTime(purimaddhaMin),
-        avaddha: fmtTime(avaddhaMin),
+        navkarshi: fmtTime(srMin + 48),
+        porsi: fmtTime(srMin + Math.round(daytimeMins / 4.0)),
+        sadhporsi: fmtTime(srMin + Math.round(daytimeMins * 3.0 / 8.0)),
+        purimaddha: fmtTime(srMin + Math.round(daytimeMins / 2.0)),
+        avaddha: fmtTime(srMin + Math.round(daytimeMins * 3.0 / 4.0)),
         chauvihar: fmtTime(ssMin)
       };
     }
 
-    /* CHOGHADIYA (PROKERALA STANDARD) */
+    /* CHOGHADIYAS */
     const choghadiyaInfo = {
       'Amrit': { nature: 'Super Auspicious 🌟', class: 'best' },
       'Shubh': { nature: 'Auspicious 🟢', class: 'good' },
@@ -2084,33 +2177,33 @@
     const vitragvaniOct2026 = {
       1: { month: "Bhadarvo", sudVad: "Vad", tithi: "5", athamChaudas: false, event: "", details: "" },
       2: { month: "Bhadarvo", sudVad: "Vad", tithi: "6", athamChaudas: false, event: "", details: "" },
-      3: { month: "Bhadarvo", sudVad: "Vad", tithi: "8", athamChaudas: true, event: "Atham Parva", details: "Atham Parva — 🌱 Lilotri Tyag (Green Veg Abstinence), Samayik, Swadhyay." },
+      3: { month: "Bhadarvo", sudVad: "Vad", tithi: "8", athamChaudas: true, event: "Atham Parva", details: "Atham Parva — 🌱 Lilotri Tyag (Green Veg Abstinence)." },
       4: { month: "Bhadarvo", sudVad: "Vad", tithi: "9", athamChaudas: false, event: "", details: "" },
       5: { month: "Bhadarvo", sudVad: "Vad", tithi: "10", athamChaudas: false, event: "", details: "" },
       6: { month: "Bhadarvo", sudVad: "Vad", tithi: "11", athamChaudas: false, event: "Indira Ekadashi", details: "Ekadashi Vrat." },
       7: { month: "Bhadarvo", sudVad: "Vad", tithi: "12", athamChaudas: false, event: "", details: "" },
       8: { month: "Bhadarvo", sudVad: "Vad", tithi: "13", athamChaudas: false, event: "Pradosh Vrat", details: "Trayodashi." },
-      9: { month: "Bhadarvo", sudVad: "Vad", tithi: "14", athamChaudas: true, event: "Chaudas Parva", details: "Chaudas Parva — 🌱 Lilotri Tyag, Pratikraman day." },
+      9: { month: "Bhadarvo", sudVad: "Vad", tithi: "14", athamChaudas: true, event: "Chaudas Parva", details: "Chaudas Parva — 🌱 Lilotri Tyag." },
       10: { month: "Bhadarvo", sudVad: "Vad", tithi: "Amas", athamChaudas: false, event: "Sarva Pitru Amas", details: "Amavasya." },
-      11: { month: "Aso", sudVad: "Sud", tithi: "1", athamChaudas: false, event: "Neminath Kevalgyan Kalyanak", details: "22nd Tirthankar Neminath Kevalgyan Kalyanak (Girnarji)." },
+      11: { month: "Aso", sudVad: "Sud", tithi: "1", athamChaudas: false, event: "Neminath Kevalgyan", details: "Neminath Bhagwan Kevalgyan Kalyanak (Girnarji)." },
       12: { month: "Aso", sudVad: "Sud", tithi: "2", athamChaudas: false, event: "Navratri Starts", details: "Bij Parva." },
       13: { month: "Aso", sudVad: "Sud", tithi: "3", athamChaudas: false, event: "", details: "" },
       14: { month: "Aso", sudVad: "Sud", tithi: "4", athamChaudas: false, event: "", details: "" },
       15: { month: "Aso", sudVad: "Sud", tithi: "5", athamChaudas: false, event: "Pancham Parva", details: "Pancham Tithi." },
       16: { month: "Aso", sudVad: "Sud", tithi: "6", athamChaudas: false, event: "", details: "" },
-      17: { month: "Aso", sudVad: "Sud", tithi: "7", athamChaudas: false, event: "Ayambil Oliji Starts", details: "Aso Ayambil Oliji Parva Prarambh." },
-      18: { month: "Aso", sudVad: "Sud", tithi: "8", athamChaudas: true, event: "Sheetalnath Moksha Kalyanak", details: "10th Tirthankar Sheetalnath Moksha Kalyanak (Sammed Shikharji) • Atham Parva." },
+      17: { month: "Aso", sudVad: "Sud", tithi: "7", athamChaudas: false, event: "Ayambil Oliji Starts", details: "Aso Ayambil Oliji Parva." },
+      18: { month: "Aso", sudVad: "Sud", tithi: "8", athamChaudas: true, event: "Sheetalnath Moksha", details: "10th Tirthankar Sheetalnath Moksha Kalyanak • Atham Parva." },
       19: { month: "Aso", sudVad: "Sud", tithi: "9", athamChaudas: false, event: "", details: "" },
       20: { month: "Aso", sudVad: "Sud", tithi: "10", athamChaudas: false, event: "Vijayadashami (Dussehra)", details: "Dussehra." },
-      21: { month: "Aso", sudVad: "Sud", tithi: "11", athamChaudas: false, event: "Papankusha Ekadashi", details: "Ekadashi Vrat Parva." },
+      21: { month: "Aso", sudVad: "Sud", tithi: "11", athamChaudas: false, event: "Papankusha Ekadashi", details: "Ekadashi Vrat." },
       22: { month: "Aso", sudVad: "Sud", tithi: "12", athamChaudas: false, event: "", details: "" },
       23: { month: "Aso", sudVad: "Sud", tithi: "13", athamChaudas: false, event: "", details: "" },
       24: { month: "Aso", sudVad: "Sud", tithi: "14", athamChaudas: false, event: "", details: "" },
       25: { month: "Aso", sudVad: "Sud", tithi: "14", athamChaudas: true, event: "Chaudas Parva", details: "Chaudas Parva — 🌱 Lilotri Tyag." },
-      26: { month: "Aso", sudVad: "Sud/Vad", tithi: "15/1", athamChaudas: false, event: "Atmasiddhi Rachna Divas", details: "Shri Atmasiddhi Shastra Day (Shrimad Rajchandraji) • 14th Tirthankar Anantnath Garbha Kalyanak." },
+      26: { month: "Aso", sudVad: "Sud/Vad", tithi: "15/1", athamChaudas: false, event: "Sharad Poonam", details: "Atmasiddhi Rachna Divas • Anantnath Garbha Kalyanak." },
       27: { month: "Aso", sudVad: "Vad", tithi: "2", athamChaudas: false, event: "Bij Parva", details: "" },
       28: { month: "Aso", sudVad: "Vad", tithi: "3", athamChaudas: false, event: "", details: "" },
-      29: { month: "Aso", sudVad: "Vad", tithi: "4", athamChaudas: false, event: "Sambhavnath Kevalgyan Kalyanak", details: "3rd Tirthankar Sambhavnath Kevalgyan Kalyanak." },
+      29: { month: "Aso", sudVad: "Vad", tithi: "4", athamChaudas: false, event: "Sambhavnath Kevalgyan", details: "3rd Tirthankar Sambhavnath Kevalgyan." },
       30: { month: "Aso", sudVad: "Vad", tithi: "5", athamChaudas: false, event: "Pancham Parva", details: "" },
       31: { month: "Aso", sudVad: "Vad", tithi: "6", athamChaudas: false, event: "Diwali Near", details: "" }
     };
@@ -2131,24 +2224,18 @@
           veerYear: 2552
         };
       }
-      const dateIST = new Date(year, month, day, 6, 0, 0);
-      const diffMs = dateIST.getTime() - 1704974220000;
-      const phase = (diffMs / (29.530588853 * 86400 * 1000)) % 1;
-      const tithiIdx = Math.floor(phase * 30);
-      const isShukla = tithiIdx < 15;
+      const isShukla = day <= 15;
       const sudVad = isShukla ? "Sud" : "Vad";
-      let tithiNum = isShukla ? (tithiIdx + 1) : (tithiIdx - 14);
-      let tithiStr = (tithiNum === 15) ? (isShukla ? "Poonam" : "Amas") : String(tithiNum);
+      const tithiNum = isShukla ? day : (day - 15);
       const isAthamChaudas = (tithiNum === 8 || tithiNum === 14);
-
       return {
         month: "Aso",
         sudVad,
-        tithi: tithiStr,
-        fullTithi: `${sudVad} ${tithiStr}`,
-        shortTithi: `${sudVad} ${tithiStr}`,
+        tithi: String(tithiNum),
+        fullTithi: `${sudVad} ${tithiNum}`,
+        shortTithi: `${sudVad} ${tithiNum}`,
         isAthamChaudas,
-        event: isAthamChaudas ? "Parva Tithi" : (tithiNum === 11 ? "Ekadashi Vrat" : ""),
+        event: isAthamChaudas ? "Parva Tithi" : "",
         details: isAthamChaudas ? "Lilotri Tyag Day" : "",
         vikramYear: year + 56,
         veerYear: year + 526
@@ -2156,7 +2243,7 @@
     }
 
     /* ==========================================================================
-       2. AUTHENTICATION & PROFILE SYSTEM
+       AUTHENTICATION & PIN LOCK CONTROLLER
        ========================================================================== */
     const STORAGE_KEY_USER = 'app_user_profile_v1';
     const STORAGE_KEY_SESSION = 'app_user_session_v1';
@@ -2165,22 +2252,33 @@
     const STORAGE_KEY_ACCOUNTS = 'app_expense_accounts_v1';
 
     let currentUser = null;
-    let selectedRegCalMode = 'english'; // Default
+    let enteredPin = '';
 
     function initAuth() {
       try {
-        const u = localStorage.getItem(STORAGE_KEY_USER);
+        let u = localStorage.getItem(STORAGE_KEY_USER);
+        if (!u) {
+          // Pre-populate initial Honey Shah profile so user can immediately test lock screen!
+          const defaultUser = {
+            name: "Honey Shah",
+            mobile: "9876543210",
+            pin: "1234",
+            calMode: "english",
+            createdAt: new Date().toISOString()
+          };
+          localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(defaultUser));
+          u = JSON.stringify(defaultUser);
+        }
+
         const sess = localStorage.getItem(STORAGE_KEY_SESSION);
-        if (u && sess === 'active') {
+        if (sess === 'active') {
           currentUser = JSON.parse(u);
           showMainApp();
-        } else if (u) {
-          showAuthScreen('signIn');
         } else {
-          showAuthScreen('signUp');
+          showAuthScreen('signIn');
         }
       } catch(e) {
-        showAuthScreen('signUp');
+        showAuthScreen('signIn');
       }
     }
 
@@ -2189,13 +2287,132 @@
       document.getElementById('screenSignIn').style.display = (name === 'signIn') ? 'flex' : 'none';
       document.getElementById('screenForgotPin').style.display = (name === 'forgotPin') ? 'flex' : 'none';
       document.getElementById('mainAppShell').style.display = 'none';
+
+      if (name === 'signIn') {
+        clearNumpad();
+        const savedUserStr = localStorage.getItem(STORAGE_KEY_USER);
+        if (savedUserStr) {
+          const savedUser = JSON.parse(savedUserStr);
+          document.getElementById('lockUserName').innerText = savedUser.name || 'Honey Shah';
+          document.getElementById('lockAvatar').innerText = (savedUser.name || 'H').charAt(0).toUpperCase();
+          document.getElementById('lockGreeting').innerText = 'Welcome back';
+        }
+      }
     }
 
+    /* NUMPAD TOUCH & KEYBOARD CONTROLS (ENTER PIN ONLY ONCE!) */
+    function pressNumpad(num) {
+      if (enteredPin.length < 4) {
+        enteredPin += num;
+        updatePinDots();
+        if (enteredPin.length === 4) {
+          setTimeout(verifyPinAndUnlock, 120);
+        }
+      }
+    }
+
+    function backspaceNumpad() {
+      if (enteredPin.length > 0) {
+        enteredPin = enteredPin.slice(0, -1);
+        updatePinDots();
+      }
+      document.getElementById('pinErrorMsg').innerText = '';
+    }
+
+    function clearNumpad() {
+      enteredPin = '';
+      updatePinDots();
+      document.getElementById('pinErrorMsg').innerText = '';
+    }
+
+    function updatePinDots() {
+      for (let i = 1; i <= 4; i++) {
+        const dot = document.getElementById('pDot' + i);
+        if (dot) {
+          dot.classList.toggle('filled', i <= enteredPin.length);
+          dot.classList.remove('error');
+          dot.style.background = (i <= enteredPin.length) ? '#4f46e5' : 'transparent';
+        }
+      }
+    }
+
+    function verifyPinAndUnlock() {
+      const savedUserStr = localStorage.getItem(STORAGE_KEY_USER);
+      if (!savedUserStr) {
+        showAuthScreen('signUp');
+        return;
+      }
+      const savedUser = JSON.parse(savedUserStr);
+
+      if (enteredPin === savedUser.pin) {
+        // Correct PIN!
+        for (let i = 1; i <= 4; i++) {
+          const dot = document.getElementById('pDot' + i);
+          if (dot) dot.style.background = '#10b981';
+        }
+        currentUser = savedUser;
+        localStorage.setItem(STORAGE_KEY_SESSION, 'active');
+        setTimeout(() => {
+          showToast('Unlocked successfully! 👋');
+          showMainApp();
+          clearNumpad();
+        }, 180);
+      } else {
+        // Incorrect PIN
+        const row = document.getElementById('pinDotsRow');
+        if (row) {
+          row.classList.add('shake');
+          setTimeout(() => row.classList.remove('shake'), 450);
+        }
+        for (let i = 1; i <= 4; i++) {
+          const dot = document.getElementById('pDot' + i);
+          if (dot) dot.classList.add('error');
+        }
+        document.getElementById('pinErrorMsg').innerText = 'Incorrect PIN! Please try again.';
+        setTimeout(() => {
+          clearNumpad();
+        }, 550);
+      }
+    }
+
+    /* PHYSICAL KEYBOARD LISTENER */
+    window.addEventListener('keydown', (e) => {
+      const signInLayer = document.getElementById('screenSignIn');
+      if (signInLayer && signInLayer.style.display !== 'none') {
+        if (e.key >= '0' && e.key <= '9') {
+          pressNumpad(e.key);
+        } else if (e.key === 'Backspace') {
+          backspaceNumpad();
+        } else if (e.key === 'Escape') {
+          clearNumpad();
+        }
+      }
+    });
+
+    function lockApp() {
+      localStorage.removeItem(STORAGE_KEY_SESSION);
+      clearNumpad();
+      showAuthScreen('signIn');
+      showToast('Diary Locked 🔒');
+    }
+
+    /* REGISTRATION / SIGN UP */
     function movePinFocus(currentInput, nextInputId) {
       if (currentInput.value.length >= 1 && nextInputId) {
         const el = document.getElementById(nextInputId);
         if (el) el.focus();
       }
+    }
+
+    let isRegPinVisible = false;
+    function toggleRegPinPeek() {
+      isRegPinVisible = !isRegPinVisible;
+      const type = isRegPinVisible ? 'text' : 'password';
+      for (let i = 1; i <= 4; i++) {
+        const el = document.getElementById('regPin' + i);
+        if (el) el.type = type;
+      }
+      document.getElementById('regPinPeekText').innerText = isRegPinVisible ? '🙈 Hide' : '👁️ Show';
     }
 
     function getPinFromBoxes(prefix) {
@@ -2207,88 +2424,27 @@
       return pin;
     }
 
-    function clearPinBoxes(prefix) {
-      for (let i = 1; i <= 4; i++) {
-        const el = document.getElementById(prefix + i);
-        if (el) el.value = '';
-      }
-    }
-
-    function selectCalModeChoice(mode) {
-      selectedRegCalMode = mode;
-      document.getElementById('optCalEnglish').classList.toggle('selected', mode === 'english');
-      document.getElementById('optCalJain').classList.toggle('selected', mode === 'jain');
-      document.getElementById('optCalHindu').classList.toggle('selected', mode === 'hindu');
-    }
-
     function handleRegisterProfile() {
       const name = document.getElementById('regName').value.trim();
       const mobile = document.getElementById('regMobile').value.trim();
       const pin = getPinFromBoxes('regPin');
-      const confPin = getPinFromBoxes('confPin');
 
       if (!name) { alert("Please enter your full name."); return; }
       if (!mobile || mobile.length < 10) { alert("Please enter a valid 10-digit mobile number."); return; }
-      if (!pin || pin.length !== 4) { alert("Please enter a 4-digit security PIN."); return; }
-      if (pin !== confPin) { alert("PIN and Confirm PIN do not match! Please check."); return; }
-
-      const milkRateInput = parseFloat(document.getElementById('regMilkRate').value);
-      const tiffinRateInput = parseFloat(document.getElementById('regTiffinRate').value);
-
-      if (!isNaN(milkRateInput) && milkRateInput > 0) {
-        const milkAcc = accounts.find(a => a.id === 'milk');
-        if (milkAcc) milkAcc.fixedRate = milkRateInput;
-      }
-      if (!isNaN(tiffinRateInput) && tiffinRateInput > 0) {
-        const tiffinAcc = accounts.find(a => a.id === 'tiffin');
-        if (tiffinAcc) tiffinAcc.fixedRate = tiffinRateInput;
-      }
-      saveAccounts();
+      if (!pin || pin.length !== 4) { alert("Please set a 4-digit security PIN."); return; }
 
       currentUser = {
         name,
         mobile,
         pin,
-        calMode: selectedRegCalMode || 'english',
+        calMode: 'english',
         createdAt: new Date().toISOString()
       };
 
       localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
       localStorage.setItem(STORAGE_KEY_SESSION, 'active');
 
-      showToast("Profile created successfully! Welcome 🎉");
-      showMainApp();
-    }
-
-    function handleSignIn() {
-      const mobile = document.getElementById('loginMobile').value.trim();
-      const pin = getPinFromBoxes('loginPin');
-
-      if (!mobile || mobile.length < 10) { alert("Please enter your 10-digit registered mobile number."); return; }
-      if (!pin || pin.length !== 4) { alert("Please enter your 4-digit PIN."); return; }
-
-      const savedUserStr = localStorage.getItem(STORAGE_KEY_USER);
-      if (!savedUserStr) {
-        alert("No profile found! Please create a new profile.");
-        showAuthScreen('signUp');
-        return;
-      }
-
-      const savedUser = JSON.parse(savedUserStr);
-      if (savedUser.mobile !== mobile) {
-        alert("Mobile number does not match registered profile.");
-        return;
-      }
-      if (savedUser.pin !== pin) {
-        alert("Incorrect 4-digit PIN! Please try again or click 'Forgot PIN'.");
-        clearPinBoxes('loginPin');
-        document.getElementById('loginPin1').focus();
-        return;
-      }
-
-      currentUser = savedUser;
-      localStorage.setItem(STORAGE_KEY_SESSION, 'active');
-      showToast("Signed in successfully! 🚀");
+      showToast("Profile created! Welcome 🎉");
       showMainApp();
     }
 
@@ -2296,14 +2452,14 @@
       const mobile = document.getElementById('forgotMobile').value.trim();
       const newPin = getPinFromBoxes('resetPin');
 
-      if (!mobile || mobile.length < 10) { alert("Please enter your registered mobile number."); return; }
+      if (!mobile || mobile.length < 10) { alert("Please enter registered mobile number."); return; }
       if (!newPin || newPin.length !== 4) { alert("Please enter new 4-digit PIN."); return; }
 
       const savedUserStr = localStorage.getItem(STORAGE_KEY_USER);
       if (!savedUserStr) { alert("No user profile found."); return; }
 
       const savedUser = JSON.parse(savedUserStr);
-      if (savedUser.mobile !== mobile) { alert("Mobile number does not match."); return; }
+      if (savedUser.mobile !== mobile) { alert("Mobile number does not match registered profile."); return; }
 
       savedUser.pin = newPin;
       currentUser = savedUser;
@@ -2315,7 +2471,7 @@
     }
 
     function handleSignOut() {
-      if (confirm("Are you sure you want to sign out?")) {
+      if (confirm("Sign out from your diary?")) {
         localStorage.removeItem(STORAGE_KEY_SESSION);
         currentUser = null;
         initAuth();
@@ -2338,58 +2494,34 @@
       document.getElementById('profileLargeMobile').innerText = `+91 ${currentUser.mobile}`;
 
       setAppCalendarMode(currentUser.calMode || 'english', false);
-
       renderAll();
     }
 
     /* ==========================================================================
-       3. EXPENSE & INCOME LEDGERS
+       EXPENSE & INCOME LEDGERS
        ========================================================================== */
     const defaultAccounts = [
       { id: 'milk', name: '🥛 Milk', type: 'fixed', fixedRate: 32, unit: 'Liter', step: 0.5 },
       { id: 'tiffin', name: '🍱 Tiffin', type: 'fixed', fixedRate: 120, unit: 'Meal', step: 1 },
-      { id: 'veg_fruits', name: '🥬 Vegetables & Fruits', type: 'direct', fixedRate: null, unit: '₹' },
-      { id: 'groceries', name: '🛒 Groceries', type: 'direct', fixedRate: null, unit: '₹' },
-      { id: 'medicine', name: '💊 Medical & Medicines', type: 'direct', fixedRate: null, unit: '₹' },
-      { id: 'household', name: '🧼 Household & Laundry', type: 'direct', fixedRate: null, unit: '₹' }
+      { id: 'veg_fruits', name: '🥬 Veg & Fruits', type: 'direct', fixedRate: null, unit: '₹', step: 1 },
+      { id: 'groceries', name: '🛒 Groceries', type: 'direct', fixedRate: null, unit: '₹', step: 1 },
+      { id: 'medicines', name: '💊 Medicines', type: 'direct', fixedRate: null, unit: '₹', step: 1 },
+      { id: 'households', name: '🧹 Household Cleaning', type: 'direct', fixedRate: null, unit: '₹', step: 1 }
     ];
 
-    let accounts = [];
-    try {
-      const a = localStorage.getItem(STORAGE_KEY_ACCOUNTS);
-      accounts = a ? JSON.parse(a) : defaultAccounts;
-    } catch(e) { accounts = defaultAccounts; }
+    let accounts = JSON.parse(localStorage.getItem(STORAGE_KEY_ACCOUNTS) || 'null') || defaultAccounts;
+    let ledger = JSON.parse(localStorage.getItem(STORAGE_KEY_LEDGER) || '{}');
+    let incomeLedger = JSON.parse(localStorage.getItem(STORAGE_KEY_INCOME) || '{}');
 
-    let ledger = {};
-    try {
-      const l = localStorage.getItem(STORAGE_KEY_LEDGER);
-      if (l) ledger = JSON.parse(l);
-    } catch(e) { ledger = {}; }
+    function saveAccounts() { localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(accounts)); }
+    function saveLedger() { localStorage.setItem(STORAGE_KEY_LEDGER, JSON.stringify(ledger)); }
+    function saveIncomeLedger() { localStorage.setItem(STORAGE_KEY_INCOME, JSON.stringify(incomeLedger)); }
 
-    // Money Received (Income / Budget) ledger: { "2026-10-01": [ { id, amount, source, mode, notes } ] }
-    let incomeLedger = {};
-    try {
-      const inc = localStorage.getItem(STORAGE_KEY_INCOME);
-      if (inc) incomeLedger = JSON.parse(inc);
-    } catch(e) { incomeLedger = {}; }
-
-    function saveAccounts() {
-      localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(accounts));
-    }
-
-    function saveLedger() {
-      localStorage.setItem(STORAGE_KEY_LEDGER, JSON.stringify(ledger));
-    }
-
-    function saveIncomeLedger() {
-      localStorage.setItem(STORAGE_KEY_INCOME, JSON.stringify(incomeLedger));
-    }
-
-    /* APP STATE */
+    /* CALENDAR STATE */
     let currentYear = 2026;
-    let currentMonth = 9; // October (0-indexed)
-    let selectedDateKey = '2026-10-07'; // Defaults to simulated current day
-    let activeCalMode = 'english'; // 'english' | 'jain' | 'hindu'
+    let currentMonth = 9; // 0-indexed: 9 = October
+    let selectedDateKey = '2026-10-07';
+    let activeCalMode = 'english'; // 'english', 'jain', 'hindu'
 
     const monthNamesEn = [
       "January", "February", "March", "April", "May", "June",
@@ -2400,7 +2532,6 @@
       return `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
     }
 
-    /* SET CALENDAR MODE */
     function setAppCalendarMode(mode, savePref = true) {
       activeCalMode = mode;
       if (savePref && currentUser) {
@@ -2415,16 +2546,13 @@
       const elEng = document.getElementById('setChoiceEnglish');
       const elJain = document.getElementById('setChoiceJain');
       const elHin = document.getElementById('setChoiceHindu');
-      if (elEng) elEng.classList.toggle('selected', mode === 'english');
-      if (elJain) elJain.classList.toggle('selected', mode === 'jain');
-      if (elHin) elHin.classList.toggle('selected', mode === 'hindu');
+      if (elEng) elEng.style.border = (mode === 'english') ? '2px solid var(--primary)' : '1px solid var(--border)';
+      if (elJain) elJain.style.border = (mode === 'jain') ? '2px solid var(--primary)' : '1px solid var(--border)';
+      if (elHin) elHin.style.border = (mode === 'hindu') ? '2px solid var(--primary)' : '1px solid var(--border)';
 
       renderMainDaysGrid();
     }
 
-    /* ==========================================================================
-       4. CALENDAR GRID & WALLET RENDERING
-       ========================================================================== */
     function renderAll() {
       renderWalletBanner();
       renderMainDaysGrid();
@@ -2455,31 +2583,29 @@
 
       const remainingBalance = monthIncome - monthExpenses;
 
-      document.getElementById('bannerMonthTitle').innerText = `${monthNamesEn[currentMonth].toUpperCase()} ${currentYear} HOUSEHOLD WALLET`;
+      document.getElementById('bannerMonthTitle').innerText = `${monthNamesEn[currentMonth].toUpperCase()} ${currentYear} WALLET`;
       document.getElementById('bannerTotalIncome').innerText = `₹${monthIncome.toLocaleString('en-IN')}`;
       document.getElementById('bannerMonthTotal').innerText = `₹${monthExpenses.toLocaleString('en-IN')}`;
       document.getElementById('bannerTodayTotal').innerText = `₹${todaySpend.toLocaleString('en-IN')}`;
 
       const balEl = document.getElementById('bannerRemainingBalance');
       if (remainingBalance >= 0) {
-        balEl.innerHTML = `Balance: <span style="color:#4ade80;">₹${remainingBalance.toLocaleString('en-IN')}</span>`;
+        balEl.innerHTML = `<span style="color:#4ade80;">₹${remainingBalance.toLocaleString('en-IN')}</span>`;
       } else {
-        balEl.innerHTML = `Overspent: <span style="color:#f87171;">-₹${Math.abs(remainingBalance).toLocaleString('en-IN')}</span>`;
+        balEl.innerHTML = `<span style="color:#f87171;">-₹${Math.abs(remainingBalance).toLocaleString('en-IN')}</span>`;
       }
 
-      // Progress bar (spent vs received)
       const fillBar = document.getElementById('walletBarFill');
       const pctUsedText = document.getElementById('walletPctUsed');
       if (monthIncome > 0) {
         const pct = Math.min(100, Math.round((monthExpenses / monthIncome) * 100));
         fillBar.style.width = `${pct}%`;
         fillBar.style.background = pct > 90 ? '#ef4444' : (pct > 70 ? '#f59e0b' : '#10b981');
-        pctUsedText.innerText = `${pct}% of received funds spent`;
+        pctUsedText.innerText = `${pct}% spent`;
       } else {
         fillBar.style.width = '0%';
-        pctUsedText.innerText = monthExpenses > 0 ? `₹${monthExpenses.toLocaleString('en-IN')} spent (No income added)` : 'Add money received to track budget';
+        pctUsedText.innerText = monthExpenses > 0 ? `₹${monthExpenses.toLocaleString('en-IN')} spent (No budget added)` : 'Add budget received';
       }
-
       document.getElementById('walletDaysRemaining').innerText = `${daysInMonth} days in month`;
     }
 
@@ -2499,7 +2625,7 @@
       }
 
       const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-      const firstDayOffset = new Date(currentYear, currentMonth, 1).getDay(); // Sunday = 0
+      const firstDayOffset = new Date(currentYear, currentMonth, 1).getDay();
 
       for (let i = 0; i < firstDayOffset; i++) {
         const empty = document.createElement('div');
@@ -2535,7 +2661,7 @@
 
         cell.className = classes.join(' ');
         
-        // CLICKING ANY DATE DIRECTLY OPENS THE EXPENSE ENTRY WINDOW!
+        // CLICKING ANY DATE DIRECTLY OPENS EXPENSE WINDOW
         cell.onclick = () => {
           selectedDateKey = dateKey;
           renderMainDaysGrid();
@@ -2544,9 +2670,7 @@
         };
 
         let tithiHtml = '';
-        if (activeCalMode === 'jain') {
-          tithiHtml = `<span class="cell-tithi-txt">${panchang.shortTithi}</span>`;
-        } else if (activeCalMode === 'hindu') {
+        if (activeCalMode === 'jain' || activeCalMode === 'hindu') {
           tithiHtml = `<span class="cell-tithi-txt">${panchang.shortTithi}</span>`;
         }
 
@@ -2568,13 +2692,8 @@
 
     function navMonth(delta) {
       currentMonth += delta;
-      if (currentMonth < 0) {
-        currentMonth = 11;
-        currentYear--;
-      } else if (currentMonth > 11) {
-        currentMonth = 0;
-        currentYear++;
-      }
+      if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+      else if (currentMonth > 11) { currentMonth = 0; currentYear++; }
       selectedDateKey = fmtDateKey(currentYear, currentMonth, 1);
       renderAll();
     }
@@ -2602,18 +2721,17 @@
       const panchang = getPanchangForDate(y, m, d);
       document.getElementById('selectedCardTithiLabel').innerText = `${panchang.fullTithi} ${panchang.event ? `• ${panchang.event}` : ''}`;
 
-      // Money received on this day
       const incBox = document.getElementById('selectedCardIncomeBox');
       const incomes = incomeLedger[selectedDateKey] || [];
       if (incomes.length > 0) {
         incBox.style.display = 'block';
         incBox.innerHTML = incomes.map(inc => `
-          <div class="day-income-box">
+          <div style="background:#ecfdf5; border:1px solid #a7f3d0; border-radius:10px; padding:6px 10px; display:flex; justify-content:space-between; align-items:center;">
             <div>
-              <strong style="color:#059669; font-size:0.85rem;">💵 Received: +₹${inc.amount.toLocaleString('en-IN')}</strong>
-              <div style="font-size:0.72rem; color:#047857;">${inc.source} • ${inc.mode || 'Cash'} ${inc.notes ? `(${inc.notes})` : ''}</div>
+              <strong style="color:#059669; font-size:0.82rem;">💵 Received: +₹${inc.amount.toLocaleString('en-IN')}</strong>
+              <div style="font-size:0.7rem; color:#047857;">${inc.source} (${inc.mode || 'Cash'})</div>
             </div>
-            <button style="background:none; border:none; cursor:pointer; font-size:0.85rem;" onclick="deleteIncomeEntry('${selectedDateKey}', '${inc.id}')" title="Delete">🗑️</button>
+            <button style="background:none; border:none; cursor:pointer;" onclick="deleteIncomeEntry('${selectedDateKey}', '${inc.id}')">🗑️</button>
           </div>
         `).join('');
       } else {
@@ -2628,7 +2746,7 @@
       const entries = Object.entries(dayData).filter(([_, it]) => Number(it.amount) > 0);
 
       if (entries.length === 0) {
-        listEl.innerHTML = '<div class="empty-note">No expenses recorded for this day. Click button below to add.</div>';
+        listEl.innerHTML = '<div style="font-size:0.78rem; color:var(--text-muted); padding:8px 0;">No expenses recorded for this day. Click button above to add.</div>';
       } else {
         entries.forEach(([id, it]) => {
           dayTotal += Number(it.amount);
@@ -2649,9 +2767,7 @@
       document.getElementById('selectedCardDayTotal').innerText = `₹${dayTotal.toLocaleString('en-IN')}`;
     }
 
-    /* ==========================================================================
-       5. POPUP EXPENSE ENTRY WINDOW ENGINE (OPENS ON CLICKING DATE)
-       ========================================================================== */
+    /* EXPENSE MODAL CONTROLLER */
     function openExpenseModal(dateKey) {
       selectedDateKey = dateKey;
       const parts = dateKey.split('-');
@@ -2666,7 +2782,6 @@
       const panchang = getPanchangForDate(y, m, d);
       document.getElementById('modalTithiHeading').innerText = `${panchang.fullTithi} ${panchang.event ? `(${panchang.event})` : ''}`;
 
-      // Check if money was received on this day
       const noticeEl = document.getElementById('modalIncomeNotice');
       const incomes = incomeLedger[selectedDateKey] || [];
       if (incomes.length > 0) {
@@ -2675,9 +2790,7 @@
           <div style="background:#ecfdf5; border:1px solid #a7f3d0; border-radius:10px; padding:6px 10px; display:flex; justify-content:space-between; align-items:center;">
             <div>
               <strong style="color:#059669; font-size:0.82rem;">💵 +₹${inc.amount.toLocaleString('en-IN')} Received (${inc.source})</strong>
-              <div style="font-size:0.7rem; color:#047857;">Mode: ${inc.mode || 'Cash'}</div>
             </div>
-            <button style="background:none; border:none; color:#059669; font-size:0.75rem; font-weight:700; cursor:pointer;" onclick="closeExpenseModal(); openIncomeModal('${selectedDateKey}');">Edit</button>
           </div>
         `).join('');
       } else {
@@ -2712,14 +2825,13 @@
         row.className = 'sheet-item-row';
 
         if (acc.type === 'fixed') {
-          // FIXED RATE ITEM: ONLY QUANTITY IS ENTERED / STEPPED! AMOUNT AUTO-CALCULATES!
           const qty = Number(item.qty) || 0;
           row.innerHTML = `
             <div class="item-meta">
               <div class="item-name">${acc.name}</div>
               <div style="display:flex; align-items:center;">
                 <span class="item-rate-badge">Rate: ₹${acc.fixedRate}/${acc.unit || 'unit'}</span>
-                <button class="btn-edit-rate" onclick="openEditItemModal('${acc.id}')" title="Edit Rate or Unit">✏️ Edit Rate</button>
+                <button class="btn-edit-rate" onclick="openEditItemModal('${acc.id}')" title="Edit Rate">✏️ Edit Rate</button>
               </div>
             </div>
             <div class="qty-controls-wrap">
@@ -2731,13 +2843,12 @@
             <div class="item-subtotal-tag" id="subtotal_${acc.id}">₹${amount}</div>
           `;
         } else {
-          // DIRECT AMOUNT: USER ENTERS RUPEE AMOUNT
           row.innerHTML = `
             <div class="item-meta">
               <div class="item-name">${acc.name}</div>
               <div style="display:flex; align-items:center;">
                 <span class="item-rate-badge">Variable Spend</span>
-                <button class="btn-edit-rate" onclick="openEditItemModal('${acc.id}')" title="Rename or Edit">✏️ Edit</button>
+                <button class="btn-edit-rate" onclick="openEditItemModal('${acc.id}')" title="Edit">✏️ Edit</button>
               </div>
             </div>
             <div class="direct-amount-wrap">
@@ -2753,7 +2864,6 @@
       document.getElementById('modalLiveTotalDisplay').innerText = `₹${runningTotal.toLocaleString('en-IN')}`;
     }
 
-    /* STEPPER FOR FIXED ITEMS (+ / -) */
     function stepModalQty(accId, delta) {
       if (!ledger[selectedDateKey]) ledger[selectedDateKey] = {};
       const acc = accounts.find(a => a.id === accId);
@@ -2766,7 +2876,6 @@
       renderModalItems();
     }
 
-    /* MANUAL QUANTITY TYPED FOR FIXED ITEMS */
     function onModalQtyTyped(accId, val) {
       if (!ledger[selectedDateKey]) ledger[selectedDateKey] = {};
       const acc = accounts.find(a => a.id === accId);
@@ -2774,13 +2883,11 @@
       const amount = Math.round(qty * acc.fixedRate);
 
       ledger[selectedDateKey][accId] = { qty, amount };
-      
       const subEl = document.getElementById(`subtotal_${accId}`);
       if (subEl) subEl.innerText = `₹${amount}`;
       recalcModalLiveTotal();
     }
 
-    /* MANUAL DIRECT AMOUNT TYPED */
     function onModalAmountTyped(accId, val) {
       if (!ledger[selectedDateKey]) ledger[selectedDateKey] = {};
       const amount = Math.max(0, parseFloat(val) || 0);
@@ -2817,11 +2924,9 @@
       showToast("Expense saved successfully! ✅");
     }
 
-    /* INLINE ADD NEW CATEGORY LOGIC */
     function toggleAddCategoryForm() {
       const form = document.getElementById('newCategoryForm');
-      const isVisible = form.style.display === 'flex';
-      form.style.display = isVisible ? 'none' : 'flex';
+      form.style.display = form.style.display === 'flex' ? 'none' : 'flex';
     }
 
     function toggleRateInputVisibility(type) {
@@ -2850,7 +2955,6 @@
       });
 
       saveAccounts();
-
       document.getElementById('newCatName').value = '';
       document.getElementById('newCatRate').value = '';
       document.getElementById('newCatUnit').value = '';
@@ -2858,12 +2962,10 @@
 
       renderModalItems();
       renderProfileItemsMaster();
-      showToast(`Added '${name}' to expense list! 🎉`);
+      showToast(`Added '${name}'! 🎉`);
     }
 
-    /* ==========================================================================
-       6. MONEY RECEIVED (INCOME / BUDGET ENTRY) LOGIC
-       ========================================================================== */
+    /* MONEY RECEIVED (INCOME) */
     function openIncomeModal(defaultDateKey) {
       const dateVal = defaultDateKey || selectedDateKey || fmtDateKey(currentYear, currentMonth, 1);
       document.getElementById('incomeEditId').value = '';
@@ -2906,22 +3008,16 @@
       if (!incomeLedger[date]) incomeLedger[date] = [];
 
       const id = 'inc_' + Date.now();
-      incomeLedger[date].push({
-        id,
-        amount,
-        source,
-        mode,
-        notes
-      });
+      incomeLedger[date].push({ id, amount, source, mode, notes });
 
       saveIncomeLedger();
       closeIncomeModal();
       renderAll();
-      showToast(`Added ₹${amount.toLocaleString('en-IN')} to Household Wallet! 💵`);
+      showToast(`Added ₹${amount.toLocaleString('en-IN')} to Wallet! 💵`);
     }
 
     function deleteIncomeEntry(dateKey, id) {
-      if (!confirm("Are you sure you want to delete this received money record?")) return;
+      if (!confirm("Delete this income entry?")) return;
       if (incomeLedger[dateKey]) {
         incomeLedger[dateKey] = incomeLedger[dateKey].filter(it => it.id !== id);
         if (incomeLedger[dateKey].length === 0) delete incomeLedger[dateKey];
@@ -2931,9 +3027,7 @@
       }
     }
 
-    /* ==========================================================================
-       7. EDIT ITEM & RATE MASTER MODAL LOGIC
-       ========================================================================== */
+    /* EDIT ITEM & RATE MASTER */
     function openEditItemModal(accId) {
       const acc = accounts.find(a => a.id === accId);
       if (!acc) return;
@@ -2959,13 +3053,12 @@
       document.getElementById('editItemStep').value = '1';
 
       toggleEditItemTypeFields('fixed');
-      document.getElementById('editItemModalHeading').innerText = `➕ Add New Item / Rate`;
+      document.getElementById('editItemModalHeading').innerText = `➕ Add New Item`;
       document.getElementById('editItemModalOverlay').classList.add('active');
     }
 
     function toggleEditItemTypeFields(type) {
-      const isFixed = (type === 'fixed');
-      document.getElementById('editFixedRateGroup').style.display = isFixed ? 'block' : 'none';
+      document.getElementById('editFixedRateGroup').style.display = (type === 'fixed') ? 'block' : 'none';
     }
 
     function closeEditItemModal() {
@@ -2997,7 +3090,7 @@
           unit: type === 'fixed' ? unit : '₹',
           step
         });
-        showToast("New item created successfully! 🎉");
+        showToast("New item created! 🎉");
       } else {
         const acc = accounts.find(a => a.id === id);
         if (acc) {
@@ -3028,12 +3121,9 @@
 
     function deleteEditedItem() {
       const id = document.getElementById('editItemId').value;
-      if (id === 'NEW_ITEM') {
-        closeEditItemModal();
-        return;
-      }
+      if (id === 'NEW_ITEM') { closeEditItemModal(); return; }
       const acc = accounts.find(a => a.id === id);
-      if (!confirm(`Are you sure you want to remove '${acc?.name}' from your items list?`)) return;
+      if (!confirm(`Delete '${acc?.name}'?`)) return;
 
       accounts = accounts.filter(a => a.id !== id);
       saveAccounts();
@@ -3042,7 +3132,7 @@
       if (document.getElementById('expenseModalOverlay').classList.contains('active')) {
         renderModalItems();
       }
-      showToast("Item deleted from list.");
+      showToast("Item deleted.");
     }
 
     function renderProfileItemsMaster() {
@@ -3065,7 +3155,7 @@
           <div>
             <strong style="font-size:0.85rem; color:#0f172a;">${acc.name}</strong>
             <div style="font-size:0.72rem; color:var(--text-muted);">
-              ${isFixed ? `Fixed Rate: ₹${acc.fixedRate} / ${acc.unit} (Step: ${acc.step})` : `Direct Amount (₹)`}
+              ${isFixed ? `Fixed: ₹${acc.fixedRate} / ${acc.unit} (Step: ${acc.step})` : `Direct Amount (₹)`}
             </div>
           </div>
           <button class="btn btn-secondary" style="width:auto; padding:4px 10px; font-size:0.75rem;" onclick="openEditItemModal('${acc.id}')">
@@ -3076,9 +3166,7 @@
       });
     }
 
-    /* ==========================================================================
-       8. PANCHANG & SPIRITUAL SCREEN RENDERING
-       ========================================================================== */
+    /* PANCHANG SCREEN */
     function renderPanchangScreen() {
       const parts = selectedDateKey.split('-');
       const y = parseInt(parts[0]);
@@ -3092,10 +3180,8 @@
       document.getElementById('panchangCityText').innerText = `📍 ${currentCity.name.split(' ')[0]}`;
       document.getElementById('panchangHeroTithiText').innerText = panchang.fullTithi;
       document.getElementById('panchangHeroSamvatText').innerText = `Vikram Samvat ${panchang.vikramYear} • Veer Samvat ${panchang.veerYear}`;
+      document.getElementById('panchangHeroParvaBox').style.display = panchang.isAthamChaudas ? 'block' : 'none';
 
-      document.getElementById('panchangHeroParvaBox').style.display = panchang.isAthamChaudas ? 'flex' : 'none';
-
-      // 8 Pachkhan
       document.getElementById('pkSunrise').innerText = sun.sunrise;
       document.getElementById('pkSunset').innerText = sun.sunset;
       document.getElementById('pkNavkarshi').innerText = sun.navkarshi;
@@ -3105,7 +3191,6 @@
       document.getElementById('pkAvaddha').innerText = sun.avaddha;
       document.getElementById('pkChauvihar').innerText = sun.chauvihar;
 
-      // Choghadiyas
       const chogs = getChoghadiyas(y, m, d, sun.srMin, sun.ssMin);
       const now = new Date();
       const nowMin = now.getHours() * 60 + now.getMinutes();
@@ -3128,7 +3213,6 @@
 
       document.getElementById('activeChogBadge').innerText = `Live: ${activeChog.name} (${activeChog.info.nature})`;
 
-      // Kalyanaks list for month
       const kalContainer = document.getElementById('panchangKalyanakContainer');
       kalContainer.innerHTML = '';
 
@@ -3149,13 +3233,11 @@
           }
         });
       } else {
-        kalContainer.innerHTML = '<div style="font-size:0.8rem; color:var(--text-muted);">Tithis calculated astronomically for this month.</div>';
+        kalContainer.innerHTML = '<div style="font-size:0.8rem; color:var(--text-muted);">Astronomical tithis calculated for this month.</div>';
       }
     }
 
-    /* ==========================================================================
-       9. REPORTS & EXCEL CSV EXPORT
-       ========================================================================== */
+    /* REPORTS & EXCEL */
     function renderReports() {
       let monthExpenses = 0;
       let monthIncome = 0;
@@ -3163,14 +3245,12 @@
       accounts.forEach(a => catTotals[a.id] = 0);
 
       const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-      let activeDaysCount = 0;
       const ledgerRows = [];
       const incomeRows = [];
 
       for (let d = 1; d <= daysInMonth; d++) {
         const dk = fmtDateKey(currentYear, currentMonth, d);
         
-        // Income entries
         if (incomeLedger[dk]) {
           incomeLedger[dk].forEach(inc => {
             monthIncome += Number(inc.amount) || 0;
@@ -3178,7 +3258,6 @@
           });
         }
 
-        // Expense entries
         const dayData = ledger[dk];
         if (dayData) {
           let daySum = 0;
@@ -3194,23 +3273,20 @@
           });
           if (daySum > 0) {
             monthExpenses += daySum;
-            activeDaysCount++;
             ledgerRows.push({ day: d, dateKey: dk, total: daySum, desc: descriptions.join(', ') });
           }
         }
       }
 
       const netBalance = monthIncome - monthExpenses;
-
       document.getElementById('repTotalIncome').innerText = `+₹${monthIncome.toLocaleString('en-IN')}`;
       document.getElementById('repTotalSpend').innerText = `-₹${monthExpenses.toLocaleString('en-IN')}`;
       document.getElementById('repNetBalance').innerText = `₹${netBalance.toLocaleString('en-IN')}`;
       document.getElementById('repNetBalance').style.color = netBalance >= 0 ? '#10b981' : '#ef4444';
 
-      // Income records list in reports
       const incListEl = document.getElementById('reportsIncomeList');
       if (incomeRows.length === 0) {
-        incListEl.innerHTML = '<div class="empty-note">No income recorded for this month. Click "+ Add Money" to add opening budget or salary.</div>';
+        incListEl.innerHTML = '<div style="font-size:0.75rem; color:var(--text-muted); padding:8px 0;">No income records for this month.</div>';
       } else {
         incListEl.innerHTML = incomeRows.map(r => `
           <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #f1f5f9; font-size:0.8rem;">
@@ -3218,19 +3294,16 @@
               <strong style="color:#059669;">${r.day} ${monthNamesEn[currentMonth]} — +₹${r.amount.toLocaleString('en-IN')}</strong>
               <div style="font-size:0.72rem; color:var(--text-muted);">${r.source} (${r.mode || 'Cash'})</div>
             </div>
-            <button style="background:none; border:none; cursor:pointer; color:#ef4444; font-size:0.85rem;" onclick="deleteIncomeEntry('${r.dateKey}', '${r.id}')" title="Delete">🗑️</button>
+            <button style="background:none; border:none; cursor:pointer; color:#ef4444;" onclick="deleteIncomeEntry('${r.dateKey}', '${r.id}')">🗑️</button>
           </div>
         `).join('');
       }
 
-      // Expense progress bars
       const barBox = document.getElementById('categoryProgressBars');
       barBox.innerHTML = '';
-
       accounts.forEach(acc => {
         const amt = catTotals[acc.id] || 0;
         const pct = monthExpenses > 0 ? Math.round((amt / monthExpenses) * 100) : 0;
-
         const row = document.createElement('div');
         row.className = 'bar-row';
         row.innerHTML = `
@@ -3245,10 +3318,9 @@
         barBox.appendChild(row);
       });
 
-      // Daily list
       const ledgerList = document.getElementById('dailyLedgerList');
       if (ledgerRows.length === 0) {
-        ledgerList.innerHTML = '<div class="empty-note">No expense records found for this month.</div>';
+        ledgerList.innerHTML = '<div style="font-size:0.75rem; color:var(--text-muted); padding:8px 0;">No expense records found.</div>';
       } else {
         ledgerList.innerHTML = ledgerRows.map(r => `
           <div style="display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px solid #f1f5f9; font-size:0.8rem;">
@@ -3269,16 +3341,12 @@
 
       for (let d = 1; d <= daysInMonth; d++) {
         const dk = fmtDateKey(currentYear, currentMonth, d);
-        
-        // Income lines
         if (incomeLedger[dk]) {
           incomeLedger[dk].forEach(inc => {
             runningBalance += inc.amount;
-            csv += `"${dk}","${d} ${monthNamesEn[currentMonth]}","INCOME (RECEIVED)","${inc.source} (${inc.mode || 'Cash'})",${inc.amount},0,${runningBalance}\r\n`;
+            csv += `"${dk}","${d} ${monthNamesEn[currentMonth]}","INCOME","${inc.source} (${inc.mode || 'Cash'})",${inc.amount},0,${runningBalance}\r\n`;
           });
         }
-
-        // Expense lines
         const dayData = ledger[dk];
         if (dayData) {
           let daySum = 0;
@@ -3293,7 +3361,7 @@
           });
           if (daySum > 0) {
             runningBalance -= daySum;
-            csv += `"${dk}","${d} ${monthNamesEn[currentMonth]}","EXPENSE (DEDUCTED)","${itemsList.join('; ')}",0,${daySum},${runningBalance}\r\n`;
+            csv += `"${dk}","${d} ${monthNamesEn[currentMonth]}","EXPENSE","${itemsList.join('; ')}",0,${daySum},${runningBalance}\r\n`;
           }
         }
       }
@@ -3302,19 +3370,17 @@
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `Household_Statement_${monthNamesEn[currentMonth]}_${currentYear}.csv`);
+      link.setAttribute('download', `Statement_${monthNamesEn[currentMonth]}_${currentYear}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      showToast("Excel CSV downloaded successfully! 📥");
+      showToast("Excel CSV downloaded! 📥");
     }
 
     function exportBackupJSON() {
       const data = {
         user: currentUser,
-        accounts,
-        ledger,
-        incomeLedger,
+        accounts, ledger, incomeLedger,
         city: selectedCityKey,
         exportedAt: new Date().toISOString()
       };
@@ -3329,9 +3395,7 @@
       showToast("Data backup saved! 💾");
     }
 
-    /* ==========================================================================
-       10. NAVIGATION & CITY MODALS
-       ========================================================================== */
+    /* NAVIGATION TABS & CITY MODAL */
     function switchNavTab(tabName) {
       document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
@@ -3352,7 +3416,6 @@
         document.getElementById('navBtnProfile').classList.add('active');
         renderProfileItemsMaster();
       }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function openCityModal() {
@@ -3389,7 +3452,7 @@
       if (!navigator.geolocation) { alert("GPS not available."); return; }
       navigator.geolocation.getCurrentPosition(pos => {
         currentCity = {
-          name: "Live GPS Location",
+          name: "Live GPS",
           lat: pos.coords.latitude,
           lng: pos.coords.longitude
         };
@@ -3410,7 +3473,7 @@
       setTimeout(() => { toast.style.display = 'none'; }, 2200);
     }
 
-    // BOOTSTRAP APP
+    // BOOTSTRAP
     window.addEventListener('DOMContentLoaded', () => {
       initAuth();
     });
