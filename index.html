@@ -1,0 +1,3419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Daily Expense & Calendar Diary</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Gujarati:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2563eb;         /* Google Calendar Blue */
+      --primary-dark: #1d4ed8;
+      --primary-light: #eff6ff;
+      --primary-border: #bfdbfe;
+      --accent-green: #10b981;    /* Money / Expense Green */
+      --accent-green-light: #ecfdf5;
+      --accent-green-border: #a7f3d0;
+      --gold: #d97706;            /* Spiritual / Panchang Gold */
+      --gold-light: #fef3c7;
+      --vitrag-green: #dcfce7;    /* 8 & 14 Parva Green */
+      --vitrag-green-border: #86efac;
+      --danger: #ef4444;
+      --danger-light: #fef2f2;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --text-light: #94a3b8;
+      --border: #e2e8f0;
+      --border-focus: #3b82f6;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.04);
+      --shadow-lg: 0 10px 25px -3px rgba(0,0,0,0.12);
+      --radius: 14px;
+      --radius-sm: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: #e2e8f0;
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 0;
+      margin: 0;
+    }
+
+    /* MOBILE APP CONTAINER */
+    .app-container {
+      width: 100%;
+      max-width: 480px; /* Mobile App Viewport */
+      min-height: 100vh;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: 0 0 25px rgba(0,0,0,0.1);
+      padding-bottom: 74px; /* Space for bottom nav */
+    }
+
+    /* AUTH SCREENS (FULLSCREEN ONBOARDING) */
+    .auth-screen {
+      position: fixed;
+      inset: 0;
+      background: #ffffff;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+      max-width: 480px;
+      margin: 0 auto;
+      overflow-y: auto;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 380px;
+      background: #ffffff;
+      padding: 20px 8px;
+    }
+
+    .auth-logo {
+      width: 60px;
+      height: 60px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      color: white;
+      font-size: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px auto;
+      box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+    }
+
+    .auth-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #0f172a;
+      text-align: center;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+
+    .auth-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 6px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #0f172a;
+      outline: none;
+      transition: all 0.2s;
+      background: #ffffff;
+    }
+
+    .form-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+    }
+
+    /* 4-digit PIN input container */
+    .pin-input-container {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 6px;
+    }
+
+    .pin-box {
+      width: 52px;
+      height: 54px;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 800;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      outline: none;
+      background: #f8fafc;
+      transition: all 0.2s;
+    }
+
+    .pin-box:focus {
+      border-color: var(--primary);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+    }
+
+    /* Calendar Choice Radio Cards */
+    .choice-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .choice-card {
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.2s;
+      background: #ffffff;
+    }
+
+    .choice-card.selected {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .choice-icon {
+      font-size: 1.6rem;
+    }
+
+    .choice-text h4 {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .choice-text p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* BUTTONS */
+    .btn {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(37,99,235,0.3);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: #e2e8f0;
+    }
+
+    .btn-link {
+      background: transparent;
+      color: var(--primary);
+      border: none;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 8px;
+      margin-top: 8px;
+      text-align: center;
+      width: 100%;
+    }
+
+    .btn-link:hover {
+      text-decoration: underline;
+    }
+
+    /* APP TOP HEADER */
+    .app-header {
+      background: #ffffff;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+
+    .user-profile-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+    }
+
+    .user-details h2 {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.2;
+    }
+
+    .user-details span {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .mode-pill {
+      background: var(--primary-light);
+      border: 1px solid var(--primary-border);
+      color: var(--primary);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* 3-WAY CALENDAR MODE SWITCHER BAR */
+    .mode-switcher-bar {
+      background: #ffffff;
+      padding: 8px 14px;
+      display: flex;
+      gap: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mode-tab-btn {
+      flex: 1;
+      padding: 7px 10px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      background: #f1f5f9;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+
+    .mode-tab-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba(37,99,235,0.25);
+    }
+
+    /* HOUSEHOLD WALLET & BALANCE BANNER */
+    .wallet-banner {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: white;
+      margin: 12px 14px 6px 14px;
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .btn-add-money-pill {
+      background: #10b981;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 2px 6px rgba(16,185,129,0.35);
+      transition: all 0.15s;
+    }
+
+    .btn-add-money-pill:hover {
+      background: #059669;
+    }
+
+    .wallet-stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+      margin: 10px 0 6px 0;
+    }
+
+    .wallet-stat-box {
+      background: rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 6px 8px;
+    }
+
+    .wallet-stat-box span {
+      font-size: 0.62rem;
+      color: #cbd5e1;
+      font-weight: 700;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .wallet-stat-box strong {
+      font-size: 0.95rem;
+      font-weight: 800;
+      display: block;
+    }
+
+    .wallet-stat-box.green strong { color: #4ade80; }
+    .wallet-stat-box.red strong { color: #f87171; }
+    .wallet-stat-box.blue strong { color: #60a5fa; }
+
+    .wallet-progress-track {
+      height: 6px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .wallet-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, #f59e0b);
+      border-radius: 3px;
+      transition: width 0.3s;
+    }
+
+    /* APP SCREENS */
+    .app-screen {
+      display: none;
+      padding: 10px 14px 20px 14px;
+      flex: 1;
+    }
+
+    .app-screen.active {
+      display: block;
+      animation: fadeIn 0.15s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(3px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* GOOGLE CALENDAR CONTROLS */
+    .cal-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 2px 10px 2px;
+    }
+
+    .cal-title-wrap h3 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.02em;
+    }
+
+    .cal-title-wrap p {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .cal-nav-buttons {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-today-pill {
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      color: #1e293b;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 16px;
+      cursor: pointer;
+    }
+
+    .btn-nav-arrow {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: #1e293b;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    /* CALENDAR GRID */
+    .calendar-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 6px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .weekdays-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      padding-bottom: 6px;
+      margin-bottom: 4px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .weekdays-grid span:first-child {
+      color: #ef4444; /* Sunday */
+    }
+
+    .days-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 3px;
+    }
+
+    .cal-day-cell {
+      aspect-ratio: 1 / 1.35;
+      border-radius: 10px;
+      padding: 3px 2px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      position: relative;
+      border: 1px solid transparent;
+      user-select: none;
+      background: #ffffff;
+      transition: all 0.15s ease;
+    }
+
+    .cal-day-cell:hover {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+    }
+
+    .cal-day-cell.empty {
+      background: transparent !important;
+      border: none !important;
+      cursor: default;
+    }
+
+    /* Number badge */
+    .day-num {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      font-size: 0.82rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #1e293b;
+    }
+
+    .cal-day-cell.sunday .day-num {
+      color: #ef4444;
+    }
+
+    /* Today highlight: Classic Google blue circle */
+    .cal-day-cell.today .day-num {
+      background: var(--primary);
+      color: #ffffff !important;
+      box-shadow: 0 2px 6px rgba(37,99,235,0.4);
+    }
+
+    /* Selected cell border */
+    .cal-day-cell.selected {
+      border: 2px solid var(--primary);
+      background: var(--primary-light);
+    }
+
+    /* Tithi Subtitle inside cell (in Jain / Hindu mode) */
+    .cell-tithi-txt {
+      font-size: 0.58rem;
+      color: var(--gold);
+      font-weight: 700;
+      line-height: 1;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      max-width: 95%;
+      text-overflow: ellipsis;
+    }
+
+    /* Atham/Chaudas Green Highlight */
+    .cal-day-cell.atham-chaudas {
+      background: var(--vitrag-green) !important;
+      border-color: var(--vitrag-green-border);
+    }
+
+    /* Special Event Star / Badge */
+    .cell-event-dot {
+      width: 4px;
+      height: 4px;
+      background: var(--gold);
+      border-radius: 50%;
+    }
+
+    /* Expense pill inside cell */
+    .cell-expense-badge {
+      font-size: 0.6rem;
+      font-weight: 800;
+      color: #b91c1c;
+      background: #fee2e2;
+      padding: 1px 3px;
+      border-radius: 4px;
+      max-width: 95%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      line-height: 1.1;
+    }
+
+    /* Income pill inside cell */
+    .cell-income-badge {
+      font-size: 0.58rem;
+      font-weight: 800;
+      color: #15803d;
+      background: #dcfce7;
+      padding: 1px 3px;
+      border-radius: 4px;
+      max-width: 95%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      line-height: 1.1;
+    }
+
+    /* SELECTED DAY CARD */
+    .selected-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-top: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .selected-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #f1f5f9;
+      margin-bottom: 10px;
+    }
+
+    .selected-card-title h4 {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .selected-card-title span {
+      font-size: 0.75rem;
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    .selected-card-total span {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      display: block;
+      text-align: right;
+    }
+
+    .selected-card-total strong {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--danger);
+    }
+
+    .day-items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .day-item-pill {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f8fafc;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+    }
+
+    .day-item-pill .name {
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .day-item-pill .qty {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-left: 4px;
+    }
+
+    .day-item-pill .cost {
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    /* Money Received highlight on selected day */
+    .day-income-box {
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .empty-note {
+      text-align: center;
+      padding: 10px;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    /* ==========================================================================
+       EXPENSE ENTRY MODAL (POPS UP ON CLICKING DATE)
+       ========================================================================== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 80;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      backdrop-filter: blur(2px);
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-sheet {
+      width: 100%;
+      max-width: 480px;
+      background: #ffffff;
+      border-radius: 20px 20px 0 0;
+      padding: 16px 18px 24px 18px;
+      max-height: 88vh;
+      overflow-y: auto;
+      box-shadow: 0 -6px 25px rgba(0,0,0,0.2);
+      animation: slideSheet 0.22s ease-out;
+    }
+
+    @keyframes slideSheet {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .sheet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 14px;
+    }
+
+    .sheet-title-box h3 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .sheet-title-box span {
+      font-size: 0.75rem;
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    .close-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: #f1f5f9;
+      color: var(--text-muted);
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Modal Items List */
+    .sheet-items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .sheet-item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      gap: 10px;
+    }
+
+    .item-meta {
+      flex: 1;
+    }
+
+    .item-name {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .item-rate-badge {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-top: 1px;
+    }
+
+    /* EDIT RATE BUTTON */
+    .btn-edit-rate {
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      color: var(--primary);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      margin-left: 6px;
+      transition: all 0.15s;
+    }
+
+    .btn-edit-rate:hover {
+      background: #dbeafe;
+      border-color: #93c5fd;
+    }
+
+    /* FIXED RATE: QUANTITY CONTROLS ONLY */
+    .qty-controls-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stepper-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border);
+      background: #ffffff;
+      color: #0f172a;
+      font-size: 1.15rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.1s;
+    }
+
+    .stepper-btn:active {
+      transform: scale(0.92);
+      background: #e2e8f0;
+    }
+
+    .qty-input-box {
+      width: 48px;
+      text-align: center;
+      padding: 6px 2px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--primary);
+      outline: none;
+      background: #ffffff;
+    }
+
+    .qty-input-box:focus {
+      border-color: var(--primary);
+    }
+
+    /* DIRECT AMOUNT INPUT */
+    .direct-amount-wrap {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .currency-symbol {
+      font-weight: 700;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .amount-input {
+      width: 90px;
+      padding: 7px 8px;
+      text-align: right;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      outline: none;
+      color: #0f172a;
+    }
+
+    .amount-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(37,99,235,0.15);
+    }
+
+    .item-subtotal-tag {
+      min-width: 65px;
+      text-align: right;
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: var(--danger);
+    }
+
+    /* INLINE ADD NEW CATEGORY CARD */
+    .add-category-card {
+      background: #f1f5f9;
+      border: 1.5px dashed #cbd5e1;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 16px;
+    }
+
+    .add-category-btn-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: var(--primary);
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .add-category-form {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+
+    .sheet-footer-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-top: 8px;
+    }
+
+    .sheet-total-label span {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      display: block;
+      font-weight: 600;
+    }
+
+    .sheet-total-label strong {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--danger);
+    }
+
+    /* ==========================================================================
+       TITHI & PANCHANG SCREEN
+       ========================================================================== */
+    .panchang-hero {
+      background: linear-gradient(135deg, #b45309 0%, #78350f 100%);
+      color: white;
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .hero-badge {
+      background: rgba(255,255,255,0.22);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 12px;
+    }
+
+    .hero-tithi {
+      font-size: 1.35rem;
+      font-weight: 800;
+      margin-bottom: 2px;
+    }
+
+    .hero-samvat {
+      font-size: 0.78rem;
+      opacity: 0.9;
+    }
+
+    .parva-alert {
+      background: var(--vitrag-green);
+      color: #166534;
+      border: 1px solid var(--vitrag-green-border);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .section-title {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 14px 2px 8px 2px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .section-title small {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .pachkhan-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .pk-box {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .pk-box.highlight {
+      background: #fffbeb;
+      border-color: #fde68a;
+    }
+
+    .pk-box.accent {
+      background: #f0fdf4;
+      border-color: #bbf7d0;
+    }
+
+    .pk-box .lbl {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .pk-box .val {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .pk-box.highlight .val { color: #b45309; }
+    .pk-box.accent .val { color: #15803d; }
+
+    /* CHOGHADIYA TIMELINE */
+    .chog-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .chog-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 8px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+    }
+
+    .chog-row.active {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      font-weight: 800;
+    }
+
+    .chog-row.best { color: #166534; }
+    .chog-row.good { color: #15803d; }
+    .chog-row.neutral { color: #b45309; }
+    .chog-row.bad { color: #b91c1c; }
+
+    /* REPORTS */
+    .stat-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .stat-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 8px 10px;
+    }
+
+    .stat-card span {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      display: block;
+    }
+
+    .stat-card strong {
+      font-size: 1.05rem;
+      font-weight: 800;
+      display: block;
+    }
+
+    .stat-card.green strong { color: #10b981; }
+    .stat-card.red strong { color: #ef4444; }
+    .stat-card.blue strong { color: #2563eb; }
+
+    .bar-row {
+      margin-bottom: 10px;
+    }
+
+    .bar-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .bar-track {
+      height: 8px;
+      background: #f1f5f9;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: var(--danger);
+      border-radius: 4px;
+    }
+
+    /* BOTTOM NAV BAR */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      height: 64px;
+      background: #ffffff;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 50;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+    }
+
+    .nav-tab-btn {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      color: var(--text-muted);
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 0.7rem;
+      font-weight: 700;
+      transition: all 0.15s;
+    }
+
+    .nav-tab-btn.active {
+      color: var(--primary);
+    }
+
+    .nav-tab-icon {
+      font-size: 1.3rem;
+      line-height: 1;
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 78px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0f172a;
+      color: white;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      z-index: 95;
+      display: none;
+      box-shadow: var(--shadow-lg);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ======================================================================
+       ONBOARDING / AUTH SCREENS (FULLSCREEN UNTIL LOGGED IN)
+       ====================================================================== -->
+
+  <!-- SCREEN A: SIGN UP / CREATE PROFILE -->
+  <div class="auth-screen" id="screenSignUp" style="display:none;">
+    <div class="auth-card">
+      <div class="auth-logo">👤</div>
+      <h2 class="auth-title">Create Profile</h2>
+      <p class="auth-subtitle">Set up your household account & 4-digit security PIN</p>
+
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input type="text" id="regName" class="form-input" placeholder="e.g. Honey Shah" autocomplete="name">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Mobile Number</label>
+        <input type="tel" id="regMobile" class="form-input" placeholder="10-digit mobile number" maxlength="10">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Set 4-Digit Security PIN</label>
+        <div class="pin-input-container">
+          <input type="password" maxlength="1" class="pin-box reg-pin" id="regPin1" oninput="movePinFocus(this, 'regPin2')">
+          <input type="password" maxlength="1" class="pin-box reg-pin" id="regPin2" oninput="movePinFocus(this, 'regPin3')">
+          <input type="password" maxlength="1" class="pin-box reg-pin" id="regPin3" oninput="movePinFocus(this, 'regPin4')">
+          <input type="password" maxlength="1" class="pin-box reg-pin" id="regPin4">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Confirm 4-Digit PIN</label>
+        <div class="pin-input-container">
+          <input type="password" maxlength="1" class="pin-box conf-pin" id="confPin1" oninput="movePinFocus(this, 'confPin2')">
+          <input type="password" maxlength="1" class="pin-box conf-pin" id="confPin2" oninput="movePinFocus(this, 'confPin3')">
+          <input type="password" maxlength="1" class="pin-box conf-pin" id="confPin3" oninput="movePinFocus(this, 'confPin4')">
+          <input type="password" maxlength="1" class="pin-box conf-pin" id="confPin4">
+        </div>
+      </div>
+
+      <!-- ONBOARDING RATE CUSTOMIZATION -->
+      <div class="form-group" style="background:#f8fafc; border:1px solid var(--border); border-radius:12px; padding:12px;">
+        <label class="form-label" style="margin-bottom:4px;">Customize Daily Rates (Optional)</label>
+        <p style="font-size:0.72rem; color:var(--text-muted); margin-bottom:8px;">Set your household rates. You can edit or add items anytime.</p>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+          <div>
+            <span style="font-size:0.72rem; color:var(--text-muted); font-weight:700;">🥛 Milk Rate (₹/L)</span>
+            <input type="number" id="regMilkRate" class="form-input" value="32" style="padding:8px 10px;">
+          </div>
+          <div>
+            <span style="font-size:0.72rem; color:var(--text-muted); font-weight:700;">🍱 Tiffin Rate (₹)</span>
+            <input type="number" id="regTiffinRate" class="form-input" value="120" style="padding:8px 10px;">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Choose Preferred Calendar Mode</label>
+        <div class="choice-grid">
+          <div class="choice-card selected" id="optCalEnglish" onclick="selectCalModeChoice('english')">
+            <div class="choice-icon">📅</div>
+            <div class="choice-text">
+              <h4>English Calendar</h4>
+              <p>Google Calendar style with clean dates & daily expenses</p>
+            </div>
+          </div>
+          <div class="choice-card" id="optCalJain" onclick="selectCalModeChoice('jain')">
+            <div class="choice-icon">📿</div>
+            <div class="choice-text">
+              <h4>Jain Panchang</h4>
+              <p>Pachkhan timings, Atham/Chaudas green alerts & Kalyanaks</p>
+            </div>
+          </div>
+          <div class="choice-card" id="optCalHindu" onclick="selectCalModeChoice('hindu')">
+            <div class="choice-icon">🕉️</div>
+            <div class="choice-text">
+              <h4>Hindu Panchang</h4>
+              <p>Tithi, Ekadashi, Pradosh, Poonam, Amas & Choghadiya</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="handleRegisterProfile()">Create Profile & Start</button>
+      <button class="btn-link" onclick="showAuthScreen('signIn')">Already have a profile? Sign In</button>
+    </div>
+  </div>
+
+  <!-- SCREEN B: SIGN IN -->
+  <div class="auth-screen" id="screenSignIn" style="display:none;">
+    <div class="auth-card">
+      <div class="auth-logo">🔒</div>
+      <h2 class="auth-title">Welcome Back</h2>
+      <p class="auth-subtitle">Enter your 4-digit security PIN to access your diary</p>
+
+      <div class="form-group">
+        <label class="form-label">Mobile Number</label>
+        <input type="tel" id="loginMobile" class="form-input" placeholder="Registered 10-digit mobile" maxlength="10">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">4-Digit Security PIN</label>
+        <div class="pin-input-container">
+          <input type="password" maxlength="1" class="pin-box login-pin" id="loginPin1" oninput="movePinFocus(this, 'loginPin2')">
+          <input type="password" maxlength="1" class="pin-box login-pin" id="loginPin2" oninput="movePinFocus(this, 'loginPin3')">
+          <input type="password" maxlength="1" class="pin-box login-pin" id="loginPin3" oninput="movePinFocus(this, 'loginPin4')">
+          <input type="password" maxlength="1" class="pin-box login-pin" id="loginPin4">
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="handleSignIn()">Sign In</button>
+      <button class="btn-link" onclick="showAuthScreen('forgotPin')">Forgot PIN?</button>
+      <button class="btn-link" onclick="showAuthScreen('signUp')">+ Create New Profile</button>
+    </div>
+  </div>
+
+  <!-- SCREEN C: FORGOT PIN -->
+  <div class="auth-screen" id="screenForgotPin" style="display:none;">
+    <div class="auth-card">
+      <div class="auth-logo">🔑</div>
+      <h2 class="auth-title">Reset Security PIN</h2>
+      <p class="auth-subtitle">Verify your registered mobile number to reset PIN</p>
+
+      <div class="form-group">
+        <label class="form-label">Registered Mobile Number</label>
+        <input type="tel" id="forgotMobile" class="form-input" placeholder="Enter your 10-digit mobile" maxlength="10">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Set New 4-Digit PIN</label>
+        <div class="pin-input-container">
+          <input type="password" maxlength="1" class="pin-box reset-pin" id="resetPin1" oninput="movePinFocus(this, 'resetPin2')">
+          <input type="password" maxlength="1" class="pin-box reset-pin" id="resetPin2" oninput="movePinFocus(this, 'resetPin3')">
+          <input type="password" maxlength="1" class="pin-box reset-pin" id="resetPin3" oninput="movePinFocus(this, 'resetPin4')">
+          <input type="password" maxlength="1" class="pin-box reset-pin" id="resetPin4">
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="handleResetPin()">Reset PIN & Login</button>
+      <button class="btn-link" onclick="showAuthScreen('signIn')">Back to Sign In</button>
+    </div>
+  </div>
+
+
+  <!-- ======================================================================
+       MAIN APPLICATION SHELL (VISIBLE ONCE LOGGED IN)
+       ====================================================================== -->
+  <div class="app-container" id="mainAppShell" style="display:none;">
+
+    <!-- TOP APP BAR -->
+    <header class="app-header">
+      <div class="user-profile-badge" onclick="switchNavTab('profile')" title="View Profile">
+        <div class="user-avatar" id="headerUserAvatar">H</div>
+        <div class="user-details">
+          <h2 id="headerUserName">Honey Shah</h2>
+          <span id="headerUserMobile">+91 9876543210</span>
+        </div>
+      </div>
+
+      <div class="header-right-actions">
+        <button class="mode-pill" onclick="openCityModal()" id="headerCityBtn">
+          📍 <span id="headerCityLabel">Songadh</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- CALENDAR MODE SWITCHER BAR (ENGLISH | JAIN | HINDU) -->
+    <div class="mode-switcher-bar">
+      <button class="mode-tab-btn active" id="modeBtnEnglish" onclick="setAppCalendarMode('english')">
+        📅 English
+      </button>
+      <button class="mode-tab-btn" id="modeBtnJain" onclick="setAppCalendarMode('jain')">
+        📿 Jain
+      </button>
+      <button class="mode-tab-btn" id="modeBtnHindu" onclick="setAppCalendarMode('hindu')">
+        🕉️ Hindu
+      </button>
+    </div>
+
+    <!-- MONTH HOUSEHOLD WALLET & BALANCE CARD -->
+    <div class="wallet-banner">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <span style="font-size:0.68rem; color:#94a3b8; text-transform:uppercase; font-weight:700; letter-spacing:0.04em;" id="bannerMonthTitle">OCTOBER 2026 HOUSEHOLD WALLET</span>
+          <div style="font-size:1.25rem; font-weight:800; color:#ffffff;" id="bannerRemainingBalance">Balance: ₹0</div>
+        </div>
+        <button class="btn-add-money-pill" onclick="openIncomeModal(selectedDateKey)">
+          ➕ Add Money Received
+        </button>
+      </div>
+
+      <div class="wallet-stats-grid">
+        <div class="wallet-stat-box green">
+          <span>RECEIVED (INCOME)</span>
+          <strong id="bannerTotalIncome">₹0</strong>
+        </div>
+        <div class="wallet-stat-box red">
+          <span>TOTAL SPENT</span>
+          <strong id="bannerMonthTotal">₹0</strong>
+        </div>
+        <div class="wallet-stat-box blue">
+          <span>TODAY'S SPEND</span>
+          <strong id="bannerTodayTotal">₹0</strong>
+        </div>
+      </div>
+
+      <div class="wallet-progress-track">
+        <div class="wallet-progress-fill" id="walletBarFill" style="width: 0%;"></div>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:0.68rem; color:#cbd5e1; margin-top:3px;">
+        <span id="walletPctUsed">0% spent</span>
+        <span id="walletDaysRemaining">31 days in month</span>
+      </div>
+    </div>
+
+    <!-- SCREEN 1: CALENDAR VIEW (CLICKING ANY DATE DIRECTLY OPENS EXPENSE WINDOW!) -->
+    <main class="app-screen active" id="screenCalendar">
+      
+      <div class="cal-header-bar">
+        <div class="cal-title-wrap">
+          <h3 id="calViewTitle">October 2026</h3>
+          <p id="calViewSubtitle">Vikram Samvat 2082 • Veer Samvat 2552</p>
+        </div>
+        <div class="cal-nav-buttons">
+          <button class="btn-today-pill" onclick="jumpToday()">Today</button>
+          <button class="btn-nav-arrow" onclick="navMonth(-1)" title="Previous Month">◀</button>
+          <button class="btn-nav-arrow" onclick="navMonth(1)" title="Next Month">▶</button>
+        </div>
+      </div>
+
+      <div class="calendar-card">
+        <div class="weekdays-grid">
+          <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+        </div>
+        <div class="days-grid" id="mainDaysGrid"></div>
+      </div>
+
+      <!-- SELECTED DATE SUMMARY CARD -->
+      <div class="selected-card">
+        <div class="selected-card-header">
+          <div class="selected-card-title">
+            <h4 id="selectedCardDateLabel">Wednesday, 7 October 2026</h4>
+            <span id="selectedCardTithiLabel">Aso Vad Ekadashi</span>
+          </div>
+          <div class="selected-card-total">
+            <span>Day Total Spent</span>
+            <strong id="selectedCardDayTotal">₹0</strong>
+          </div>
+        </div>
+
+        <!-- MONEY RECEIVED ON THIS DAY (IF ANY) -->
+        <div id="selectedCardIncomeBox" style="display:none;"></div>
+
+        <div class="day-items-list" id="selectedCardItemsList">
+          <div class="empty-note">Tap any date above to add or view expenses.</div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+          <button class="btn btn-primary" onclick="openExpenseModal(selectedDateKey)">
+            ✏️ Expenses
+          </button>
+          <button class="btn btn-secondary" style="background:#ecfdf5; color:#047857; border-color:#a7f3d0;" onclick="openIncomeModal(selectedDateKey)">
+            ➕ Received Money
+          </button>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- SCREEN 2: PANCHANG & SPIRITUAL TIMINGS (DEDICATED HEAD) -->
+    <section class="app-screen" id="screenPanchang">
+      
+      <div class="panchang-hero">
+        <div class="hero-top-row">
+          <span class="hero-badge" id="panchangHeroDateText">7 Oct 2026</span>
+          <span class="hero-badge" id="panchangCityText">📍 Songadh</span>
+        </div>
+        <div class="hero-tithi" id="panchangHeroTithiText">Aso Vad Ekadashi</div>
+        <div class="hero-samvat" id="panchangHeroSamvatText">Vikram Samvat 2082 • Veer Nirvana Samvat 2552</div>
+
+        <div class="parva-alert" id="panchangHeroParvaBox" style="display:none;">
+          🌱 Atham / Chaudas Parva — Lilotri Tyag (Green Vegetable Abstinence) Day
+        </div>
+      </div>
+
+      <!-- 8 PACHKHAN TIMINGS (INDIA CALCULATED) -->
+      <div class="section-title">
+        <span>⏱️ Pachkhan Timings (MSJS / Songadh)</span>
+        <small>Indian Solar Calculation</small>
+      </div>
+
+      <div class="pachkhan-grid">
+        <div class="pk-box"><span class="lbl">🌅 Sunrise</span><span class="val" id="pkSunrise">06:28 AM</span></div>
+        <div class="pk-box accent"><span class="lbl">🌇 Sunset / Chauvihar</span><span class="val" id="pkSunset">06:14 PM</span></div>
+        <div class="pk-box highlight"><span class="lbl">⏳ Navkarshi</span><span class="val" id="pkNavkarshi">07:16 AM</span></div>
+        <div class="pk-box"><span class="lbl">⏱️ Porsi</span><span class="val" id="pkPorsi">09:24 AM</span></div>
+        <div class="pk-box"><span class="lbl">⏱️ Sadh Porsi</span><span class="val" id="pkSadhporsi">10:52 AM</span></div>
+        <div class="pk-box highlight"><span class="lbl">☀️ Purimaddha</span><span class="val" id="pkPurimaddha">12:21 PM</span></div>
+        <div class="pk-box"><span class="lbl">⏱️ Avaddha</span><span class="val" id="pkAvaddha">03:17 PM</span></div>
+        <div class="pk-box accent"><span class="lbl">🍵 Chauvihar</span><span class="val" id="pkChauvihar">06:14 PM</span></div>
+      </div>
+
+      <!-- CHOGHADIYA -->
+      <div class="section-title">
+        <span>✨ Choghadiya Muhurat (Prokerala)</span>
+        <small id="activeChogBadge" style="color:var(--primary); font-weight:700;">Live: Amrit</small>
+      </div>
+
+      <div class="calendar-card" style="padding:10px;">
+        <div class="chog-timeline" id="choghadiyaTimeline"></div>
+      </div>
+
+      <!-- MONTH KALYANAKS & FESTIVALS -->
+      <div class="section-title">
+        <span>📜 Tirthankar Kalyanaks & Parva List</span>
+        <small>Vitragvani Standard</small>
+      </div>
+
+      <div class="calendar-card" style="padding:12px;" id="panchangKalyanakContainer"></div>
+
+    </section>
+
+    <!-- SCREEN 3: REPORTS & EXCEL EXPORT -->
+    <section class="app-screen" id="screenReports">
+      
+      <!-- FINANCIAL SUMMARY -->
+      <div class="stat-row">
+        <div class="stat-card green">
+          <span>Total Received</span>
+          <strong id="repTotalIncome">₹0</strong>
+        </div>
+        <div class="stat-card red">
+          <span>Total Spent</span>
+          <strong id="repTotalSpend">₹0</strong>
+        </div>
+        <div class="stat-card blue">
+          <span>Net Balance</span>
+          <strong id="repNetBalance">₹0</strong>
+        </div>
+      </div>
+
+      <!-- MONEY RECEIVED / INFLOW TRANSACTIONS LIST -->
+      <div class="calendar-card" style="padding:14px; margin-bottom:12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <div>
+            <h4 style="font-size:0.92rem; font-weight:800; color:#059669;">💵 Money Received Records</h4>
+            <span style="font-size:0.72rem; color:var(--text-muted);">Opening budget, salary, cash received</span>
+          </div>
+          <button class="btn btn-secondary" style="width:auto; padding:4px 10px; font-size:0.75rem; background:#ecfdf5; color:#059669; border-color:#a7f3d0;" onclick="openIncomeModal(selectedDateKey)">
+            ➕ Add Money
+          </button>
+        </div>
+        <div id="reportsIncomeList"></div>
+      </div>
+
+      <!-- EXPENSE BREAKDOWN -->
+      <div class="calendar-card" style="padding:14px; margin-bottom:12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <h4 style="font-size:0.92rem; font-weight:800;">Expense Category Breakdown</h4>
+          <button class="btn btn-secondary" style="width:auto; padding:6px 12px; font-size:0.75rem;" onclick="exportExcel()">
+            📥 Download Excel (CSV)
+          </button>
+        </div>
+        <div id="categoryProgressBars"></div>
+      </div>
+
+      <div class="calendar-card" style="padding:14px;">
+        <h4 style="font-size:0.92rem; font-weight:800; margin-bottom:10px;">Daily Expenses Ledger</h4>
+        <div style="max-height: 250px; overflow-y: auto;" id="dailyLedgerList"></div>
+      </div>
+
+    </section>
+
+    <!-- SCREEN 4: USER PROFILE & SETTINGS -->
+    <section class="app-screen" id="screenProfile">
+      
+      <div class="calendar-card" style="padding:16px; margin-bottom:14px; text-align:center;">
+        <div class="user-avatar" style="width:64px; height:64px; font-size:1.6rem; margin:0 auto 10px auto;" id="profileLargeAvatar">H</div>
+        <h3 id="profileLargeName" style="font-size:1.15rem; font-weight:800;">Honey Shah</h3>
+        <p id="profileLargeMobile" style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">+91 9876543210</p>
+        <button class="btn btn-secondary" style="width:auto; margin:0 auto; padding:6px 16px; font-size:0.78rem;" onclick="handleSignOut()">
+          🚪 Sign Out / Switch Profile
+        </button>
+      </div>
+
+      <!-- MANAGE ITEMS & DAILY RATES MASTER -->
+      <div class="calendar-card" style="padding:14px; margin-bottom:14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <div>
+            <h4 style="font-size:0.9rem; font-weight:800;">⚙️ Items & Daily Rates Master</h4>
+            <span style="font-size:0.72rem; color:var(--text-muted);">Customize your rates, units, and custom items</span>
+          </div>
+          <button class="btn btn-secondary" style="width:auto; padding:5px 10px; font-size:0.75rem;" onclick="openAddNewItemModal()">
+            ➕ Add Item
+          </button>
+        </div>
+        <div id="profileItemsMasterList" style="display:flex; flex-direction:column; gap:8px;"></div>
+      </div>
+
+      <div class="calendar-card" style="padding:14px; margin-bottom:14px;">
+        <h4 style="font-size:0.9rem; font-weight:800; margin-bottom:8px;">Default Calendar Mode</h4>
+        <div class="choice-grid">
+          <div class="choice-card" id="setChoiceEnglish" onclick="setAppCalendarMode('english')">
+            <div class="choice-icon">📅</div>
+            <div class="choice-text"><h4>English Calendar</h4><p>Google Calendar style</p></div>
+          </div>
+          <div class="choice-card" id="setChoiceJain" onclick="setAppCalendarMode('jain')">
+            <div class="choice-icon">📿</div>
+            <div class="choice-text"><h4>Jain Panchang</h4><p>Pachkhan & Atham/Chaudas</p></div>
+          </div>
+          <div class="choice-card" id="setChoiceHindu" onclick="setAppCalendarMode('hindu')">
+            <div class="choice-icon">🕉️</div>
+            <div class="choice-text"><h4>Hindu Panchang</h4><p>Ekadashi, Tithi & Choghadiya</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="calendar-card" style="padding:14px;">
+        <h4 style="font-size:0.9rem; font-weight:800; margin-bottom:6px;">Data Safety & Backup</h4>
+        <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:12px;">
+          Your entries are saved 100% locally on your computer. Download backup anytime.
+        </p>
+        <button class="btn btn-secondary" onclick="exportBackupJSON()">💾 Download Data Backup (JSON)</button>
+      </div>
+
+    </section>
+
+    <!-- FIXED BOTTOM NAVIGATION BAR -->
+    <nav class="bottom-nav">
+      <button class="nav-tab-btn active" id="navBtnCalendar" onclick="switchNavTab('calendar')">
+        <span class="nav-tab-icon">📅</span>
+        <span>Calendar</span>
+      </button>
+      <button class="nav-tab-btn" id="navBtnPanchang" onclick="switchNavTab('panchang')">
+        <span class="nav-tab-icon">📿</span>
+        <span>Panchang</span>
+      </button>
+      <button class="nav-tab-btn" id="navBtnReports" onclick="switchNavTab('reports')">
+        <span class="nav-tab-icon">📊</span>
+        <span>Reports</span>
+      </button>
+      <button class="nav-tab-btn" id="navBtnProfile" onclick="switchNavTab('profile')">
+        <span class="nav-tab-icon">👤</span>
+        <span>Profile</span>
+      </button>
+    </nav>
+
+  </div>
+
+
+  <!-- ======================================================================
+       POPUP WINDOW: EXPENSE ENTRY WINDOW (DIRECTLY OPENS WHEN CLICKING DATE)
+       ====================================================================== -->
+  <div class="modal-overlay" id="expenseModalOverlay" onclick="closeExpenseModalOnBackdrop(event)">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+      
+      <div class="sheet-header">
+        <div class="sheet-title-box">
+          <h3 id="modalDateHeading">7 October 2026</h3>
+          <span id="modalTithiHeading">Aso Vad Ekadashi</span>
+        </div>
+        <button class="close-btn" onclick="closeExpenseModal()">✕</button>
+      </div>
+
+      <!-- MONEY RECEIVED NOTICE ON THIS DATE (IF ANY) -->
+      <div id="modalIncomeNotice" style="display:none; margin-bottom:12px;"></div>
+
+      <!-- LIST OF EXPENSE ACCOUNTS -->
+      <div class="sheet-items-list" id="modalItemsListContainer"></div>
+
+      <!-- INLINE ADD NEW CUSTOM ITEM / CATEGORY -->
+      <div class="add-category-card">
+        <button class="add-category-btn-trigger" id="toggleAddCategoryBtn" onclick="toggleAddCategoryForm()">
+          ➕ Add New Custom Expense Item
+        </button>
+        <div class="add-category-form" id="newCategoryForm">
+          <input type="text" id="newCatName" class="form-input" placeholder="Item Name (e.g. Laundry, Doctor, Rent, Water Jar)">
+          <div style="display:flex; gap:8px;">
+            <select id="newCatType" class="form-input" onchange="toggleRateInputVisibility(this.value)" style="flex:1;">
+              <option value="direct">Direct Amount (₹)</option>
+              <option value="fixed">Fixed Rate (Qty × Rate)</option>
+            </select>
+            <input type="number" id="newCatRate" class="form-input" placeholder="Rate ₹" style="flex:1; display:none;">
+            <input type="text" id="newCatUnit" class="form-input" placeholder="Unit (kg/ltr/can)" style="flex:1; display:none;">
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-primary" style="flex:1;" onclick="submitNewCategory()">Add Item</button>
+            <button class="btn btn-secondary" style="width:80px;" onclick="toggleAddCategoryForm()">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOOTER WITH LIVE TOTAL & SAVE -->
+      <div class="sheet-footer-bar">
+        <div class="sheet-total-label">
+          <span>DAY'S EXPENSE:</span>
+          <strong id="modalLiveTotalDisplay">₹0</strong>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-secondary" style="width:auto; padding:8px 12px; font-size:0.75rem;" onclick="copyYesterdayToModal()">
+            ⚡ Repeat Yesterday
+          </button>
+          <button class="btn btn-primary" style="width:auto; padding:8px 20px;" onclick="saveModalExpenses()">
+            💾 Save
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ======================================================================
+       POPUP WINDOW: ADD MONEY RECEIVED (INCOME / BUDGET ENTRY MODAL)
+       ====================================================================== -->
+  <div class="modal-overlay" id="incomeModalOverlay" onclick="closeIncomeModalOnBackdrop(event)">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="sheet-header">
+        <div class="sheet-title-box">
+          <h3 style="color:#059669; font-size:1.15rem;">💵 Add Money Received (Income)</h3>
+          <span style="color:var(--text-muted); font-size:0.75rem;">Beginning of month budget, salary, cash received</span>
+        </div>
+        <button class="close-btn" onclick="closeIncomeModal()">✕</button>
+      </div>
+
+      <input type="hidden" id="incomeEditId">
+
+      <div class="form-group">
+        <label class="form-label">Date Received</label>
+        <input type="date" id="incomeDateInput" class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Amount Received (₹)</label>
+        <div style="position:relative; display:flex; align-items:center;">
+          <span style="position:absolute; left:14px; font-weight:800; font-size:1.2rem; color:#059669;">₹</span>
+          <input type="number" id="incomeAmountInput" class="form-input" placeholder="e.g. 50000" style="padding-left:36px; font-size:1.15rem; font-weight:800; color:#059669;">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Source / Title</label>
+        <select id="incomeSourceSelect" class="form-input" onchange="toggleCustomIncomeSource(this.value)">
+          <option value="Monthly Salary / Household Budget">Monthly Salary / Household Budget</option>
+          <option value="Cash from Husband / Family">Cash from Husband / Family</option>
+          <option value="Bank Transfer / UPI Deposit">Bank Transfer / UPI Deposit</option>
+          <option value="Rental Income">Rental Income</option>
+          <option value="Savings Withdrawal">Savings Withdrawal</option>
+          <option value="Gift / Bonus">Gift / Bonus</option>
+          <option value="CUSTOM">Custom Source...</option>
+        </select>
+        <input type="text" id="incomeCustomSourceInput" class="form-input" placeholder="Enter custom source name" style="display:none; margin-top:8px;">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Payment Mode</label>
+        <select id="incomeModeSelect" class="form-input">
+          <option value="Cash">Cash in Hand</option>
+          <option value="Bank / UPI">Bank Transfer / GPay / PhonePe (UPI)</option>
+          <option value="Cheque">Cheque</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Notes (Optional)</label>
+        <input type="text" id="incomeNotesInput" class="form-input" placeholder="e.g. October monthly household allowance">
+      </div>
+
+      <div style="display:flex; gap:10px; margin-top:16px;">
+        <button class="btn btn-primary" style="background:#059669; box-shadow:0 3px 10px rgba(5,150,105,0.3); flex:2;" onclick="saveIncomeEntry()">
+          💾 Save Money Received
+        </button>
+        <button class="btn btn-secondary" style="flex:1;" onclick="closeIncomeModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ======================================================================
+       EDIT ITEM & RATE MODAL (FOR EDITING ANY ITEM'S RATE, UNIT, NAME)
+       ====================================================================== -->
+  <div class="modal-overlay" id="editItemModalOverlay" onclick="closeEditItemModalOnBackdrop(event)">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="sheet-header">
+        <h3 id="editItemModalHeading" style="font-size:1.05rem; font-weight:800;">⚙️ Edit Item & Rate</h3>
+        <button class="close-btn" onclick="closeEditItemModal()">✕</button>
+      </div>
+
+      <input type="hidden" id="editItemId">
+      
+      <div class="form-group">
+        <label class="form-label">Item Name</label>
+        <input type="text" id="editItemName" class="form-input" placeholder="e.g. Milk, Tiffin, Water Jar">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Pricing Type</label>
+        <select id="editItemType" class="form-input" onchange="toggleEditItemTypeFields(this.value)">
+          <option value="fixed">Fixed Rate (Quantity × Rate = Total ₹)</option>
+          <option value="direct">Direct Amount (Type ₹ Directly)</option>
+        </select>
+      </div>
+
+      <div id="editFixedRateGroup">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:12px;">
+          <div>
+            <label class="form-label">Rate (₹)</label>
+            <input type="number" id="editItemRate" class="form-input" placeholder="e.g. 32">
+          </div>
+          <div>
+            <label class="form-label">Unit</label>
+            <input type="text" id="editItemUnit" class="form-input" placeholder="e.g. Liter, Meal, Jar">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Quantity Stepper (+ / - by)</label>
+          <select id="editItemStep" class="form-input">
+            <option value="0.5">0.5 (Half - e.g. 0.5L, 1L, 1.5L)</option>
+            <option value="1">1 (Whole - e.g. 1, 2, 3)</option>
+            <option value="2">2</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:10px; margin-top:16px;">
+        <button class="btn btn-primary" style="flex:2;" onclick="saveEditedItem()">Save Rate</button>
+        <button class="btn btn-secondary" style="flex:1; color:#ef4444; border-color:#fca5a5;" onclick="deleteEditedItem()">Delete Item</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- CITY PICKER MODAL -->
+  <div class="modal-overlay" id="cityModalOverlay" onclick="closeCityModalOnBackdrop(event)">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="sheet-header">
+        <h3 style="font-size:1.05rem; font-weight:800;">📍 Select Indian City / Tirtha</h3>
+        <button class="close-btn" onclick="closeCityModal()">✕</button>
+      </div>
+      <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:12px;">
+        Pachkhan, Sunrise, Sunset and Choghadiya will be calculated for this location:
+      </p>
+      <div id="cityOptionGrid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;"></div>
+      <button class="btn btn-secondary" onclick="detectGPSLocation()">📡 Detect My Live GPS Location</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toastMessage">Saved successfully!</div>
+
+
+  <!-- ======================================================================
+       JAVASCRIPT: 100% ROBUST & ACCURATE LOGIC
+       ====================================================================== -->
+  <script>
+    /* ==========================================================================
+       1. DATA STRUCTURES & INDIAN CITIES
+       ========================================================================== */
+    const INDIAN_CITIES = {
+      songadh: { name: "Songadh (Saurashtra)", lat: 21.5035, lng: 71.7695 },
+      ahmedabad: { name: "Ahmedabad (Gujarat)", lat: 23.0225, lng: 72.5714 },
+      mumbai: { name: "Mumbai (Maharashtra)", lat: 18.9220, lng: 72.8347 },
+      surat: { name: "Surat (Gujarat)", lat: 21.1702, lng: 72.8311 },
+      palitana: { name: "Palitana (Shatrunjay)", lat: 21.5222, lng: 71.8286 },
+      bhavnagar: { name: "Bhavnagar (Gujarat)", lat: 21.7645, lng: 72.1519 },
+      rajkot: { name: "Rajkot (Saurashtra)", lat: 22.3039, lng: 70.8022 },
+      vadodara: { name: "Vadodara (Gujarat)", lat: 22.3072, lng: 73.1812 },
+      delhi: { name: "New Delhi (NCR)", lat: 28.6139, lng: 77.2090 },
+      pune: { name: "Pune (Maharashtra)", lat: 18.5204, lng: 73.8567 }
+    };
+
+    let selectedCityKey = localStorage.getItem('app_city_key') || 'songadh';
+    let currentCity = INDIAN_CITIES[selectedCityKey] || INDIAN_CITIES.songadh;
+
+    /* SOLAR CALCULATIONS FOR INDIA (IST UTC+05:30) */
+    function calculateSolarTimes(year, month, day, lat, lng) {
+      const tzOffset = 5.5; // IST
+      const dateObj = new Date(year, month, day);
+      const startOfYear = new Date(year, 0, 0);
+      const N = Math.floor((dateObj - startOfYear) / (1000 * 60 * 60 * 24));
+      const lngHour = lng / 15.0;
+
+      function getSolarMinutes(isSunrise) {
+        const t = N + ((isSunrise ? 6.0 : 18.0) - lngHour) / 24.0;
+        const M = (0.9856 * t) - 3.289;
+        const Mrad = M * Math.PI / 180.0;
+        let L = M + (1.916 * Math.sin(Mrad)) + (0.020 * Math.sin(2 * Mrad)) + 282.634;
+        L = (L % 360 + 360) % 360;
+        const Lrad = L * Math.PI / 180.0;
+        let RA = Math.atan(0.91764 * Math.tan(Lrad)) * 180.0 / Math.PI;
+        RA = (RA % 360 + 360) % 360;
+        const Lquad = Math.floor(L / 90.0) * 90;
+        const RAquad = Math.floor(RA / 90.0) * 90;
+        RA = (RA + (Lquad - RAquad)) / 15.0;
+
+        const sinDec = 0.39782 * Math.sin(Lrad);
+        const cosDec = Math.cos(Math.asin(sinDec));
+        const zenithRad = 90.833 * Math.PI / 180.0;
+        const latRad = lat * Math.PI / 180.0;
+
+        const cosH = (Math.cos(zenithRad) - (sinDec * Math.sin(latRad))) / (cosDec * Math.cos(latRad));
+        if (cosH > 1 || cosH < -1) return null;
+
+        let H = Math.acos(cosH) * 180.0 / Math.PI;
+        if (isSunrise) H = 360.0 - H;
+        H = H / 15.0;
+
+        const T = H + RA - (0.06571 * t) - 6.622;
+        const UT = (T - lngHour + 24) % 24;
+        const localT = (UT + tzOffset + 24) % 24;
+        return Math.round(localT * 60);
+      }
+
+      const srMin = getSolarMinutes(true);
+      const ssMin = getSolarMinutes(false);
+
+      function fmtTime(totalMins) {
+        if (!totalMins) return '--:--';
+        const hh24 = Math.floor(totalMins / 60) % 24;
+        const mm = Math.floor(totalMins % 60);
+        const ampm = hh24 < 12 ? 'AM' : 'PM';
+        const hh12 = hh24 % 12 === 0 ? 12 : hh24 % 12;
+        return `${String(hh12).padStart(2, '0')}:${String(mm).padStart(2, '0')} ${ampm}`;
+      }
+
+      const daytimeMins = ssMin - srMin;
+      const navkarshiMin = srMin + 48; // 2 Ghadis (48 min)
+      const porsiMin = srMin + Math.round(daytimeMins / 4.0);
+      const sadhporsiMin = srMin + Math.round(daytimeMins * 3.0 / 8.0);
+      const purimaddhaMin = srMin + Math.round(daytimeMins / 2.0);
+      const avaddhaMin = srMin + Math.round(daytimeMins * 3.0 / 4.0);
+
+      return {
+        srMin,
+        ssMin,
+        sunrise: fmtTime(srMin),
+        sunset: fmtTime(ssMin),
+        navkarshi: fmtTime(navkarshiMin),
+        porsi: fmtTime(porsiMin),
+        sadhporsi: fmtTime(sadhporsiMin),
+        purimaddha: fmtTime(purimaddhaMin),
+        avaddha: fmtTime(avaddhaMin),
+        chauvihar: fmtTime(ssMin)
+      };
+    }
+
+    /* CHOGHADIYA (PROKERALA STANDARD) */
+    const choghadiyaInfo = {
+      'Amrit': { nature: 'Super Auspicious 🌟', class: 'best' },
+      'Shubh': { nature: 'Auspicious 🟢', class: 'good' },
+      'Labh': { nature: 'Beneficial 🟢', class: 'good' },
+      'Chal': { nature: 'Neutral 🟡', class: 'neutral' },
+      'Udveg': { nature: 'Inauspicious ❌', class: 'bad' },
+      'Rog': { nature: 'Inauspicious ❌', class: 'bad' },
+      'Kaal': { nature: 'Inauspicious ❌', class: 'bad' }
+    };
+
+    const dayChogOrder = [
+      ['Udveg', 'Chal', 'Labh', 'Amrit', 'Kaal', 'Shubh', 'Rog', 'Udveg'], // Sun
+      ['Amrit', 'Kaal', 'Shubh', 'Rog', 'Udveg', 'Chal', 'Labh', 'Amrit'], // Mon
+      ['Rog', 'Udveg', 'Chal', 'Labh', 'Amrit', 'Kaal', 'Shubh', 'Rog'],   // Tue
+      ['Labh', 'Amrit', 'Kaal', 'Shubh', 'Rog', 'Udveg', 'Chal', 'Labh'],   // Wed
+      ['Shubh', 'Rog', 'Udveg', 'Chal', 'Labh', 'Amrit', 'Kaal', 'Shubh'], // Thu
+      ['Chal', 'Labh', 'Amrit', 'Kaal', 'Shubh', 'Rog', 'Udveg', 'Chal'],   // Fri
+      ['Kaal', 'Shubh', 'Rog', 'Udveg', 'Chal', 'Labh', 'Amrit', 'Kaal']   // Sat
+    ];
+
+    function getChoghadiyas(year, month, day, srMin, ssMin) {
+      const dayOfWeek = new Date(year, month, day).getDay();
+      const daySlot = (ssMin - srMin) / 8.0;
+
+      function fmtM(m) {
+        let mins = Math.round(m) % 1440;
+        if (mins < 0) mins += 1440;
+        const hh24 = Math.floor(mins / 60);
+        const mm = Math.floor(mins % 60);
+        const ampm = hh24 < 12 ? 'AM' : 'PM';
+        const hh12 = hh24 % 12 === 0 ? 12 : hh24 % 12;
+        return `${String(hh12).padStart(2, '0')}:${String(mm).padStart(2, '0')} ${ampm}`;
+      }
+
+      const list = [];
+      const dayNames = dayChogOrder[dayOfWeek];
+      for (let i = 0; i < 8; i++) {
+        const start = srMin + (i * daySlot);
+        const end = srMin + ((i + 1) * daySlot);
+        const name = dayNames[i];
+        list.push({
+          type: 'Day',
+          name,
+          startMin: start,
+          endMin: end,
+          timeStr: `${fmtM(start)} - ${fmtM(end)}`,
+          info: choghadiyaInfo[name] || { nature: '', class: 'neutral' }
+        });
+      }
+      return list;
+    }
+
+    /* VITRAGVANI OCTOBER 2026 TITHI DATA */
+    const vitragvaniOct2026 = {
+      1: { month: "Bhadarvo", sudVad: "Vad", tithi: "5", athamChaudas: false, event: "", details: "" },
+      2: { month: "Bhadarvo", sudVad: "Vad", tithi: "6", athamChaudas: false, event: "", details: "" },
+      3: { month: "Bhadarvo", sudVad: "Vad", tithi: "8", athamChaudas: true, event: "Atham Parva", details: "Atham Parva — 🌱 Lilotri Tyag (Green Veg Abstinence), Samayik, Swadhyay." },
+      4: { month: "Bhadarvo", sudVad: "Vad", tithi: "9", athamChaudas: false, event: "", details: "" },
+      5: { month: "Bhadarvo", sudVad: "Vad", tithi: "10", athamChaudas: false, event: "", details: "" },
+      6: { month: "Bhadarvo", sudVad: "Vad", tithi: "11", athamChaudas: false, event: "Indira Ekadashi", details: "Ekadashi Vrat." },
+      7: { month: "Bhadarvo", sudVad: "Vad", tithi: "12", athamChaudas: false, event: "", details: "" },
+      8: { month: "Bhadarvo", sudVad: "Vad", tithi: "13", athamChaudas: false, event: "Pradosh Vrat", details: "Trayodashi." },
+      9: { month: "Bhadarvo", sudVad: "Vad", tithi: "14", athamChaudas: true, event: "Chaudas Parva", details: "Chaudas Parva — 🌱 Lilotri Tyag, Pratikraman day." },
+      10: { month: "Bhadarvo", sudVad: "Vad", tithi: "Amas", athamChaudas: false, event: "Sarva Pitru Amas", details: "Amavasya." },
+      11: { month: "Aso", sudVad: "Sud", tithi: "1", athamChaudas: false, event: "Neminath Kevalgyan Kalyanak", details: "22nd Tirthankar Neminath Kevalgyan Kalyanak (Girnarji)." },
+      12: { month: "Aso", sudVad: "Sud", tithi: "2", athamChaudas: false, event: "Navratri Starts", details: "Bij Parva." },
+      13: { month: "Aso", sudVad: "Sud", tithi: "3", athamChaudas: false, event: "", details: "" },
+      14: { month: "Aso", sudVad: "Sud", tithi: "4", athamChaudas: false, event: "", details: "" },
+      15: { month: "Aso", sudVad: "Sud", tithi: "5", athamChaudas: false, event: "Pancham Parva", details: "Pancham Tithi." },
+      16: { month: "Aso", sudVad: "Sud", tithi: "6", athamChaudas: false, event: "", details: "" },
+      17: { month: "Aso", sudVad: "Sud", tithi: "7", athamChaudas: false, event: "Ayambil Oliji Starts", details: "Aso Ayambil Oliji Parva Prarambh." },
+      18: { month: "Aso", sudVad: "Sud", tithi: "8", athamChaudas: true, event: "Sheetalnath Moksha Kalyanak", details: "10th Tirthankar Sheetalnath Moksha Kalyanak (Sammed Shikharji) • Atham Parva." },
+      19: { month: "Aso", sudVad: "Sud", tithi: "9", athamChaudas: false, event: "", details: "" },
+      20: { month: "Aso", sudVad: "Sud", tithi: "10", athamChaudas: false, event: "Vijayadashami (Dussehra)", details: "Dussehra." },
+      21: { month: "Aso", sudVad: "Sud", tithi: "11", athamChaudas: false, event: "Papankusha Ekadashi", details: "Ekadashi Vrat Parva." },
+      22: { month: "Aso", sudVad: "Sud", tithi: "12", athamChaudas: false, event: "", details: "" },
+      23: { month: "Aso", sudVad: "Sud", tithi: "13", athamChaudas: false, event: "", details: "" },
+      24: { month: "Aso", sudVad: "Sud", tithi: "14", athamChaudas: false, event: "", details: "" },
+      25: { month: "Aso", sudVad: "Sud", tithi: "14", athamChaudas: true, event: "Chaudas Parva", details: "Chaudas Parva — 🌱 Lilotri Tyag." },
+      26: { month: "Aso", sudVad: "Sud/Vad", tithi: "15/1", athamChaudas: false, event: "Atmasiddhi Rachna Divas", details: "Shri Atmasiddhi Shastra Day (Shrimad Rajchandraji) • 14th Tirthankar Anantnath Garbha Kalyanak." },
+      27: { month: "Aso", sudVad: "Vad", tithi: "2", athamChaudas: false, event: "Bij Parva", details: "" },
+      28: { month: "Aso", sudVad: "Vad", tithi: "3", athamChaudas: false, event: "", details: "" },
+      29: { month: "Aso", sudVad: "Vad", tithi: "4", athamChaudas: false, event: "Sambhavnath Kevalgyan Kalyanak", details: "3rd Tirthankar Sambhavnath Kevalgyan Kalyanak." },
+      30: { month: "Aso", sudVad: "Vad", tithi: "5", athamChaudas: false, event: "Pancham Parva", details: "" },
+      31: { month: "Aso", sudVad: "Vad", tithi: "6", athamChaudas: false, event: "Diwali Near", details: "" }
+    };
+
+    function getPanchangForDate(year, month, day) {
+      if (year === 2026 && month === 9 && vitragvaniOct2026[day]) {
+        const item = vitragvaniOct2026[day];
+        return {
+          month: item.month,
+          sudVad: item.sudVad,
+          tithi: item.tithi,
+          fullTithi: `${item.month} ${item.sudVad} ${item.tithi}`,
+          shortTithi: `${item.sudVad} ${item.tithi}`,
+          isAthamChaudas: item.athamChaudas,
+          event: item.event,
+          details: item.details,
+          vikramYear: 2082,
+          veerYear: 2552
+        };
+      }
+      const dateIST = new Date(year, month, day, 6, 0, 0);
+      const diffMs = dateIST.getTime() - 1704974220000;
+      const phase = (diffMs / (29.530588853 * 86400 * 1000)) % 1;
+      const tithiIdx = Math.floor(phase * 30);
+      const isShukla = tithiIdx < 15;
+      const sudVad = isShukla ? "Sud" : "Vad";
+      let tithiNum = isShukla ? (tithiIdx + 1) : (tithiIdx - 14);
+      let tithiStr = (tithiNum === 15) ? (isShukla ? "Poonam" : "Amas") : String(tithiNum);
+      const isAthamChaudas = (tithiNum === 8 || tithiNum === 14);
+
+      return {
+        month: "Aso",
+        sudVad,
+        tithi: tithiStr,
+        fullTithi: `${sudVad} ${tithiStr}`,
+        shortTithi: `${sudVad} ${tithiStr}`,
+        isAthamChaudas,
+        event: isAthamChaudas ? "Parva Tithi" : (tithiNum === 11 ? "Ekadashi Vrat" : ""),
+        details: isAthamChaudas ? "Lilotri Tyag Day" : "",
+        vikramYear: year + 56,
+        veerYear: year + 526
+      };
+    }
+
+    /* ==========================================================================
+       2. AUTHENTICATION & PROFILE SYSTEM
+       ========================================================================== */
+    const STORAGE_KEY_USER = 'app_user_profile_v1';
+    const STORAGE_KEY_SESSION = 'app_user_session_v1';
+    const STORAGE_KEY_LEDGER = 'app_expense_ledger_v1';
+    const STORAGE_KEY_INCOME = 'app_income_ledger_v1';
+    const STORAGE_KEY_ACCOUNTS = 'app_expense_accounts_v1';
+
+    let currentUser = null;
+    let selectedRegCalMode = 'english'; // Default
+
+    function initAuth() {
+      try {
+        const u = localStorage.getItem(STORAGE_KEY_USER);
+        const sess = localStorage.getItem(STORAGE_KEY_SESSION);
+        if (u && sess === 'active') {
+          currentUser = JSON.parse(u);
+          showMainApp();
+        } else if (u) {
+          showAuthScreen('signIn');
+        } else {
+          showAuthScreen('signUp');
+        }
+      } catch(e) {
+        showAuthScreen('signUp');
+      }
+    }
+
+    function showAuthScreen(name) {
+      document.getElementById('screenSignUp').style.display = (name === 'signUp') ? 'flex' : 'none';
+      document.getElementById('screenSignIn').style.display = (name === 'signIn') ? 'flex' : 'none';
+      document.getElementById('screenForgotPin').style.display = (name === 'forgotPin') ? 'flex' : 'none';
+      document.getElementById('mainAppShell').style.display = 'none';
+    }
+
+    function movePinFocus(currentInput, nextInputId) {
+      if (currentInput.value.length >= 1 && nextInputId) {
+        const el = document.getElementById(nextInputId);
+        if (el) el.focus();
+      }
+    }
+
+    function getPinFromBoxes(prefix) {
+      let pin = '';
+      for (let i = 1; i <= 4; i++) {
+        const el = document.getElementById(prefix + i);
+        if (el) pin += el.value.trim();
+      }
+      return pin;
+    }
+
+    function clearPinBoxes(prefix) {
+      for (let i = 1; i <= 4; i++) {
+        const el = document.getElementById(prefix + i);
+        if (el) el.value = '';
+      }
+    }
+
+    function selectCalModeChoice(mode) {
+      selectedRegCalMode = mode;
+      document.getElementById('optCalEnglish').classList.toggle('selected', mode === 'english');
+      document.getElementById('optCalJain').classList.toggle('selected', mode === 'jain');
+      document.getElementById('optCalHindu').classList.toggle('selected', mode === 'hindu');
+    }
+
+    function handleRegisterProfile() {
+      const name = document.getElementById('regName').value.trim();
+      const mobile = document.getElementById('regMobile').value.trim();
+      const pin = getPinFromBoxes('regPin');
+      const confPin = getPinFromBoxes('confPin');
+
+      if (!name) { alert("Please enter your full name."); return; }
+      if (!mobile || mobile.length < 10) { alert("Please enter a valid 10-digit mobile number."); return; }
+      if (!pin || pin.length !== 4) { alert("Please enter a 4-digit security PIN."); return; }
+      if (pin !== confPin) { alert("PIN and Confirm PIN do not match! Please check."); return; }
+
+      const milkRateInput = parseFloat(document.getElementById('regMilkRate').value);
+      const tiffinRateInput = parseFloat(document.getElementById('regTiffinRate').value);
+
+      if (!isNaN(milkRateInput) && milkRateInput > 0) {
+        const milkAcc = accounts.find(a => a.id === 'milk');
+        if (milkAcc) milkAcc.fixedRate = milkRateInput;
+      }
+      if (!isNaN(tiffinRateInput) && tiffinRateInput > 0) {
+        const tiffinAcc = accounts.find(a => a.id === 'tiffin');
+        if (tiffinAcc) tiffinAcc.fixedRate = tiffinRateInput;
+      }
+      saveAccounts();
+
+      currentUser = {
+        name,
+        mobile,
+        pin,
+        calMode: selectedRegCalMode || 'english',
+        createdAt: new Date().toISOString()
+      };
+
+      localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
+      localStorage.setItem(STORAGE_KEY_SESSION, 'active');
+
+      showToast("Profile created successfully! Welcome 🎉");
+      showMainApp();
+    }
+
+    function handleSignIn() {
+      const mobile = document.getElementById('loginMobile').value.trim();
+      const pin = getPinFromBoxes('loginPin');
+
+      if (!mobile || mobile.length < 10) { alert("Please enter your 10-digit registered mobile number."); return; }
+      if (!pin || pin.length !== 4) { alert("Please enter your 4-digit PIN."); return; }
+
+      const savedUserStr = localStorage.getItem(STORAGE_KEY_USER);
+      if (!savedUserStr) {
+        alert("No profile found! Please create a new profile.");
+        showAuthScreen('signUp');
+        return;
+      }
+
+      const savedUser = JSON.parse(savedUserStr);
+      if (savedUser.mobile !== mobile) {
+        alert("Mobile number does not match registered profile.");
+        return;
+      }
+      if (savedUser.pin !== pin) {
+        alert("Incorrect 4-digit PIN! Please try again or click 'Forgot PIN'.");
+        clearPinBoxes('loginPin');
+        document.getElementById('loginPin1').focus();
+        return;
+      }
+
+      currentUser = savedUser;
+      localStorage.setItem(STORAGE_KEY_SESSION, 'active');
+      showToast("Signed in successfully! 🚀");
+      showMainApp();
+    }
+
+    function handleResetPin() {
+      const mobile = document.getElementById('forgotMobile').value.trim();
+      const newPin = getPinFromBoxes('resetPin');
+
+      if (!mobile || mobile.length < 10) { alert("Please enter your registered mobile number."); return; }
+      if (!newPin || newPin.length !== 4) { alert("Please enter new 4-digit PIN."); return; }
+
+      const savedUserStr = localStorage.getItem(STORAGE_KEY_USER);
+      if (!savedUserStr) { alert("No user profile found."); return; }
+
+      const savedUser = JSON.parse(savedUserStr);
+      if (savedUser.mobile !== mobile) { alert("Mobile number does not match."); return; }
+
+      savedUser.pin = newPin;
+      currentUser = savedUser;
+      localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(savedUser));
+      localStorage.setItem(STORAGE_KEY_SESSION, 'active');
+
+      showToast("PIN reset successfully! Logged in.");
+      showMainApp();
+    }
+
+    function handleSignOut() {
+      if (confirm("Are you sure you want to sign out?")) {
+        localStorage.removeItem(STORAGE_KEY_SESSION);
+        currentUser = null;
+        initAuth();
+      }
+    }
+
+    function showMainApp() {
+      document.getElementById('screenSignUp').style.display = 'none';
+      document.getElementById('screenSignIn').style.display = 'none';
+      document.getElementById('screenForgotPin').style.display = 'none';
+      document.getElementById('mainAppShell').style.display = 'flex';
+
+      const initial = currentUser.name.charAt(0).toUpperCase();
+      document.getElementById('headerUserAvatar').innerText = initial;
+      document.getElementById('headerUserName').innerText = currentUser.name;
+      document.getElementById('headerUserMobile').innerText = `+91 ${currentUser.mobile}`;
+
+      document.getElementById('profileLargeAvatar').innerText = initial;
+      document.getElementById('profileLargeName').innerText = currentUser.name;
+      document.getElementById('profileLargeMobile').innerText = `+91 ${currentUser.mobile}`;
+
+      setAppCalendarMode(currentUser.calMode || 'english', false);
+
+      renderAll();
+    }
+
+    /* ==========================================================================
+       3. EXPENSE & INCOME LEDGERS
+       ========================================================================== */
+    const defaultAccounts = [
+      { id: 'milk', name: '🥛 Milk', type: 'fixed', fixedRate: 32, unit: 'Liter', step: 0.5 },
+      { id: 'tiffin', name: '🍱 Tiffin', type: 'fixed', fixedRate: 120, unit: 'Meal', step: 1 },
+      { id: 'veg_fruits', name: '🥬 Vegetables & Fruits', type: 'direct', fixedRate: null, unit: '₹' },
+      { id: 'groceries', name: '🛒 Groceries', type: 'direct', fixedRate: null, unit: '₹' },
+      { id: 'medicine', name: '💊 Medical & Medicines', type: 'direct', fixedRate: null, unit: '₹' },
+      { id: 'household', name: '🧼 Household & Laundry', type: 'direct', fixedRate: null, unit: '₹' }
+    ];
+
+    let accounts = [];
+    try {
+      const a = localStorage.getItem(STORAGE_KEY_ACCOUNTS);
+      accounts = a ? JSON.parse(a) : defaultAccounts;
+    } catch(e) { accounts = defaultAccounts; }
+
+    let ledger = {};
+    try {
+      const l = localStorage.getItem(STORAGE_KEY_LEDGER);
+      if (l) ledger = JSON.parse(l);
+    } catch(e) { ledger = {}; }
+
+    // Money Received (Income / Budget) ledger: { "2026-10-01": [ { id, amount, source, mode, notes } ] }
+    let incomeLedger = {};
+    try {
+      const inc = localStorage.getItem(STORAGE_KEY_INCOME);
+      if (inc) incomeLedger = JSON.parse(inc);
+    } catch(e) { incomeLedger = {}; }
+
+    function saveAccounts() {
+      localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(accounts));
+    }
+
+    function saveLedger() {
+      localStorage.setItem(STORAGE_KEY_LEDGER, JSON.stringify(ledger));
+    }
+
+    function saveIncomeLedger() {
+      localStorage.setItem(STORAGE_KEY_INCOME, JSON.stringify(incomeLedger));
+    }
+
+    /* APP STATE */
+    let currentYear = 2026;
+    let currentMonth = 9; // October (0-indexed)
+    let selectedDateKey = '2026-10-07'; // Defaults to simulated current day
+    let activeCalMode = 'english'; // 'english' | 'jain' | 'hindu'
+
+    const monthNamesEn = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+
+    function fmtDateKey(y, m, d) {
+      return `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+    }
+
+    /* SET CALENDAR MODE */
+    function setAppCalendarMode(mode, savePref = true) {
+      activeCalMode = mode;
+      if (savePref && currentUser) {
+        currentUser.calMode = mode;
+        localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
+      }
+
+      document.getElementById('modeBtnEnglish').classList.toggle('active', mode === 'english');
+      document.getElementById('modeBtnJain').classList.toggle('active', mode === 'jain');
+      document.getElementById('modeBtnHindu').classList.toggle('active', mode === 'hindu');
+
+      const elEng = document.getElementById('setChoiceEnglish');
+      const elJain = document.getElementById('setChoiceJain');
+      const elHin = document.getElementById('setChoiceHindu');
+      if (elEng) elEng.classList.toggle('selected', mode === 'english');
+      if (elJain) elJain.classList.toggle('selected', mode === 'jain');
+      if (elHin) elHin.classList.toggle('selected', mode === 'hindu');
+
+      renderMainDaysGrid();
+    }
+
+    /* ==========================================================================
+       4. CALENDAR GRID & WALLET RENDERING
+       ========================================================================== */
+    function renderAll() {
+      renderWalletBanner();
+      renderMainDaysGrid();
+      renderSelectedCardDetails();
+      renderPanchangScreen();
+      renderReports();
+      renderProfileItemsMaster();
+    }
+
+    function renderWalletBanner() {
+      let monthExpenses = 0;
+      let monthIncome = 0;
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dk = fmtDateKey(currentYear, currentMonth, d);
+        if (ledger[dk]) {
+          Object.values(ledger[dk]).forEach(it => monthExpenses += (Number(it.amount) || 0));
+        }
+        if (incomeLedger[dk]) {
+          incomeLedger[dk].forEach(inc => monthIncome += (Number(inc.amount) || 0));
+        }
+      }
+
+      const todayData = ledger[selectedDateKey] || {};
+      let todaySpend = 0;
+      Object.values(todayData).forEach(it => todaySpend += (Number(it.amount) || 0));
+
+      const remainingBalance = monthIncome - monthExpenses;
+
+      document.getElementById('bannerMonthTitle').innerText = `${monthNamesEn[currentMonth].toUpperCase()} ${currentYear} HOUSEHOLD WALLET`;
+      document.getElementById('bannerTotalIncome').innerText = `₹${monthIncome.toLocaleString('en-IN')}`;
+      document.getElementById('bannerMonthTotal').innerText = `₹${monthExpenses.toLocaleString('en-IN')}`;
+      document.getElementById('bannerTodayTotal').innerText = `₹${todaySpend.toLocaleString('en-IN')}`;
+
+      const balEl = document.getElementById('bannerRemainingBalance');
+      if (remainingBalance >= 0) {
+        balEl.innerHTML = `Balance: <span style="color:#4ade80;">₹${remainingBalance.toLocaleString('en-IN')}</span>`;
+      } else {
+        balEl.innerHTML = `Overspent: <span style="color:#f87171;">-₹${Math.abs(remainingBalance).toLocaleString('en-IN')}</span>`;
+      }
+
+      // Progress bar (spent vs received)
+      const fillBar = document.getElementById('walletBarFill');
+      const pctUsedText = document.getElementById('walletPctUsed');
+      if (monthIncome > 0) {
+        const pct = Math.min(100, Math.round((monthExpenses / monthIncome) * 100));
+        fillBar.style.width = `${pct}%`;
+        fillBar.style.background = pct > 90 ? '#ef4444' : (pct > 70 ? '#f59e0b' : '#10b981');
+        pctUsedText.innerText = `${pct}% of received funds spent`;
+      } else {
+        fillBar.style.width = '0%';
+        pctUsedText.innerText = monthExpenses > 0 ? `₹${monthExpenses.toLocaleString('en-IN')} spent (No income added)` : 'Add money received to track budget';
+      }
+
+      document.getElementById('walletDaysRemaining').innerText = `${daysInMonth} days in month`;
+    }
+
+    function renderMainDaysGrid() {
+      const grid = document.getElementById('mainDaysGrid');
+      grid.innerHTML = '';
+
+      document.getElementById('calViewTitle').innerText = `${monthNamesEn[currentMonth]} ${currentYear}`;
+      const midPan = getPanchangForDate(currentYear, currentMonth, 15);
+
+      if (activeCalMode === 'jain') {
+        document.getElementById('calViewSubtitle').innerText = `Veer Nirvana Samvat ${midPan.veerYear} • Vikram Samvat ${midPan.vikramYear}`;
+      } else if (activeCalMode === 'hindu') {
+        document.getElementById('calViewSubtitle').innerText = `Vikram Samvat ${midPan.vikramYear} • Gujarat Calendar`;
+      } else {
+        document.getElementById('calViewSubtitle').innerText = `Standard Google Calendar View`;
+      }
+
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      const firstDayOffset = new Date(currentYear, currentMonth, 1).getDay(); // Sunday = 0
+
+      for (let i = 0; i < firstDayOffset; i++) {
+        const empty = document.createElement('div');
+        empty.className = 'cal-day-cell empty';
+        grid.appendChild(empty);
+      }
+
+      const today = new Date();
+      const isActualMonth = (today.getFullYear() === currentYear && today.getMonth() === currentMonth);
+      const actualTodayDate = today.getDate();
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dateKey = fmtDateKey(currentYear, currentMonth, day);
+        const dayOfWeek = (firstDayOffset + day - 1) % 7;
+        const panchang = getPanchangForDate(currentYear, currentMonth, day);
+
+        const dayData = ledger[dateKey] || {};
+        let dayTotal = 0;
+        Object.values(dayData).forEach(it => dayTotal += (Number(it.amount) || 0));
+
+        let dayIncome = 0;
+        if (incomeLedger[dateKey]) {
+          incomeLedger[dateKey].forEach(inc => dayIncome += (Number(inc.amount) || 0));
+        }
+
+        const cell = document.createElement('div');
+        const classes = ['cal-day-cell'];
+
+        if (dayOfWeek === 0) classes.push('sunday');
+        if (isActualMonth && day === actualTodayDate) classes.push('today');
+        if (selectedDateKey === dateKey) classes.push('selected');
+        if (activeCalMode === 'jain' && panchang.isAthamChaudas) classes.push('atham-chaudas');
+
+        cell.className = classes.join(' ');
+        
+        // CLICKING ANY DATE DIRECTLY OPENS THE EXPENSE ENTRY WINDOW!
+        cell.onclick = () => {
+          selectedDateKey = dateKey;
+          renderMainDaysGrid();
+          renderSelectedCardDetails();
+          openExpenseModal(dateKey);
+        };
+
+        let tithiHtml = '';
+        if (activeCalMode === 'jain') {
+          tithiHtml = `<span class="cell-tithi-txt">${panchang.shortTithi}</span>`;
+        } else if (activeCalMode === 'hindu') {
+          tithiHtml = `<span class="cell-tithi-txt">${panchang.shortTithi}</span>`;
+        }
+
+        let eventDotHtml = panchang.event ? `<div class="cell-event-dot" title="${panchang.event}"></div>` : '';
+        let incomeHtml = dayIncome > 0 ? `<div class="cell-income-badge">+₹${dayIncome >= 1000 ? Math.round(dayIncome/1000) + 'k' : dayIncome}</div>` : '';
+        let costHtml = dayTotal > 0 ? `<div class="cell-expense-badge">-₹${dayTotal}</div>` : '';
+
+        cell.innerHTML = `
+          <div class="day-num">${day}</div>
+          ${tithiHtml}
+          ${eventDotHtml}
+          ${incomeHtml}
+          ${costHtml}
+        `;
+
+        grid.appendChild(cell);
+      }
+    }
+
+    function navMonth(delta) {
+      currentMonth += delta;
+      if (currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+      } else if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+      }
+      selectedDateKey = fmtDateKey(currentYear, currentMonth, 1);
+      renderAll();
+    }
+
+    function jumpToday() {
+      const now = new Date();
+      currentYear = now.getFullYear();
+      currentMonth = now.getMonth();
+      selectedDateKey = fmtDateKey(currentYear, currentMonth, now.getDate());
+      renderAll();
+    }
+
+    function renderSelectedCardDetails() {
+      const parts = selectedDateKey.split('-');
+      const y = parseInt(parts[0]);
+      const m = parseInt(parts[1]) - 1;
+      const d = parseInt(parts[2]);
+
+      const dObj = new Date(y, m, d);
+      const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      const dayName = dayNames[dObj.getDay()];
+
+      document.getElementById('selectedCardDateLabel').innerText = `${dayName}, ${d} ${monthNamesEn[m]} ${y}`;
+
+      const panchang = getPanchangForDate(y, m, d);
+      document.getElementById('selectedCardTithiLabel').innerText = `${panchang.fullTithi} ${panchang.event ? `• ${panchang.event}` : ''}`;
+
+      // Money received on this day
+      const incBox = document.getElementById('selectedCardIncomeBox');
+      const incomes = incomeLedger[selectedDateKey] || [];
+      if (incomes.length > 0) {
+        incBox.style.display = 'block';
+        incBox.innerHTML = incomes.map(inc => `
+          <div class="day-income-box">
+            <div>
+              <strong style="color:#059669; font-size:0.85rem;">💵 Received: +₹${inc.amount.toLocaleString('en-IN')}</strong>
+              <div style="font-size:0.72rem; color:#047857;">${inc.source} • ${inc.mode || 'Cash'} ${inc.notes ? `(${inc.notes})` : ''}</div>
+            </div>
+            <button style="background:none; border:none; cursor:pointer; font-size:0.85rem;" onclick="deleteIncomeEntry('${selectedDateKey}', '${inc.id}')" title="Delete">🗑️</button>
+          </div>
+        `).join('');
+      } else {
+        incBox.style.display = 'none';
+      }
+
+      const dayData = ledger[selectedDateKey] || {};
+      let dayTotal = 0;
+      const listEl = document.getElementById('selectedCardItemsList');
+      listEl.innerHTML = '';
+
+      const entries = Object.entries(dayData).filter(([_, it]) => Number(it.amount) > 0);
+
+      if (entries.length === 0) {
+        listEl.innerHTML = '<div class="empty-note">No expenses recorded for this day. Click button below to add.</div>';
+      } else {
+        entries.forEach(([id, it]) => {
+          dayTotal += Number(it.amount);
+          const acc = accounts.find(a => a.id === id) || { name: id, unit: '' };
+          const row = document.createElement('div');
+          row.className = 'day-item-pill';
+          row.innerHTML = `
+            <div class="name">
+              <span>${acc.name}</span>
+              ${it.qty ? `<span class="qty">(${it.qty} ${acc.unit || ''})</span>` : ''}
+            </div>
+            <div class="cost">₹${it.amount}</div>
+          `;
+          listEl.appendChild(row);
+        });
+      }
+
+      document.getElementById('selectedCardDayTotal').innerText = `₹${dayTotal.toLocaleString('en-IN')}`;
+    }
+
+    /* ==========================================================================
+       5. POPUP EXPENSE ENTRY WINDOW ENGINE (OPENS ON CLICKING DATE)
+       ========================================================================== */
+    function openExpenseModal(dateKey) {
+      selectedDateKey = dateKey;
+      const parts = dateKey.split('-');
+      const y = parseInt(parts[0]);
+      const m = parseInt(parts[1]) - 1;
+      const d = parseInt(parts[2]);
+
+      const dObj = new Date(y, m, d);
+      const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      document.getElementById('modalDateHeading').innerText = `${dayNames[dObj.getDay()]}, ${d} ${monthNamesEn[m]} ${y}`;
+
+      const panchang = getPanchangForDate(y, m, d);
+      document.getElementById('modalTithiHeading').innerText = `${panchang.fullTithi} ${panchang.event ? `(${panchang.event})` : ''}`;
+
+      // Check if money was received on this day
+      const noticeEl = document.getElementById('modalIncomeNotice');
+      const incomes = incomeLedger[selectedDateKey] || [];
+      if (incomes.length > 0) {
+        noticeEl.style.display = 'block';
+        noticeEl.innerHTML = incomes.map(inc => `
+          <div style="background:#ecfdf5; border:1px solid #a7f3d0; border-radius:10px; padding:6px 10px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <strong style="color:#059669; font-size:0.82rem;">💵 +₹${inc.amount.toLocaleString('en-IN')} Received (${inc.source})</strong>
+              <div style="font-size:0.7rem; color:#047857;">Mode: ${inc.mode || 'Cash'}</div>
+            </div>
+            <button style="background:none; border:none; color:#059669; font-size:0.75rem; font-weight:700; cursor:pointer;" onclick="closeExpenseModal(); openIncomeModal('${selectedDateKey}');">Edit</button>
+          </div>
+        `).join('');
+      } else {
+        noticeEl.style.display = 'none';
+      }
+
+      renderModalItems();
+      document.getElementById('expenseModalOverlay').classList.add('active');
+    }
+
+    function closeExpenseModal() {
+      document.getElementById('expenseModalOverlay').classList.remove('active');
+    }
+
+    function closeExpenseModalOnBackdrop(e) {
+      if (e.target.id === 'expenseModalOverlay') closeExpenseModal();
+    }
+
+    function renderModalItems() {
+      const container = document.getElementById('modalItemsListContainer');
+      container.innerHTML = '';
+
+      const dayData = ledger[selectedDateKey] || {};
+      let runningTotal = 0;
+
+      accounts.forEach(acc => {
+        const item = dayData[acc.id] || { qty: 0, amount: 0 };
+        const amount = Number(item.amount) || 0;
+        runningTotal += amount;
+
+        const row = document.createElement('div');
+        row.className = 'sheet-item-row';
+
+        if (acc.type === 'fixed') {
+          // FIXED RATE ITEM: ONLY QUANTITY IS ENTERED / STEPPED! AMOUNT AUTO-CALCULATES!
+          const qty = Number(item.qty) || 0;
+          row.innerHTML = `
+            <div class="item-meta">
+              <div class="item-name">${acc.name}</div>
+              <div style="display:flex; align-items:center;">
+                <span class="item-rate-badge">Rate: ₹${acc.fixedRate}/${acc.unit || 'unit'}</span>
+                <button class="btn-edit-rate" onclick="openEditItemModal('${acc.id}')" title="Edit Rate or Unit">✏️ Edit Rate</button>
+              </div>
+            </div>
+            <div class="qty-controls-wrap">
+              <button class="stepper-btn" onclick="stepModalQty('${acc.id}', -${acc.step || 1})">-</button>
+              <input type="number" step="any" min="0" class="qty-input-box" value="${qty > 0 ? qty : 0}"
+                     oninput="onModalQtyTyped('${acc.id}', this.value)">
+              <button class="stepper-btn" onclick="stepModalQty('${acc.id}', ${acc.step || 1})">+</button>
+            </div>
+            <div class="item-subtotal-tag" id="subtotal_${acc.id}">₹${amount}</div>
+          `;
+        } else {
+          // DIRECT AMOUNT: USER ENTERS RUPEE AMOUNT
+          row.innerHTML = `
+            <div class="item-meta">
+              <div class="item-name">${acc.name}</div>
+              <div style="display:flex; align-items:center;">
+                <span class="item-rate-badge">Variable Spend</span>
+                <button class="btn-edit-rate" onclick="openEditItemModal('${acc.id}')" title="Rename or Edit">✏️ Edit</button>
+              </div>
+            </div>
+            <div class="direct-amount-wrap">
+              <span class="currency-symbol">₹</span>
+              <input type="number" min="0" class="amount-input" placeholder="0" value="${amount > 0 ? amount : ''}"
+                     oninput="onModalAmountTyped('${acc.id}', this.value)">
+            </div>
+          `;
+        }
+        container.appendChild(row);
+      });
+
+      document.getElementById('modalLiveTotalDisplay').innerText = `₹${runningTotal.toLocaleString('en-IN')}`;
+    }
+
+    /* STEPPER FOR FIXED ITEMS (+ / -) */
+    function stepModalQty(accId, delta) {
+      if (!ledger[selectedDateKey]) ledger[selectedDateKey] = {};
+      const acc = accounts.find(a => a.id === accId);
+      let curQty = Number(ledger[selectedDateKey][accId]?.qty) || 0;
+      let newQty = Math.max(0, curQty + delta);
+      newQty = Math.round(newQty * 10) / 10;
+      const newAmount = Math.round(newQty * acc.fixedRate);
+
+      ledger[selectedDateKey][accId] = { qty: newQty, amount: newAmount };
+      renderModalItems();
+    }
+
+    /* MANUAL QUANTITY TYPED FOR FIXED ITEMS */
+    function onModalQtyTyped(accId, val) {
+      if (!ledger[selectedDateKey]) ledger[selectedDateKey] = {};
+      const acc = accounts.find(a => a.id === accId);
+      const qty = Math.max(0, parseFloat(val) || 0);
+      const amount = Math.round(qty * acc.fixedRate);
+
+      ledger[selectedDateKey][accId] = { qty, amount };
+      
+      const subEl = document.getElementById(`subtotal_${accId}`);
+      if (subEl) subEl.innerText = `₹${amount}`;
+      recalcModalLiveTotal();
+    }
+
+    /* MANUAL DIRECT AMOUNT TYPED */
+    function onModalAmountTyped(accId, val) {
+      if (!ledger[selectedDateKey]) ledger[selectedDateKey] = {};
+      const amount = Math.max(0, parseFloat(val) || 0);
+      ledger[selectedDateKey][accId] = { qty: 0, amount };
+      recalcModalLiveTotal();
+    }
+
+    function recalcModalLiveTotal() {
+      const dayData = ledger[selectedDateKey] || {};
+      let total = 0;
+      Object.values(dayData).forEach(it => total += (Number(it.amount) || 0));
+      document.getElementById('modalLiveTotalDisplay').innerText = `₹${total.toLocaleString('en-IN')}`;
+    }
+
+    function copyYesterdayToModal() {
+      const parts = selectedDateKey.split('-');
+      const d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+      d.setDate(d.getDate() - 1);
+      const yKey = fmtDateKey(d.getFullYear(), d.getMonth(), d.getDate());
+
+      if (ledger[yKey]) {
+        ledger[selectedDateKey] = JSON.parse(JSON.stringify(ledger[yKey]));
+        renderModalItems();
+        showToast("Repeated yesterday's entry! ⚡");
+      } else {
+        alert("No entry found for yesterday.");
+      }
+    }
+
+    function saveModalExpenses() {
+      saveLedger();
+      closeExpenseModal();
+      renderAll();
+      showToast("Expense saved successfully! ✅");
+    }
+
+    /* INLINE ADD NEW CATEGORY LOGIC */
+    function toggleAddCategoryForm() {
+      const form = document.getElementById('newCategoryForm');
+      const isVisible = form.style.display === 'flex';
+      form.style.display = isVisible ? 'none' : 'flex';
+    }
+
+    function toggleRateInputVisibility(type) {
+      const isFixed = (type === 'fixed');
+      document.getElementById('newCatRate').style.display = isFixed ? 'block' : 'none';
+      document.getElementById('newCatUnit').style.display = isFixed ? 'block' : 'none';
+    }
+
+    function submitNewCategory() {
+      const name = document.getElementById('newCatName').value.trim();
+      const type = document.getElementById('newCatType').value;
+      const rate = parseFloat(document.getElementById('newCatRate').value) || 0;
+      const unit = document.getElementById('newCatUnit').value.trim() || 'unit';
+
+      if (!name) { alert("Please enter item name."); return; }
+      if (type === 'fixed' && rate <= 0) { alert("Please enter valid rate per unit."); return; }
+
+      const id = 'custom_' + Date.now();
+      accounts.push({
+        id,
+        name: `📌 ${name}`,
+        type,
+        fixedRate: type === 'fixed' ? rate : null,
+        unit: type === 'fixed' ? unit : '₹',
+        step: 1
+      });
+
+      saveAccounts();
+
+      document.getElementById('newCatName').value = '';
+      document.getElementById('newCatRate').value = '';
+      document.getElementById('newCatUnit').value = '';
+      toggleAddCategoryForm();
+
+      renderModalItems();
+      renderProfileItemsMaster();
+      showToast(`Added '${name}' to expense list! 🎉`);
+    }
+
+    /* ==========================================================================
+       6. MONEY RECEIVED (INCOME / BUDGET ENTRY) LOGIC
+       ========================================================================== */
+    function openIncomeModal(defaultDateKey) {
+      const dateVal = defaultDateKey || selectedDateKey || fmtDateKey(currentYear, currentMonth, 1);
+      document.getElementById('incomeEditId').value = '';
+      document.getElementById('incomeDateInput').value = dateVal;
+      document.getElementById('incomeAmountInput').value = '';
+      document.getElementById('incomeSourceSelect').value = 'Monthly Salary / Household Budget';
+      document.getElementById('incomeCustomSourceInput').style.display = 'none';
+      document.getElementById('incomeCustomSourceInput').value = '';
+      document.getElementById('incomeModeSelect').value = 'Cash';
+      document.getElementById('incomeNotesInput').value = '';
+
+      document.getElementById('incomeModalOverlay').classList.add('active');
+    }
+
+    function closeIncomeModal() {
+      document.getElementById('incomeModalOverlay').classList.remove('active');
+    }
+
+    function closeIncomeModalOnBackdrop(e) {
+      if (e.target.id === 'incomeModalOverlay') closeIncomeModal();
+    }
+
+    function toggleCustomIncomeSource(val) {
+      document.getElementById('incomeCustomSourceInput').style.display = (val === 'CUSTOM') ? 'block' : 'none';
+    }
+
+    function saveIncomeEntry() {
+      const date = document.getElementById('incomeDateInput').value;
+      const amount = parseFloat(document.getElementById('incomeAmountInput').value);
+      let source = document.getElementById('incomeSourceSelect').value;
+      if (source === 'CUSTOM') {
+        source = document.getElementById('incomeCustomSourceInput').value.trim() || 'Other Income';
+      }
+      const mode = document.getElementById('incomeModeSelect').value;
+      const notes = document.getElementById('incomeNotesInput').value.trim();
+
+      if (!date) { alert("Please select date."); return; }
+      if (isNaN(amount) || amount <= 0) { alert("Please enter valid received amount."); return; }
+
+      if (!incomeLedger[date]) incomeLedger[date] = [];
+
+      const id = 'inc_' + Date.now();
+      incomeLedger[date].push({
+        id,
+        amount,
+        source,
+        mode,
+        notes
+      });
+
+      saveIncomeLedger();
+      closeIncomeModal();
+      renderAll();
+      showToast(`Added ₹${amount.toLocaleString('en-IN')} to Household Wallet! 💵`);
+    }
+
+    function deleteIncomeEntry(dateKey, id) {
+      if (!confirm("Are you sure you want to delete this received money record?")) return;
+      if (incomeLedger[dateKey]) {
+        incomeLedger[dateKey] = incomeLedger[dateKey].filter(it => it.id !== id);
+        if (incomeLedger[dateKey].length === 0) delete incomeLedger[dateKey];
+        saveIncomeLedger();
+        renderAll();
+        showToast("Income record removed.");
+      }
+    }
+
+    /* ==========================================================================
+       7. EDIT ITEM & RATE MASTER MODAL LOGIC
+       ========================================================================== */
+    function openEditItemModal(accId) {
+      const acc = accounts.find(a => a.id === accId);
+      if (!acc) return;
+
+      document.getElementById('editItemId').value = acc.id;
+      document.getElementById('editItemName').value = acc.name;
+      document.getElementById('editItemType').value = acc.type || 'direct';
+      document.getElementById('editItemRate').value = acc.fixedRate || '';
+      document.getElementById('editItemUnit').value = acc.unit || '';
+      document.getElementById('editItemStep').value = String(acc.step || 1);
+
+      toggleEditItemTypeFields(acc.type || 'direct');
+      document.getElementById('editItemModalHeading').innerText = `⚙️ Edit: ${acc.name}`;
+      document.getElementById('editItemModalOverlay').classList.add('active');
+    }
+
+    function openAddNewItemModal() {
+      document.getElementById('editItemId').value = 'NEW_ITEM';
+      document.getElementById('editItemName').value = '';
+      document.getElementById('editItemType').value = 'fixed';
+      document.getElementById('editItemRate').value = '';
+      document.getElementById('editItemUnit').value = 'Liter';
+      document.getElementById('editItemStep').value = '1';
+
+      toggleEditItemTypeFields('fixed');
+      document.getElementById('editItemModalHeading').innerText = `➕ Add New Item / Rate`;
+      document.getElementById('editItemModalOverlay').classList.add('active');
+    }
+
+    function toggleEditItemTypeFields(type) {
+      const isFixed = (type === 'fixed');
+      document.getElementById('editFixedRateGroup').style.display = isFixed ? 'block' : 'none';
+    }
+
+    function closeEditItemModal() {
+      document.getElementById('editItemModalOverlay').classList.remove('active');
+    }
+
+    function closeEditItemModalOnBackdrop(e) {
+      if (e.target.id === 'editItemModalOverlay') closeEditItemModal();
+    }
+
+    function saveEditedItem() {
+      const id = document.getElementById('editItemId').value;
+      const name = document.getElementById('editItemName').value.trim();
+      const type = document.getElementById('editItemType').value;
+      const rate = parseFloat(document.getElementById('editItemRate').value) || 0;
+      const unit = document.getElementById('editItemUnit').value.trim() || 'unit';
+      const step = parseFloat(document.getElementById('editItemStep').value) || 1;
+
+      if (!name) { alert("Item name is required."); return; }
+      if (type === 'fixed' && rate <= 0) { alert("Please enter valid rate per unit."); return; }
+
+      if (id === 'NEW_ITEM') {
+        const newId = 'custom_' + Date.now();
+        accounts.push({
+          id: newId,
+          name: name.startsWith('📌') || name.startsWith('🥛') || name.startsWith('🍱') ? name : `📌 ${name}`,
+          type,
+          fixedRate: type === 'fixed' ? rate : null,
+          unit: type === 'fixed' ? unit : '₹',
+          step
+        });
+        showToast("New item created successfully! 🎉");
+      } else {
+        const acc = accounts.find(a => a.id === id);
+        if (acc) {
+          acc.name = name;
+          acc.type = type;
+          acc.fixedRate = type === 'fixed' ? rate : null;
+          acc.unit = type === 'fixed' ? unit : '₹';
+          acc.step = step;
+
+          if (ledger[selectedDateKey] && ledger[selectedDateKey][id]) {
+            const curQty = Number(ledger[selectedDateKey][id].qty) || 0;
+            if (type === 'fixed' && curQty > 0) {
+              ledger[selectedDateKey][id].amount = Math.round(curQty * rate);
+            }
+          }
+        }
+        showToast("Item rate updated! ✅");
+      }
+
+      saveAccounts();
+      saveLedger();
+      closeEditItemModal();
+      renderAll();
+      if (document.getElementById('expenseModalOverlay').classList.contains('active')) {
+        renderModalItems();
+      }
+    }
+
+    function deleteEditedItem() {
+      const id = document.getElementById('editItemId').value;
+      if (id === 'NEW_ITEM') {
+        closeEditItemModal();
+        return;
+      }
+      const acc = accounts.find(a => a.id === id);
+      if (!confirm(`Are you sure you want to remove '${acc?.name}' from your items list?`)) return;
+
+      accounts = accounts.filter(a => a.id !== id);
+      saveAccounts();
+      closeEditItemModal();
+      renderAll();
+      if (document.getElementById('expenseModalOverlay').classList.contains('active')) {
+        renderModalItems();
+      }
+      showToast("Item deleted from list.");
+    }
+
+    function renderProfileItemsMaster() {
+      const container = document.getElementById('profileItemsMasterList');
+      if (!container) return;
+      container.innerHTML = '';
+
+      accounts.forEach(acc => {
+        const itemRow = document.createElement('div');
+        itemRow.style.display = 'flex';
+        itemRow.style.justifyContent = 'space-between';
+        itemRow.style.alignItems = 'center';
+        itemRow.style.padding = '8px 10px';
+        itemRow.style.background = '#f8fafc';
+        itemRow.style.borderRadius = '10px';
+        itemRow.style.border = '1px solid var(--border)';
+
+        const isFixed = (acc.type === 'fixed');
+        itemRow.innerHTML = `
+          <div>
+            <strong style="font-size:0.85rem; color:#0f172a;">${acc.name}</strong>
+            <div style="font-size:0.72rem; color:var(--text-muted);">
+              ${isFixed ? `Fixed Rate: ₹${acc.fixedRate} / ${acc.unit} (Step: ${acc.step})` : `Direct Amount (₹)`}
+            </div>
+          </div>
+          <button class="btn btn-secondary" style="width:auto; padding:4px 10px; font-size:0.75rem;" onclick="openEditItemModal('${acc.id}')">
+            ✏️ Edit
+          </button>
+        `;
+        container.appendChild(itemRow);
+      });
+    }
+
+    /* ==========================================================================
+       8. PANCHANG & SPIRITUAL SCREEN RENDERING
+       ========================================================================== */
+    function renderPanchangScreen() {
+      const parts = selectedDateKey.split('-');
+      const y = parseInt(parts[0]);
+      const m = parseInt(parts[1]) - 1;
+      const d = parseInt(parts[2]);
+
+      const panchang = getPanchangForDate(y, m, d);
+      const sun = calculateSolarTimes(y, m, d, currentCity.lat, currentCity.lng);
+
+      document.getElementById('panchangHeroDateText').innerText = `${d} ${monthNamesEn[m]} ${y}`;
+      document.getElementById('panchangCityText').innerText = `📍 ${currentCity.name.split(' ')[0]}`;
+      document.getElementById('panchangHeroTithiText').innerText = panchang.fullTithi;
+      document.getElementById('panchangHeroSamvatText').innerText = `Vikram Samvat ${panchang.vikramYear} • Veer Samvat ${panchang.veerYear}`;
+
+      document.getElementById('panchangHeroParvaBox').style.display = panchang.isAthamChaudas ? 'flex' : 'none';
+
+      // 8 Pachkhan
+      document.getElementById('pkSunrise').innerText = sun.sunrise;
+      document.getElementById('pkSunset').innerText = sun.sunset;
+      document.getElementById('pkNavkarshi').innerText = sun.navkarshi;
+      document.getElementById('pkPorsi').innerText = sun.porsi;
+      document.getElementById('pkSadhporsi').innerText = sun.sadhporsi;
+      document.getElementById('pkPurimaddha').innerText = sun.purimaddha;
+      document.getElementById('pkAvaddha').innerText = sun.avaddha;
+      document.getElementById('pkChauvihar').innerText = sun.chauvihar;
+
+      // Choghadiyas
+      const chogs = getChoghadiyas(y, m, d, sun.srMin, sun.ssMin);
+      const now = new Date();
+      const nowMin = now.getHours() * 60 + now.getMinutes();
+
+      const timeline = document.getElementById('choghadiyaTimeline');
+      timeline.innerHTML = '';
+      let activeChog = chogs[0];
+
+      chogs.forEach(c => {
+        const isCurrent = (nowMin >= c.startMin && nowMin < c.endMin);
+        if (isCurrent) activeChog = c;
+        const row = document.createElement('div');
+        row.className = `chog-row ${c.info.class} ${isCurrent ? 'active' : ''}`;
+        row.innerHTML = `
+          <span>${c.type}: <strong>${c.name}</strong> (${c.info.nature})</span>
+          <span>${c.timeStr}</span>
+        `;
+        timeline.appendChild(row);
+      });
+
+      document.getElementById('activeChogBadge').innerText = `Live: ${activeChog.name} (${activeChog.info.nature})`;
+
+      // Kalyanaks list for month
+      const kalContainer = document.getElementById('panchangKalyanakContainer');
+      kalContainer.innerHTML = '';
+
+      if (y === 2026 && m === 9) {
+        Object.entries(vitragvaniOct2026).forEach(([dNum, item]) => {
+          if (item.event) {
+            const el = document.createElement('div');
+            el.style.padding = '7px 0';
+            el.style.borderBottom = '1px solid #f1f5f9';
+            el.innerHTML = `
+              <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:700;">
+                <span>${dNum} Oct — ${item.month} ${item.sudVad} ${item.tithi}</span>
+                <span style="color:var(--gold);">${item.event}</span>
+              </div>
+              <div style="font-size:0.72rem; color:var(--text-muted);">${item.details}</div>
+            `;
+            kalContainer.appendChild(el);
+          }
+        });
+      } else {
+        kalContainer.innerHTML = '<div style="font-size:0.8rem; color:var(--text-muted);">Tithis calculated astronomically for this month.</div>';
+      }
+    }
+
+    /* ==========================================================================
+       9. REPORTS & EXCEL CSV EXPORT
+       ========================================================================== */
+    function renderReports() {
+      let monthExpenses = 0;
+      let monthIncome = 0;
+      const catTotals = {};
+      accounts.forEach(a => catTotals[a.id] = 0);
+
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      let activeDaysCount = 0;
+      const ledgerRows = [];
+      const incomeRows = [];
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dk = fmtDateKey(currentYear, currentMonth, d);
+        
+        // Income entries
+        if (incomeLedger[dk]) {
+          incomeLedger[dk].forEach(inc => {
+            monthIncome += Number(inc.amount) || 0;
+            incomeRows.push({ day: d, dateKey: dk, amount: inc.amount, source: inc.source, mode: inc.mode, id: inc.id });
+          });
+        }
+
+        // Expense entries
+        const dayData = ledger[dk];
+        if (dayData) {
+          let daySum = 0;
+          let descriptions = [];
+          Object.entries(dayData).forEach(([accId, it]) => {
+            const amt = Number(it.amount) || 0;
+            if (amt > 0) {
+              daySum += amt;
+              catTotals[accId] = (catTotals[accId] || 0) + amt;
+              const acc = accounts.find(a => a.id === accId) || { name: accId };
+              descriptions.push(`${acc.name}: ₹${amt}`);
+            }
+          });
+          if (daySum > 0) {
+            monthExpenses += daySum;
+            activeDaysCount++;
+            ledgerRows.push({ day: d, dateKey: dk, total: daySum, desc: descriptions.join(', ') });
+          }
+        }
+      }
+
+      const netBalance = monthIncome - monthExpenses;
+
+      document.getElementById('repTotalIncome').innerText = `+₹${monthIncome.toLocaleString('en-IN')}`;
+      document.getElementById('repTotalSpend').innerText = `-₹${monthExpenses.toLocaleString('en-IN')}`;
+      document.getElementById('repNetBalance').innerText = `₹${netBalance.toLocaleString('en-IN')}`;
+      document.getElementById('repNetBalance').style.color = netBalance >= 0 ? '#10b981' : '#ef4444';
+
+      // Income records list in reports
+      const incListEl = document.getElementById('reportsIncomeList');
+      if (incomeRows.length === 0) {
+        incListEl.innerHTML = '<div class="empty-note">No income recorded for this month. Click "+ Add Money" to add opening budget or salary.</div>';
+      } else {
+        incListEl.innerHTML = incomeRows.map(r => `
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #f1f5f9; font-size:0.8rem;">
+            <div>
+              <strong style="color:#059669;">${r.day} ${monthNamesEn[currentMonth]} — +₹${r.amount.toLocaleString('en-IN')}</strong>
+              <div style="font-size:0.72rem; color:var(--text-muted);">${r.source} (${r.mode || 'Cash'})</div>
+            </div>
+            <button style="background:none; border:none; cursor:pointer; color:#ef4444; font-size:0.85rem;" onclick="deleteIncomeEntry('${r.dateKey}', '${r.id}')" title="Delete">🗑️</button>
+          </div>
+        `).join('');
+      }
+
+      // Expense progress bars
+      const barBox = document.getElementById('categoryProgressBars');
+      barBox.innerHTML = '';
+
+      accounts.forEach(acc => {
+        const amt = catTotals[acc.id] || 0;
+        const pct = monthExpenses > 0 ? Math.round((amt / monthExpenses) * 100) : 0;
+
+        const row = document.createElement('div');
+        row.className = 'bar-row';
+        row.innerHTML = `
+          <div class="bar-header">
+            <span>${acc.name}</span>
+            <span>₹${amt.toLocaleString('en-IN')} (${pct}%)</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: ${pct}%;"></div>
+          </div>
+        `;
+        barBox.appendChild(row);
+      });
+
+      // Daily list
+      const ledgerList = document.getElementById('dailyLedgerList');
+      if (ledgerRows.length === 0) {
+        ledgerList.innerHTML = '<div class="empty-note">No expense records found for this month.</div>';
+      } else {
+        ledgerList.innerHTML = ledgerRows.map(r => `
+          <div style="display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px solid #f1f5f9; font-size:0.8rem;">
+            <div>
+              <strong>${r.day} ${monthNamesEn[currentMonth]}</strong>
+              <div style="font-size:0.72rem; color:var(--text-muted);">${r.desc}</div>
+            </div>
+            <strong style="color:var(--danger);">-₹${r.total}</strong>
+          </div>
+        `).join('');
+      }
+    }
+
+    function exportExcel() {
+      let csv = "\uFEFFDate,Day,Type,Description / Category,Income (+₹),Expense (-₹),Balance (₹)\r\n";
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      let runningBalance = 0;
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dk = fmtDateKey(currentYear, currentMonth, d);
+        
+        // Income lines
+        if (incomeLedger[dk]) {
+          incomeLedger[dk].forEach(inc => {
+            runningBalance += inc.amount;
+            csv += `"${dk}","${d} ${monthNamesEn[currentMonth]}","INCOME (RECEIVED)","${inc.source} (${inc.mode || 'Cash'})",${inc.amount},0,${runningBalance}\r\n`;
+          });
+        }
+
+        // Expense lines
+        const dayData = ledger[dk];
+        if (dayData) {
+          let daySum = 0;
+          let itemsList = [];
+          Object.entries(dayData).forEach(([accId, it]) => {
+            const amt = Number(it.amount) || 0;
+            if (amt > 0) {
+              daySum += amt;
+              const acc = accounts.find(a => a.id === accId) || { name: accId };
+              itemsList.push(`${acc.name} (${it.qty || ''} ₹${amt})`);
+            }
+          });
+          if (daySum > 0) {
+            runningBalance -= daySum;
+            csv += `"${dk}","${d} ${monthNamesEn[currentMonth]}","EXPENSE (DEDUCTED)","${itemsList.join('; ')}",0,${daySum},${runningBalance}\r\n`;
+          }
+        }
+      }
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `Household_Statement_${monthNamesEn[currentMonth]}_${currentYear}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast("Excel CSV downloaded successfully! 📥");
+    }
+
+    function exportBackupJSON() {
+      const data = {
+        user: currentUser,
+        accounts,
+        ledger,
+        incomeLedger,
+        city: selectedCityKey,
+        exportedAt: new Date().toISOString()
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `Diary_Backup_${currentUser?.name || 'User'}.json`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast("Data backup saved! 💾");
+    }
+
+    /* ==========================================================================
+       10. NAVIGATION & CITY MODALS
+       ========================================================================== */
+    function switchNavTab(tabName) {
+      document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
+
+      if (tabName === 'calendar') {
+        document.getElementById('screenCalendar').classList.add('active');
+        document.getElementById('navBtnCalendar').classList.add('active');
+      } else if (tabName === 'panchang') {
+        document.getElementById('screenPanchang').classList.add('active');
+        document.getElementById('navBtnPanchang').classList.add('active');
+        renderPanchangScreen();
+      } else if (tabName === 'reports') {
+        document.getElementById('screenReports').classList.add('active');
+        document.getElementById('navBtnReports').classList.add('active');
+        renderReports();
+      } else if (tabName === 'profile') {
+        document.getElementById('screenProfile').classList.add('active');
+        document.getElementById('navBtnProfile').classList.add('active');
+        renderProfileItemsMaster();
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function openCityModal() {
+      const grid = document.getElementById('cityOptionGrid');
+      grid.innerHTML = '';
+      Object.entries(INDIAN_CITIES).forEach(([key, city]) => {
+        const btn = document.createElement('button');
+        btn.className = `btn ${selectedCityKey === key ? 'btn-primary' : 'btn-secondary'}`;
+        btn.style.fontSize = '0.75rem';
+        btn.innerText = city.name.split(' ')[0];
+        btn.onclick = () => {
+          selectedCityKey = key;
+          currentCity = city;
+          localStorage.setItem('app_city_key', key);
+          document.getElementById('headerCityLabel').innerText = city.name.split(' ')[0];
+          closeCityModal();
+          renderAll();
+          showToast(`City set to ${city.name}!`);
+        };
+        grid.appendChild(btn);
+      });
+      document.getElementById('cityModalOverlay').classList.add('active');
+    }
+
+    function closeCityModal() {
+      document.getElementById('cityModalOverlay').classList.remove('active');
+    }
+
+    function closeCityModalOnBackdrop(e) {
+      if (e.target.id === 'cityModalOverlay') closeCityModal();
+    }
+
+    function detectGPSLocation() {
+      if (!navigator.geolocation) { alert("GPS not available."); return; }
+      navigator.geolocation.getCurrentPosition(pos => {
+        currentCity = {
+          name: "Live GPS Location",
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude
+        };
+        selectedCityKey = 'gps';
+        document.getElementById('headerCityLabel').innerText = "My GPS";
+        closeCityModal();
+        renderAll();
+        showToast("GPS location applied! 📡");
+      }, err => {
+        alert("GPS permission denied.");
+      });
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toastMessage');
+      toast.innerText = msg;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 2200);
+    }
+
+    // BOOTSTRAP APP
+    window.addEventListener('DOMContentLoaded', () => {
+      initAuth();
+    });
+  </script>
+</body>
+</html>

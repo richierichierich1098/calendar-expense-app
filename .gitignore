@@ -1,0 +1,20 @@
+# Scratch & Data Mining Scripts
+*.py
+*.html.bak
+*sample*.html
+vitragvani*
+prokerala*
+*.pdf
+
+# Exception for main app
+!index.html
+
+# Node & Environment
+node_modules/
+npm-debug.log*
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
