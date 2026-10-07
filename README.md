@@ -1,4 +1,4 @@
-# 🗓️ Household Expense Diary & Multi-Mode Calendar
+# 🗓️ GharKharch - Household Expense Diary & Multi-Mode Calendar
 
 A comprehensive, mobile-first Household Expense Tracker and Multi-Mode Calendar App built with modern vanilla HTML5, CSS3, and JavaScript.
 

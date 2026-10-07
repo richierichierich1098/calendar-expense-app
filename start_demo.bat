@@ -1,7 +1,7 @@
 @echo off
-title Shri Vitragvani Jain Calendar ^& Expense Diary Demo
+title GharKharch - Household Expense Diary ^& Calendar Demo
 echo =======================================================
-echo   Shri Vitragvani Jain Calendar ^& Household Diary Demo
+echo   GharKharch - Household Expense Diary ^& Calendar Demo
 echo =======================================================
 echo.
 echo Starting local demo server on http://localhost:8080/ ...

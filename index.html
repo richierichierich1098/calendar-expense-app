@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Household Expense Diary & Calendar</title>
+  <title>GharKharch - Household Expense Diary & Calendar</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="Gharkharch_Icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Gujarati:wght@400;600;700&display=swap" rel="stylesheet">
@@ -12,28 +14,47 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
   <style>
     :root {
-      --primary: #4f46e5;         /* Modern Indigo */
-      --primary-dark: #4338ca;
-      --primary-light: #eef2ff;
-      --primary-border: #c7d2fe;
-      --accent-green: #10b981;    /* Money Green */
-      --accent-green-light: #ecfdf5;
-      --gold: #d97706;            /* Panchang Gold */
-      --gold-light: #fef3c7;
+      /* GharKharch Signature Palette (Derived from Official Logo) */
+      --primary: #1b382b;         /* Royal Forest Green */
+      --primary-dark: #12261d;
+      --primary-light: #eff5f2;      /* Gentle Sage Light */
+      --primary-border: #b8cec2;
+      --primary-gradient: linear-gradient(135deg, #1b382b 0%, #12261d 100%);
+
+      /* Metallic Warm Gold (From the Rupee Briefcase & GharKharch Lettering) */
+      --gold: #c89a3c;            /* Antique Polished Gold */
+      --gold-dark: #9e7420;
+      --gold-light: #fcf7ee;      /* Warm Champagne Tint */
+      --gold-border: #e6ce90;
+      --gold-gradient: linear-gradient(135deg, #f3d482 0%, #c89a3c 50%, #9e7420 100%);
+      --gold-glow: 0 4px 18px rgba(200, 154, 60, 0.35);
+
+      /* Terracotta Warm Brick (From Calendar Ledger Tile in Logo) */
+      --terracotta: #c05835;      /* Burnt Sienna / Terracotta */
+      --terracotta-dark: #9d3f1f;
+      --terracotta-light: #fef4f0;
+      --terracotta-border: #f2c6b6;
+
+      /* Wealth & Expense Indicators */
+      --accent-green: #15803d;    /* Income Green */
+      --accent-green-light: #f0fdf4;
+      --danger: #dc2626;          /* Expense Red */
+      --danger-light: #fef2f2;
       --vitrag-green: #dcfce7;    /* Jain Parva Green */
       --vitrag-green-border: #86efac;
-      --danger: #ef4444;
-      --danger-light: #fef2f2;
-      --bg: #f8fafc;
+
+      /* Premium Surfaces & Typography */
+      --bg: #f6f8f6;              /* Warm Linen / Off-White */
       --card: #ffffff;
-      --text: #0f172a;
-      --text-muted: #64748b;
-      --text-light: #94a3b8;
-      --border: #e2e8f0;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
-      --shadow: 0 4px 12px rgba(0,0,0,0.06);
-      --shadow-lg: 0 12px 30px rgba(0,0,0,0.12);
-      --radius: 16px;
+      --card-warm: #fafbf9;
+      --text: #111a15;            /* Charcoal Forest Dark */
+      --text-muted: #57685e;      /* Slate Sage Muted */
+      --text-light: #8a9c92;
+      --border: #e1e7e2;
+      --shadow-sm: 0 2px 6px rgba(17,26,21,0.04);
+      --shadow: 0 6px 18px rgba(17,26,21,0.08);
+      --shadow-lg: 0 16px 36px rgba(17,26,21,0.14);
+      --radius: 18px;
       --radius-sm: 10px;
     }
 
@@ -53,7 +74,7 @@
     }
 
     body {
-      background: radial-gradient(circle at 50% 15%, #1e1b4b 0%, #0a0e1a 100%);
+      background: radial-gradient(circle at 50% 15%, #182c23 0%, #0a130f 100%);
       color: var(--text);
       min-height: 100vh;
       display: flex;
@@ -71,12 +92,12 @@
       max-height: 96vh;
       background: #0f172a;
       border-radius: 52px;
-      box-shadow: 0 25px 70px -15px rgba(0, 0, 0, 0.75), 0 0 0 11px #1e293b, 0 0 0 14px #334155;
+      box-shadow: 0 25px 70px -15px rgba(0, 0, 0, 0.85), 0 0 0 11px #16261f, 0 0 0 14px #263e33;
       position: relative;
       display: flex;
       flex-direction: column;
       overflow: hidden !important;
-      border: 1px solid rgba(255,255,255,0.1);
+      border: 1px solid rgba(200, 154, 60, 0.25);
     }
 
     /* TOP STATUS BAR (Dynamic Island + Time) */
@@ -196,7 +217,7 @@
     .auth-screen-layer {
       position: absolute;
       inset: 0;
-      background: #ffffff;
+      background: radial-gradient(circle at 50% 15%, #ffffff 0%, #f6f8f6 100%);
       z-index: 90;
       display: flex;
       flex-direction: column;
@@ -217,61 +238,98 @@
       margin: auto 0;
     }
 
-    .lock-avatar-ring {
-      position: relative;
+    /* Official GharKharch Brand Presentation on Auth */
+    .lock-brand-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       margin-bottom: 14px;
     }
 
+    .lock-brand-logo-frame {
+      width: 92px;
+      height: 92px;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 10px 24px rgba(17, 26, 21, 0.22), 0 0 0 2px var(--gold-border);
+      background: #16261e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 6px;
+      transition: transform 0.2s ease;
+    }
+    .lock-brand-logo-frame:hover {
+      transform: scale(1.03);
+    }
+
+    .lock-brand-logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .lock-brand-tagline {
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: var(--gold-dark);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .lock-user-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      padding: 5px 12px;
+      border-radius: 20px;
+      margin-bottom: 6px;
+      box-shadow: var(--shadow-sm);
+    }
+
     .lock-avatar {
-      width: 82px;
-      height: 82px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      background: linear-gradient(135deg, #1b382b 0%, #12261d 100%);
       color: white;
-      font-size: 2.2rem;
+      font-size: 0.85rem;
       font-weight: 800;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 10px 25px rgba(124, 58, 237, 0.35);
+      border: 1.5px solid var(--gold);
+      box-shadow: 0 2px 6px rgba(27, 56, 43, 0.25);
     }
 
-    .lock-badge {
-      position: absolute;
-      bottom: -2px;
-      right: -2px;
-      width: 28px;
-      height: 28px;
-      background: #ffffff;
-      border-radius: 50%;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    .lock-user-meta {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.9rem;
+      align-items: baseline;
+      gap: 5px;
     }
 
     .lock-greeting {
-      font-size: 0.8rem;
+      font-size: 0.72rem;
       font-weight: 700;
-      color: #64748b;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      color: var(--text-muted);
     }
 
     .lock-name {
-      font-size: 1.4rem;
+      font-size: 0.95rem;
       font-weight: 800;
-      color: #0f172a;
-      margin: 2px 0 4px 0;
+      color: var(--text);
       letter-spacing: -0.01em;
     }
 
     .lock-subtitle {
-      font-size: 0.82rem;
-      color: #94a3b8;
-      margin-bottom: 22px;
-      font-weight: 500;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      font-weight: 600;
     }
 
     /* 4 PIN Dots */
@@ -287,16 +345,16 @@
       width: 16px;
       height: 16px;
       border-radius: 50%;
-      border: 2px solid #cbd5e1;
+      border: 2px solid #b8cec2;
       background: transparent;
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .pin-dot-circle.filled {
-      background: #4f46e5;
-      border-color: #4f46e5;
+      background: var(--gold);
+      border-color: var(--gold);
       transform: scale(1.18);
-      box-shadow: 0 0 10px rgba(79, 70, 229, 0.5);
+      box-shadow: 0 0 12px rgba(200, 154, 60, 0.65);
     }
 
     .pin-dot-circle.error {
@@ -321,7 +379,7 @@
       font-weight: 700;
       color: #ef4444;
       text-align: center;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     /* TOUCH NUMPAD */
@@ -330,36 +388,38 @@
       grid-template-columns: repeat(3, 72px);
       gap: 14px;
       justify-content: center;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
     .numpad-key {
       width: 72px;
       height: 72px;
       border-radius: 50%;
-      border: 1px solid #e2e8f0;
+      border: 1px solid var(--border);
       background: #ffffff;
       font-size: 1.55rem;
       font-weight: 700;
-      color: #0f172a;
+      color: var(--text);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       transition: all 0.12s ease;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+      box-shadow: 0 2px 6px rgba(17, 26, 21, 0.04);
       user-select: none;
     }
 
     .numpad-key:hover {
-      background: #f8fafc;
-      border-color: #cbd5e1;
+      background: var(--gold-light);
+      border-color: var(--gold-border);
       transform: translateY(-1px);
     }
 
     .numpad-key:active {
-      background: #e2e8f0;
+      background: var(--primary-light);
+      border-color: var(--gold);
       transform: scale(0.92);
+      box-shadow: 0 0 10px rgba(200, 154, 60, 0.35);
     }
 
     .numpad-key.aux {
@@ -368,11 +428,11 @@
       background: transparent;
       border-color: transparent;
       box-shadow: none;
-      color: #64748b;
+      color: var(--text-muted);
     }
     .numpad-key.aux:hover {
-      background: #f1f5f9;
-      color: #0f172a;
+      background: var(--primary-light);
+      color: var(--text);
     }
 
     .lock-footer-row {
@@ -385,17 +445,19 @@
     .btn-text-action {
       background: transparent;
       border: none;
-      color: #4f46e5;
+      color: var(--primary);
       font-size: 0.82rem;
       font-weight: 700;
       cursor: pointer;
       padding: 4px;
+      transition: color 0.15s;
     }
     .btn-text-action:hover {
+      color: var(--gold-dark);
       text-decoration: underline;
     }
 
-    /* SCREEN 2: MINIMAL SIGN UP / ONBOARDING */
+    /* SCREEN 2: ONBOARDING & SCREEN 3: FORGOT PIN */
     .onboarding-card {
       width: 100%;
       max-width: 340px;
@@ -404,33 +466,39 @@
       margin: auto 0;
     }
 
-    .onboard-badge {
-      width: 60px;
-      height: 60px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-      color: white;
-      font-size: 2rem;
+    .onboard-logo-frame {
+      width: 86px;
+      height: 86px;
+      border-radius: 20px;
+      overflow: hidden;
+      margin: 0 auto 12px auto;
+      box-shadow: 0 10px 24px rgba(17, 26, 21, 0.2), 0 0 0 2px var(--gold-border);
+      background: #16261e;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 14px auto;
-      box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+    }
+
+    .onboard-logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
     .onboard-heading {
-      font-size: 1.45rem;
+      font-size: 1.4rem;
       font-weight: 800;
-      color: #0f172a;
+      color: var(--text);
       text-align: center;
       letter-spacing: -0.02em;
     }
 
     .onboard-sub {
-      font-size: 0.82rem;
-      color: #64748b;
+      font-size: 0.8rem;
+      color: var(--text-muted);
       text-align: center;
-      margin-bottom: 22px;
+      margin-bottom: 20px;
     }
 
     .form-group-clean {
@@ -452,14 +520,14 @@
       border-radius: 12px;
       font-size: 0.95rem;
       font-weight: 600;
-      color: #0f172a;
+      color: var(--text);
       outline: none;
       background: #ffffff;
       transition: all 0.2s;
     }
     .input-clean:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+      box-shadow: 0 0 0 3px rgba(27, 56, 43, 0.12);
     }
 
     .pin-boxes-row {
@@ -477,36 +545,38 @@
       border: 2px solid var(--border);
       border-radius: 12px;
       outline: none;
-      background: #f8fafc;
+      background: #ffffff;
+      color: var(--text);
       transition: all 0.2s;
     }
     .pin-input-cell:focus {
-      border-color: var(--primary);
-      background: #ffffff;
-      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+      border-color: var(--gold);
+      background: var(--gold-light);
+      box-shadow: 0 0 0 3px rgba(200, 154, 60, 0.2);
     }
 
     .btn-submit-action {
       width: 100%;
       padding: 13px;
-      background: var(--primary);
+      background: linear-gradient(135deg, #1b382b 0%, #12261d 100%);
       color: #ffffff;
       border-radius: 12px;
       font-size: 0.95rem;
-      font-weight: 700;
-      border: none;
+      font-weight: 800;
+      border: 1px solid rgba(200, 154, 60, 0.35);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+      box-shadow: 0 4px 14px rgba(17, 26, 21, 0.35);
       transition: all 0.2s;
       margin-top: 10px;
     }
     .btn-submit-action:hover {
-      background: var(--primary-dark);
+      background: linear-gradient(135deg, #244b3a 0%, #1b382b 100%);
       transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(17, 26, 21, 0.45);
     }
 
     /* ==========================================================================
@@ -525,7 +595,7 @@
     /* HEADER */
     .app-top-header {
       background: #ffffff;
-      padding: 12px 16px;
+      padding: 10px 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -533,51 +603,101 @@
       position: sticky;
       top: 0;
       z-index: 30;
+      box-shadow: var(--shadow-sm);
     }
 
-    .header-user-chip {
+    .header-brand-wrap {
       display: flex;
       align-items: center;
       gap: 10px;
       cursor: pointer;
+      user-select: none;
     }
 
-    .header-avatar {
+    .header-brand-logo {
       width: 38px;
       height: 38px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #4f46e5, #7c3aed);
-      color: white;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-      box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
+      border-radius: 11px;
+      box-shadow: 0 4px 10px rgba(17, 26, 21, 0.2), 0 0 0 1.5px var(--gold-border);
+      object-fit: cover;
+      flex-shrink: 0;
+      background: #16261e;
     }
 
-    .header-user-info h2 {
-      font-size: 0.92rem;
-      font-weight: 800;
-      color: #0f172a;
-      line-height: 1.15;
+    .header-brand-info {
+      display: flex;
+      flex-direction: column;
     }
-    .header-user-info span {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      font-weight: 600;
+
+    .header-brand-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .header-brand-sub {
+      font-size: 0.62rem;
+      font-weight: 800;
+      color: var(--gold-dark);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      line-height: 1.1;
     }
 
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
+    }
+
+    .header-user-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 3px 8px 3px 4px;
+      border-radius: 20px;
+      transition: all 0.15s;
+    }
+    .header-user-chip:hover {
+      background: var(--primary-light);
+      border-color: var(--primary-border);
+    }
+
+    .header-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1b382b 0%, #12261d 100%);
+      color: white;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      border: 1px solid var(--gold);
+      flex-shrink: 0;
+    }
+
+    .header-user-info h2 {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.15;
+      max-width: 65px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .pill-btn-header {
-      background: #f1f5f9;
+      background: #f1f5f2;
       border: 1px solid var(--border);
-      color: #1e293b;
+      color: var(--text);
       padding: 5px 10px;
       border-radius: 18px;
       font-size: 0.75rem;
@@ -589,7 +709,8 @@
       transition: all 0.15s;
     }
     .pill-btn-header:hover {
-      background: #e2e8f0;
+      background: var(--primary-light);
+      border-color: var(--primary-border);
     }
 
     .pill-btn-lock {
@@ -614,9 +735,9 @@
       flex: 1;
       padding: 8px 6px;
       border-radius: 10px;
-      border: none;
-      background: #f1f5f9;
-      color: #64748b;
+      border: 1px solid var(--border);
+      background: #f8faf8;
+      color: var(--text-muted);
       font-size: 0.78rem;
       font-weight: 700;
       cursor: pointer;
@@ -629,32 +750,48 @@
     .segment-tab.active {
       background: var(--primary);
       color: #ffffff;
-      box-shadow: 0 3px 8px rgba(79, 70, 229, 0.3);
+      border-color: var(--primary);
+      box-shadow: 0 3px 8px rgba(27, 56, 43, 0.35);
     }
 
-    /* LUXURY WALLET CARD (Apple Card Style) */
+    /* LUXURY WALLET CARD (Royal Forest Green & Polished Gold) */
     .wallet-hero-card {
-      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 60%, #4338ca 100%);
+      background: linear-gradient(145deg, #0e1e16 0%, #173629 55%, #1e4736 100%);
       color: white;
       margin: 12px 14px 6px 14px;
       padding: 16px;
       border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      box-shadow: 0 12px 28px rgba(14, 30, 22, 0.35);
+      border: 1px solid rgba(200, 154, 60, 0.35);
       position: relative;
       overflow: hidden !important;
       max-width: calc(100% - 28px);
     }
 
-    .wallet-hero-card::after {
+    .wallet-hero-card::before {
       content: '';
       position: absolute;
-      top: -50%;
+      top: 0;
+      left: 0;
       right: 0;
-      width: 140px;
-      height: 140px;
-      background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
-      border-radius: 50%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(243, 212, 130, 0.6), transparent);
+    }
+
+    .wallet-card-watermark {
+      position: absolute;
+      right: -12px;
+      bottom: -15px;
+      width: 125px;
+      height: 125px;
+      opacity: 0.12;
       pointer-events: none;
+      filter: drop-shadow(0 0 10px rgba(200, 154, 60, 0.5));
+    }
+    .wallet-card-watermark img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
 
     .wallet-card-top {
@@ -662,19 +799,35 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 8px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .wallet-brand-indicator {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .wallet-brand-name {
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: #f3d482;
+      text-transform: uppercase;
     }
 
     .wallet-card-title {
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      color: #cbd5e1;
+      color: #b8cec2;
     }
 
     .btn-add-funds {
-      background: #10b981;
-      color: white;
+      background: linear-gradient(135deg, #f3d482 0%, #c89a3c 100%);
+      color: #10241b;
       border: none;
       padding: 5px 12px;
       border-radius: 20px;
@@ -684,28 +837,34 @@
       display: flex;
       align-items: center;
       gap: 4px;
-      box-shadow: 0 2px 8px rgba(16,185,129,0.4);
+      box-shadow: 0 2px 10px rgba(200, 154, 60, 0.4);
       transition: all 0.15s;
     }
     .btn-add-funds:hover {
-      background: #059669;
+      background: linear-gradient(135deg, #fae29c 0%, #d4a748 100%);
+      transform: translateY(-1px);
     }
 
     .wallet-balance-row {
       margin-bottom: 12px;
+      position: relative;
+      z-index: 2;
     }
 
     .wallet-balance-label {
-      font-size: 0.72rem;
-      color: #94a3b8;
+      font-size: 0.68rem;
+      color: #a4baae;
       display: block;
       margin-bottom: 2px;
+      letter-spacing: 0.04em;
     }
 
     .wallet-balance-num {
-      font-size: 1.6rem;
+      font-size: 1.65rem;
       font-weight: 800;
       letter-spacing: -0.02em;
+      color: #ffffff;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
     }
 
     .wallet-chips-grid {
@@ -713,16 +872,20 @@
       grid-template-columns: 1fr 1fr 1fr;
       gap: 6px;
       margin-bottom: 10px;
+      position: relative;
+      z-index: 2;
     }
 
     .wallet-mini-chip {
-      background: rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.07);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.08);
       border-radius: 8px;
       padding: 6px 8px;
     }
     .wallet-mini-chip span {
       font-size: 0.62rem;
-      color: #cbd5e1;
+      color: #b8cec2;
       font-weight: 700;
       display: block;
       margin-bottom: 2px;
@@ -732,9 +895,9 @@
       font-weight: 800;
       display: block;
     }
-    .wallet-mini-chip.green strong { color: #4ade80; }
-    .wallet-mini-chip.red strong { color: #f87171; }
-    .wallet-mini-chip.blue strong { color: #93c5fd; }
+    .wallet-mini-chip.green strong { color: #86efac; }
+    .wallet-mini-chip.red strong { color: #fca5a5; }
+    .wallet-mini-chip.blue strong { color: #f3d482; }
 
     .wallet-track {
       height: 6px;
@@ -742,13 +905,64 @@
       border-radius: 3px;
       overflow: hidden;
       margin-top: 4px;
+      position: relative;
+      z-index: 2;
     }
 
     .wallet-track-fill {
       height: 100%;
-      background: linear-gradient(90deg, #10b981, #f59e0b);
+      background: linear-gradient(90deg, #c89a3c 0%, #10b981 100%);
       border-radius: 3px;
       transition: width 0.3s;
+    }
+
+    /* PROFILE BRAND BANNER CARD */
+    .brand-showcase-card {
+      background: linear-gradient(135deg, #10241b 0%, #173629 100%);
+      border: 1px solid rgba(200, 154, 60, 0.35);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .profile-brand-logo {
+      width: 58px;
+      height: 58px;
+      border-radius: 14px;
+      border: 2px solid var(--gold);
+      object-fit: cover;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      flex-shrink: 0;
+      background: #16261e;
+    }
+
+    .profile-brand-details h4 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 2px;
+      letter-spacing: -0.01em;
+    }
+    .profile-brand-details p {
+      font-size: 0.72rem;
+      color: #b8cec2;
+      margin-bottom: 6px;
+      line-height: 1.25;
+    }
+    .badge-edition {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: #10241b;
+      background: linear-gradient(135deg, #f3d482 0%, #c89a3c 100%);
+      padding: 2px 8px;
+      border-radius: 12px;
+      letter-spacing: 0.04em;
     }
 
     /* MAIN APP SCREENS */
@@ -899,10 +1113,10 @@
     .cal-day-cell.today .day-num {
       background: var(--primary);
       color: #ffffff !important;
-      box-shadow: 0 2px 6px rgba(79, 70, 229, 0.4);
+      box-shadow: 0 0 0 2px var(--gold), 0 3px 8px rgba(27, 56, 43, 0.4);
     }
     .cal-day-cell.selected {
-      border: 2px solid var(--primary);
+      border: 2px solid var(--gold);
       background: var(--primary-light);
     }
 
@@ -1313,27 +1527,30 @@
       transition: all 0.15s;
     }
     .btn-primary {
-      background: var(--primary);
+      background: linear-gradient(135deg, #1b382b 0%, #12261d 100%);
       color: #ffffff;
-      box-shadow: 0 3px 10px rgba(79, 70, 229, 0.3);
+      border: 1px solid rgba(200, 154, 60, 0.35);
+      box-shadow: 0 3px 10px rgba(27, 56, 43, 0.3);
     }
     .btn-primary:hover {
-      background: var(--primary-dark);
+      background: linear-gradient(135deg, #244b3a 0%, #1b382b 100%);
+      transform: translateY(-1px);
     }
     .btn-secondary {
-      background: #f1f5f9;
+      background: #f1f5f2;
       color: #334155;
       border: 1px solid var(--border);
     }
 
     /* PANCHANG */
     .panchang-hero {
-      background: linear-gradient(135deg, #b45309 0%, #78350f 100%);
+      background: linear-gradient(135deg, #6b3512 0%, #8c4518 50%, #b25325 100%);
       color: white;
       border-radius: var(--radius);
       padding: 16px;
       margin-bottom: 12px;
       box-shadow: var(--shadow);
+      border: 1px solid rgba(243, 212, 130, 0.3);
     }
 
     .pachkhan-grid {
@@ -1390,46 +1607,46 @@
     .preset-chip.active {
       background: var(--primary);
       color: #ffffff;
-      border-color: var(--primary);
-      box-shadow: 0 2px 6px rgba(79, 70, 229, 0.3);
+      border-color: var(--gold);
+      box-shadow: 0 2px 6px rgba(27, 56, 43, 0.3);
     }
 
     .btn-download-pdf {
       display: flex;
       align-items: center;
       gap: 10px;
-      background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+      background: linear-gradient(135deg, #c05835 0%, #9d3f1f 100%);
       color: #ffffff;
-      border: none;
+      border: 1px solid rgba(242, 198, 182, 0.3);
       border-radius: 12px;
       padding: 10px 14px;
       cursor: pointer;
-      box-shadow: 0 3px 10px rgba(220, 38, 38, 0.35);
+      box-shadow: 0 3px 10px rgba(192, 88, 53, 0.35);
       transition: all 0.15s;
       text-align: left;
     }
     .btn-download-pdf:hover {
       transform: translateY(-1px);
-      box-shadow: 0 5px 14px rgba(220, 38, 38, 0.45);
+      box-shadow: 0 5px 14px rgba(192, 88, 53, 0.45);
     }
 
     .btn-download-excel {
       display: flex;
       align-items: center;
       gap: 10px;
-      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      background: linear-gradient(135deg, #1b382b 0%, #12261d 100%);
       color: #ffffff;
-      border: none;
+      border: 1px solid rgba(200, 154, 60, 0.35);
       border-radius: 12px;
       padding: 10px 14px;
       cursor: pointer;
-      box-shadow: 0 3px 10px rgba(5, 150, 105, 0.35);
+      box-shadow: 0 3px 10px rgba(27, 56, 43, 0.35);
       transition: all 0.15s;
       text-align: left;
     }
     .btn-download-excel:hover {
       transform: translateY(-1px);
-      box-shadow: 0 5px 14px rgba(5, 150, 105, 0.45);
+      box-shadow: 0 5px 14px rgba(27, 56, 43, 0.45);
     }
 
     .stat-row {
@@ -1455,9 +1672,9 @@
       font-weight: 800;
       display: block;
     }
-    .stat-card.green strong { color: #10b981; }
-    .stat-card.red strong { color: #ef4444; }
-    .stat-card.blue strong { color: #4f46e5; }
+    .stat-card.green strong { color: #15803d; }
+    .stat-card.red strong { color: #dc2626; }
+    .stat-card.blue strong { color: var(--gold-dark); }
 
     .bar-row { margin-bottom: 10px; }
     .bar-header {
@@ -1523,13 +1740,22 @@
       <div class="auth-screen-layer" id="screenSignIn" style="display:none;">
         <div class="lock-screen-box">
           
-          <div class="lock-avatar-ring">
-            <div class="lock-avatar" id="lockAvatar">R</div>
-            <div class="lock-badge">🔒</div>
+          <!-- Official GharKharch Brand Presentation -->
+          <div class="lock-brand-card">
+            <div class="lock-brand-logo-frame">
+              <img src="Gharkharch_Logo.png" alt="GharKharch" class="lock-brand-logo-img">
+            </div>
+            <div class="lock-brand-title">GharKharch</div>
+            <div class="lock-brand-tagline">Household Diary & Calendar</div>
           </div>
 
-          <span class="lock-greeting" id="lockGreeting">Welcome back</span>
-          <h2 class="lock-name" id="lockUserName">Richie</h2>
+          <div class="lock-user-pill">
+            <div class="lock-avatar" id="lockAvatar">R</div>
+            <div class="lock-user-meta">
+              <span class="lock-greeting" id="lockGreeting">Welcome back</span>
+              <h2 class="lock-name" id="lockUserName">Richie</h2>
+            </div>
+          </div>
           <p class="lock-subtitle">Enter 4-Digit Security PIN</p>
 
           <!-- 4 PIN Dots Indicator -->
@@ -1560,7 +1786,7 @@
 
           <div class="lock-footer-row">
             <button class="btn-text-action" onclick="showAuthScreen('forgotPin')">Forgot PIN?</button>
-            <span style="color:#cbd5e1;">•</span>
+            <span style="color:#b8cec2;">•</span>
             <button class="btn-text-action" onclick="showAuthScreen('signUp')">Switch / New Profile</button>
           </div>
 
@@ -1572,8 +1798,10 @@
            ====================================================================== -->
       <div class="auth-screen-layer" id="screenSignUp" style="display:none;">
         <div class="onboarding-card">
-          <div class="onboard-badge">🗓️</div>
-          <h2 class="onboard-heading">Create Profile</h2>
+          <div class="onboard-logo-frame">
+            <img src="Gharkharch_Logo.png" alt="GharKharch" class="onboard-logo-img">
+          </div>
+          <h2 class="onboard-heading">Create GharKharch Profile</h2>
           <p class="onboard-sub">Set up your household account in 15 seconds</p>
 
           <div class="form-group-clean">
@@ -1589,7 +1817,7 @@
           <div class="form-group-clean">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
               <label class="form-label-clean" style="margin-bottom:0;">🔒 Set 4-Digit PIN</label>
-              <span id="regPinPeekText" style="font-size:0.72rem; color:var(--primary); font-weight:700; cursor:pointer;" onclick="toggleRegPinPeek()">👁️ Show</span>
+              <span id="regPinPeekText" style="font-size:0.72rem; color:var(--gold-dark); font-weight:700; cursor:pointer;" onclick="toggleRegPinPeek()">👁️ Show</span>
             </div>
             <div class="pin-boxes-row">
               <input type="password" maxlength="1" class="pin-input-cell reg-pin-box" id="regPin1" inputmode="numeric" oninput="movePinFocus(this, 'regPin2')">
@@ -1600,14 +1828,14 @@
           </div>
 
           <button class="btn-submit-action" onclick="handleRegisterProfile()">
-            🚀 Create Profile & Start
+            🚀 Create Profile & Start GharKharch
           </button>
 
           <div style="text-align:center; margin-top:14px; display:flex; flex-direction:column; gap:8px;">
             <button class="btn-text-action" onclick="showAuthScreen('signIn')">
               Already have a profile? Unlock with PIN
             </button>
-            <button class="btn-text-action" style="font-size:0.75rem; color:#6366f1; opacity:0.85;" onclick="quickDemoSetup()">
+            <button class="btn-text-action" style="font-size:0.75rem; color:var(--gold-dark); opacity:0.95;" onclick="quickDemoSetup()">
               ⚡ Quick Start with Demo Profile (Richie)
             </button>
           </div>
@@ -1619,9 +1847,11 @@
            ====================================================================== -->
       <div class="auth-screen-layer" id="screenForgotPin" style="display:none;">
         <div class="onboarding-card">
-          <div class="onboard-badge">🔑</div>
+          <div class="onboard-logo-frame">
+            <img src="Gharkharch_Logo.png" alt="GharKharch" class="onboard-logo-img">
+          </div>
           <h2 class="onboard-heading">Reset Security PIN</h2>
-          <p class="onboard-sub">Verify your registered mobile number</p>
+          <p class="onboard-sub">Verify your registered mobile number for GharKharch</p>
 
           <div class="form-group-clean">
             <label class="form-label-clean">📱 Registered Mobile</label>
@@ -1657,20 +1887,28 @@
 
         <!-- TOP APP BAR -->
         <header class="app-top-header">
-          <div class="header-user-chip" onclick="switchNavTab('profile')" title="View Profile">
-            <div class="header-avatar" id="headerUserAvatar">R</div>
-            <div class="header-user-info">
-              <h2 id="headerUserName">Richie</h2>
-              <span id="headerUserMobile">+91 9876543210</span>
+          <div class="header-brand-wrap" onclick="switchNavTab('calendar')" title="GharKharch Home">
+            <img src="Gharkharch_Icon.png" alt="GharKharch Logo" class="header-brand-logo">
+            <div class="header-brand-info">
+              <span class="header-brand-title">GharKharch</span>
+              <span class="header-brand-sub">Diary & Calendar</span>
             </div>
           </div>
 
           <div class="header-actions">
-            <button class="pill-btn-header" onclick="openCityModal()" id="headerCityBtn">
+            <div class="header-user-chip" onclick="switchNavTab('profile')" title="View Profile">
+              <div class="header-avatar" id="headerUserAvatar">R</div>
+              <div class="header-user-info">
+                <h2 id="headerUserName">Richie</h2>
+                <span id="headerUserMobile" style="display:none;">+91 9876543210</span>
+              </div>
+            </div>
+
+            <button class="pill-btn-header" onclick="openCityModal()" id="headerCityBtn" title="Change Panchang City">
               📍 <span id="headerCityLabel">Ahmedabad</span>
             </button>
-            <button class="pill-btn-header pill-btn-lock" onclick="lockApp()" title="Lock App">
-              🔒 Lock
+            <button class="pill-btn-header pill-btn-lock" onclick="lockApp()" title="Lock GharKharch">
+              🔒
             </button>
           </div>
         </header>
@@ -1690,8 +1928,14 @@
 
         <!-- LUXURY FINTECH WALLET BANNER -->
         <div class="wallet-hero-card">
+          <div class="wallet-card-watermark">
+            <img src="Gharkharch_Icon.png" alt="" aria-hidden="true">
+          </div>
           <div class="wallet-card-top">
-            <span class="wallet-card-title" id="bannerMonthTitle">OCTOBER 2026 WALLET</span>
+            <div class="wallet-brand-indicator">
+              <span class="wallet-brand-name">GHARKHARCH VAULT</span>
+              <span class="wallet-card-title" id="bannerMonthTitle">• OCTOBER 2026</span>
+            </div>
             <button class="btn-add-funds" onclick="openIncomeModal()">
               ➕ Add Money
             </button>
@@ -1920,13 +2164,23 @@
              ==================================================================== -->
         <section class="app-screen" id="screenProfile">
           
+          <!-- GHARKHARCH OFFICIAL BRAND SHOWCASE -->
+          <div class="brand-showcase-card">
+            <img src="Gharkharch_Logo.png" alt="GharKharch Logo" class="profile-brand-logo">
+            <div class="profile-brand-details">
+              <h4>GharKharch Diary</h4>
+              <p>Household Expense Ledger & Multi-Mode Calendar</p>
+              <span class="badge-edition">👑 PREMIUM GOLD EDITION • v2.0</span>
+            </div>
+          </div>
+
           <div class="calendar-card" style="padding:16px; margin-bottom:14px; text-align:center;">
-            <div class="header-avatar" style="width:64px; height:64px; font-size:1.6rem; margin:0 auto 10px auto;" id="profileLargeAvatar">R</div>
+            <div class="header-avatar" style="width:58px; height:58px; font-size:1.45rem; margin:0 auto 10px auto;" id="profileLargeAvatar">R</div>
             <h3 id="profileLargeName" style="font-size:1.15rem; font-weight:800;">Richie</h3>
             <p id="profileLargeMobile" style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">+91 9876543210</p>
             <div style="display:flex; justify-content:center; gap:8px;">
               <button class="btn btn-secondary" style="width:auto; padding:6px 14px; font-size:0.78rem;" onclick="lockApp()">
-                🔒 Lock Diary
+                🔒 Lock GharKharch
               </button>
               <button class="btn btn-secondary" style="width:auto; padding:6px 14px; font-size:0.78rem;" onclick="handleSignOut()">
                 🚪 Sign Out
@@ -2492,7 +2746,7 @@
         if (dot) {
           dot.classList.toggle('filled', i <= enteredPin.length);
           dot.classList.remove('error');
-          dot.style.background = (i <= enteredPin.length) ? '#4f46e5' : 'transparent';
+          dot.style.background = (i <= enteredPin.length) ? '#c89a3c' : 'transparent';
         }
       }
     }
@@ -2508,7 +2762,7 @@
       if (enteredPin === savedUser.pin) {
         for (let i = 1; i <= 4; i++) {
           const dot = document.getElementById('pDot' + i);
-          if (dot) dot.style.background = '#10b981';
+          if (dot) dot.style.background = '#15803d';
         }
         currentUser = savedUser;
         localStorage.setItem(STORAGE_KEY_SESSION, 'active');
@@ -2552,7 +2806,7 @@
       localStorage.removeItem(STORAGE_KEY_SESSION);
       clearNumpad();
       showAuthScreen('signIn');
-      showToast('Diary Locked 🔒');
+      showToast('GharKharch Locked 🔒');
     }
 
     /* REGISTRATION / SIGN UP */
@@ -2640,7 +2894,7 @@
     }
 
     function handleSignOut() {
-      if (confirm("Sign out from your diary?")) {
+      if (confirm("Sign out from GharKharch?")) {
         localStorage.removeItem(STORAGE_KEY_SESSION);
         currentUser = null;
         initAuth();
@@ -3631,13 +3885,15 @@
           const doc = new jsPDF();
 
           // Header Band
-          doc.setFillColor(30, 27, 75); // Dark Indigo
+          doc.setFillColor(27, 56, 43); // Royal Forest Green
           doc.rect(0, 0, 210, 36, 'F');
+          doc.setFillColor(200, 154, 60); // Metallic Gold Accent Line
+          doc.rect(0, 36, 210, 2, 'F');
 
           doc.setTextColor(255, 255, 255);
           doc.setFontSize(18);
           doc.setFont("helvetica", "bold");
-          doc.text("HOUSEHOLD EXPENSE STATEMENT", 14, 16);
+          doc.text("GHARKHARCH - STATEMENT OF EXPENSES", 14, 16);
 
           doc.setFontSize(10);
           doc.setFont("helvetica", "normal");
@@ -3665,10 +3921,10 @@
           doc.setFont("helvetica", "bold");
           doc.text(`Rs. ${data.totalExpenses.toLocaleString('en-IN')}`, 80, 58);
 
-          // Net Balance (Indigo)
-          doc.setFillColor(238, 242, 255);
+          // Net Balance (Gold Tint)
+          doc.setFillColor(252, 247, 238);
           doc.roundedRect(138, 42, 58, 22, 3, 3, 'F');
-          doc.setTextColor(79, 70, 229);
+          doc.setTextColor(158, 116, 32);
           doc.setFontSize(8);
           doc.text("NET REMAINING BALANCE", 142, 48);
           doc.setFontSize(13);
@@ -3692,7 +3948,7 @@
             head: [['Category / Account', 'Total Amount', 'Share (%)']],
             body: catRows,
             theme: 'striped',
-            headStyles: { fillColor: [79, 70, 229], textColor: [255, 255, 255], fontStyle: 'bold' },
+            headStyles: { fillColor: [27, 56, 43], textColor: [255, 255, 255], fontStyle: 'bold' },
             styles: { fontSize: 8, cellPadding: 3 },
             margin: { left: 14, right: 14 }
           });
@@ -3724,7 +3980,7 @@
             head: [['Date', 'Type', 'Description', 'Details / Mode', 'Income (Rs)', 'Expense (Rs)', 'Balance (Rs)']],
             body: itemRows.length > 0 ? itemRows : [['-', '-', 'No records in selected range', '-', '-', '-', '-']],
             theme: 'grid',
-            headStyles: { fillColor: [30, 41, 59], textColor: [255, 255, 255], fontStyle: 'bold' },
+            headStyles: { fillColor: [27, 56, 43], textColor: [255, 255, 255], fontStyle: 'bold' },
             styles: { fontSize: 8, cellPadding: 2.5 },
             columnStyles: {
               4: { textColor: [5, 150, 105], fontStyle: 'bold' },
@@ -3734,7 +3990,7 @@
             margin: { left: 14, right: 14 }
           });
 
-          doc.save(`Expense_Statement_${userName}_${data.startDate}_to_${data.endDate}.pdf`);
+          doc.save(`GharKharch_Statement_${userName}_${data.startDate}_to_${data.endDate}.pdf`);
           showToast("PDF Statement downloaded! 📄");
           return;
         } catch(err) {
@@ -3751,7 +4007,7 @@
       const userName = (currentUser && currentUser.name && currentUser.name !== "Honey Shah") ? currentUser.name : 'Richie';
 
       let csv = "\uFEFF";
-      csv += `HOUSEHOLD EXPENSE STATEMENT - ${userName}\r\n`;
+      csv += `GHARKHARCH - HOUSEHOLD EXPENSE STATEMENT - ${userName}\r\n`;
       csv += `Date Range: ${data.startDate} to ${data.endDate}\r\n`;
       csv += `Total Income Received: ₹${data.totalIncome}\r\n`;
       csv += `Total Expenses Spent: ₹${data.totalExpenses}\r\n`;
@@ -3772,7 +4028,7 @@
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `Expense_Statement_${userName}_${data.startDate}_to_${data.endDate}.csv`);
+      link.setAttribute('download', `GharKharch_Statement_${userName}_${data.startDate}_to_${data.endDate}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -3790,7 +4046,7 @@
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `Diary_Backup_${currentUser?.name || 'Richie'}.json`);
+      link.setAttribute('download', `GharKharch_Backup_${currentUser?.name || 'Richie'}.json`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
