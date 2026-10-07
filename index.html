@@ -115,6 +115,23 @@
       flex-shrink: 0;
       border-bottom: 1px solid #f1f5f9;
       user-select: none;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .phone-status-bar.auth-dark {
+      background: #171c0f;
+      color: #e2ba64;
+      border-bottom: 1px solid rgba(200, 154, 60, 0.2);
+    }
+    .phone-status-bar.auth-dark .phone-time {
+      color: #e2ba64;
+    }
+    .phone-status-bar.auth-dark .dynamic-island {
+      background: #090b06;
+      border: 1px solid rgba(200, 154, 60, 0.25);
+    }
+    .phone-status-bar.auth-dark .status-icons {
+      color: #adc09e;
     }
 
     .phone-time {
@@ -227,10 +244,16 @@
       overflow-y: auto;
     }
 
-    /* SCREEN 1: SLEEK PIN LOCK SCREEN */
+    /* SCREEN 1: SLEEK PIN LOCK SCREEN - MATCHING LOGO OLIVE CANVAS */
+    #screenSignIn.auth-screen-layer {
+      background: radial-gradient(circle at 50% 25%, #363d25 0%, #252a17 55%, #14170d 100%);
+      padding: 16px 20px;
+      color: #f1f4ed;
+    }
+
     .lock-screen-box {
       width: 100%;
-      max-width: 320px;
+      max-width: 330px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -243,24 +266,25 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-bottom: 14px;
+      margin-bottom: 10px;
     }
 
     .lock-brand-logo-frame {
-      width: 92px;
-      height: 92px;
-      border-radius: 22px;
+      width: 155px;
+      height: 155px;
+      border-radius: 28px;
       overflow: hidden;
-      box-shadow: 0 10px 24px rgba(17, 26, 21, 0.22), 0 0 0 2px var(--gold-border);
-      background: #16261e;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45), 0 0 0 1.5px rgba(200, 154, 60, 0.35);
+      background: #252a17;
       display: flex;
       align-items: center;
       justify-content: center;
       margin-bottom: 6px;
-      transition: transform 0.2s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     .lock-brand-logo-frame:hover {
-      transform: scale(1.03);
+      transform: scale(1.02);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.55), 0 0 0 2px rgba(200, 154, 60, 0.55);
     }
 
     .lock-brand-logo-img {
@@ -271,39 +295,42 @@
     }
 
     .lock-brand-tagline {
-      font-size: 0.65rem;
+      font-size: 0.68rem;
       font-weight: 800;
-      color: var(--gold-dark);
-      letter-spacing: 0.1em;
+      color: #e2ba64;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       margin-top: 2px;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
     }
 
     .lock-user-pill {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: #ffffff;
-      border: 1px solid var(--border);
-      padding: 5px 12px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(200, 154, 60, 0.32);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 4px 14px;
       border-radius: 20px;
-      margin-bottom: 6px;
-      box-shadow: var(--shadow-sm);
+      margin-bottom: 5px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     }
 
     .lock-avatar {
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #1b382b 0%, #12261d 100%);
-      color: white;
+      background: linear-gradient(135deg, #c89a3c 0%, #8c671b 100%);
+      color: #12150b;
       font-size: 0.85rem;
       font-weight: 800;
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 1.5px solid var(--gold);
-      box-shadow: 0 2px 6px rgba(27, 56, 43, 0.25);
+      border: 1.5px solid rgba(255, 255, 255, 0.4);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
     }
 
     .lock-user-meta {
@@ -313,54 +340,55 @@
     }
 
     .lock-greeting {
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: var(--text-muted);
+      font-size: 0.70rem;
+      font-weight: 600;
+      color: #adc09e;
     }
 
     .lock-name {
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       font-weight: 800;
-      color: var(--text);
+      color: #ffffff;
       letter-spacing: -0.01em;
     }
 
     .lock-subtitle {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      margin-bottom: 16px;
-      font-weight: 600;
+      font-size: 0.75rem;
+      color: #c0ceb4;
+      margin-bottom: 12px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
     }
 
     /* 4 PIN Dots */
     .pin-dots-container {
       display: flex;
-      gap: 16px;
-      margin-bottom: 8px;
+      gap: 14px;
+      margin-bottom: 6px;
       justify-content: center;
       align-items: center;
     }
 
     .pin-dot-circle {
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
-      border: 2px solid #b8cec2;
-      background: transparent;
+      border: 2px solid rgba(200, 154, 60, 0.45);
+      background: rgba(0, 0, 0, 0.3);
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .pin-dot-circle.filled {
-      background: var(--gold);
-      border-color: var(--gold);
-      transform: scale(1.18);
-      box-shadow: 0 0 12px rgba(200, 154, 60, 0.65);
+      background: #f3d482 !important;
+      border-color: #f3d482 !important;
+      transform: scale(1.15);
+      box-shadow: 0 0 14px rgba(243, 212, 130, 0.85);
     }
 
     .pin-dot-circle.error {
       background: #ef4444 !important;
       border-color: #ef4444 !important;
-      box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+      box-shadow: 0 0 12px rgba(239, 68, 68, 0.7);
     }
 
     .pin-dots-container.shake {
@@ -374,72 +402,85 @@
     }
 
     .pin-status-msg {
-      min-height: 20px;
-      font-size: 0.78rem;
+      min-height: 18px;
+      font-size: 0.76rem;
       font-weight: 700;
-      color: #ef4444;
+      color: #ff6e6e;
       text-align: center;
+      margin-bottom: 8px;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    }
+
+    /* TOUCH NUMPAD - COMPACT LUXURY KEYS */
+    .numpad-matrix {
+      display: grid;
+      grid-template-columns: repeat(3, 52px);
+      gap: 10px;
+      justify-content: center;
       margin-bottom: 12px;
     }
 
-    /* TOUCH NUMPAD */
-    .numpad-matrix {
-      display: grid;
-      grid-template-columns: repeat(3, 72px);
-      gap: 14px;
-      justify-content: center;
-      margin-bottom: 16px;
-    }
-
     .numpad-key {
-      width: 72px;
-      height: 72px;
+      width: 52px;
+      height: 52px;
       border-radius: 50%;
-      border: 1px solid var(--border);
-      background: #ffffff;
-      font-size: 1.55rem;
+      border: 1px solid rgba(200, 154, 60, 0.26);
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      font-size: 1.35rem;
       font-weight: 700;
-      color: var(--text);
+      color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       transition: all 0.12s ease;
-      box-shadow: 0 2px 6px rgba(17, 26, 21, 0.04);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
       user-select: none;
     }
 
     .numpad-key:hover {
-      background: var(--gold-light);
-      border-color: var(--gold-border);
+      background: rgba(200, 154, 60, 0.24);
+      border-color: #e2ba64;
+      color: #ffffff;
       transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
     }
 
     .numpad-key:active {
-      background: var(--primary-light);
-      border-color: var(--gold);
+      background: rgba(200, 154, 60, 0.45);
+      border-color: #f3d482;
       transform: scale(0.92);
-      box-shadow: 0 0 10px rgba(200, 154, 60, 0.35);
+      box-shadow: 0 0 12px rgba(243, 212, 130, 0.45);
     }
 
     .numpad-key.aux {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 700;
       background: transparent;
       border-color: transparent;
       box-shadow: none;
-      color: var(--text-muted);
+      color: #adc09e;
     }
     .numpad-key.aux:hover {
-      background: var(--primary-light);
-      color: var(--text);
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
     }
 
     .lock-footer-row {
       display: flex;
       align-items: center;
       gap: 12px;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
+    }
+
+    .lock-footer-row .btn-text-action {
+      color: #e2ba64;
+    }
+    .lock-footer-row .btn-text-action:hover {
+      color: #ffffff;
+      text-decoration: underline;
     }
 
     .btn-text-action {
@@ -455,6 +496,23 @@
     .btn-text-action:hover {
       color: var(--gold-dark);
       text-decoration: underline;
+    }
+
+    @media (max-height: 720px) {
+      .lock-brand-logo-frame {
+        width: 125px;
+        height: 125px;
+        border-radius: 22px;
+      }
+      .numpad-matrix {
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+      .numpad-key {
+        width: 48px;
+        height: 48px;
+        font-size: 1.2rem;
+      }
     }
 
     /* SCREEN 2: ONBOARDING & SCREEN 3: FORGOT PIN */
@@ -1720,7 +1778,7 @@
   <div class="device-mockup">
 
     <!-- IPHONE STATUS BAR (REAL LIVE TIME) -->
-    <div class="phone-status-bar">
+    <div class="phone-status-bar" id="phoneStatusBar">
       <span class="phone-time" id="statusTimeClock">9:41</span>
       <div class="dynamic-island">
         <span class="camera-lens"></span>
@@ -1745,8 +1803,7 @@
             <div class="lock-brand-logo-frame">
               <img src="Gharkharch_Logo.png" alt="GharKharch" class="lock-brand-logo-img">
             </div>
-            <div class="lock-brand-title">GharKharch</div>
-            <div class="lock-brand-tagline">Household Diary & Calendar</div>
+            <div class="lock-brand-tagline">Smart Household Diary & Calendar</div>
           </div>
 
           <div class="lock-user-pill">
@@ -1786,7 +1843,7 @@
 
           <div class="lock-footer-row">
             <button class="btn-text-action" onclick="showAuthScreen('forgotPin')">Forgot PIN?</button>
-            <span style="color:#b8cec2;">•</span>
+            <span style="color:rgba(200,154,60,0.5);">•</span>
             <button class="btn-text-action" onclick="showAuthScreen('signUp')">Switch / New Profile</button>
           </div>
 
@@ -2698,6 +2755,15 @@
       document.getElementById('screenForgotPin').style.display = (name === 'forgotPin') ? 'flex' : 'none';
       document.getElementById('mainAppShell').style.display = 'none';
 
+      const statusBar = document.getElementById('phoneStatusBar');
+      if (statusBar) {
+        if (name === 'signIn') {
+          statusBar.classList.add('auth-dark');
+        } else {
+          statusBar.classList.remove('auth-dark');
+        }
+      }
+
       if (name === 'signIn') {
         clearNumpad();
         const savedUserStr = localStorage.getItem(STORAGE_KEY_USER);
@@ -2744,9 +2810,10 @@
       for (let i = 1; i <= 4; i++) {
         const dot = document.getElementById('pDot' + i);
         if (dot) {
-          dot.classList.toggle('filled', i <= enteredPin.length);
+          const isFilled = i <= enteredPin.length;
+          dot.classList.toggle('filled', isFilled);
           dot.classList.remove('error');
-          dot.style.background = (i <= enteredPin.length) ? '#c89a3c' : 'transparent';
+          dot.style.background = isFilled ? '#f3d482' : 'rgba(0, 0, 0, 0.3)';
         }
       }
     }
@@ -2762,7 +2829,7 @@
       if (enteredPin === savedUser.pin) {
         for (let i = 1; i <= 4; i++) {
           const dot = document.getElementById('pDot' + i);
-          if (dot) dot.style.background = '#15803d';
+          if (dot) dot.style.background = '#4ade80';
         }
         currentUser = savedUser;
         localStorage.setItem(STORAGE_KEY_SESSION, 'active');
@@ -2779,7 +2846,10 @@
         }
         for (let i = 1; i <= 4; i++) {
           const dot = document.getElementById('pDot' + i);
-          if (dot) dot.classList.add('error');
+          if (dot) {
+            dot.classList.add('error');
+            dot.style.background = '#ef4444';
+          }
         }
         document.getElementById('pinErrorMsg').innerText = 'Incorrect PIN! Please try again.';
         setTimeout(() => {
@@ -2906,6 +2976,9 @@
       document.getElementById('screenSignIn').style.display = 'none';
       document.getElementById('screenForgotPin').style.display = 'none';
       document.getElementById('mainAppShell').style.display = 'flex';
+
+      const statusBar = document.getElementById('phoneStatusBar');
+      if (statusBar) statusBar.classList.remove('auth-dark');
 
       const uName = (currentUser && currentUser.name && currentUser.name !== "Honey Shah") ? currentUser.name : "Richie";
       const initial = uName.charAt(0).toUpperCase();
