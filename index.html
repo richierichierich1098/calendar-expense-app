@@ -1925,9 +1925,13 @@
           </div>
 
           <div class="calendar-card" style="padding:14px;">
-            <h4 style="font-size:0.9rem; font-weight:800; margin-bottom:6px;">Data Backup</h4>
-            <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:12px;">Saved locally on this device. Download JSON backup anytime.</p>
-            <button class="btn btn-secondary" onclick="exportBackupJSON()">💾 Download Data Backup (JSON)</button>
+            <h4 style="font-size:0.9rem; font-weight:800; margin-bottom:6px;">💾 Data Backup & Restore</h4>
+            <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:12px;">All expense & income entries are automatically saved inside this phone. You can also export or restore your full backup anytime.</p>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="btn btn-secondary" style="flex:1; min-width:140px;" onclick="exportBackupJSON()">📤 Export Backup</button>
+              <button class="btn btn-secondary" style="flex:1; min-width:140px;" onclick="document.getElementById('importBackupInput').click()">📥 Restore Backup</button>
+              <input type="file" id="importBackupInput" accept=".json" style="display:none;" onchange="importBackupJSON(event)">
+            </div>
           </div>
 
         </section>
@@ -2374,6 +2378,7 @@
 
     function initAuth() {
       try {
+        initPersistentStorage();
         let u = localStorage.getItem(STORAGE_KEY_USER);
         if (u) {
           try {
@@ -3755,7 +3760,53 @@
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      showToast("Data backup saved! 💾");
+      showToast("Data backup file exported! 💾");
+    }
+
+    function importBackupJSON(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (parsed.accounts && Array.isArray(parsed.accounts)) {
+            accounts = parsed.accounts;
+            saveAccounts();
+          }
+          if (parsed.ledger && typeof parsed.ledger === 'object') {
+            ledger = parsed.ledger;
+            saveLedger();
+          }
+          if (parsed.incomeLedger && typeof parsed.incomeLedger === 'object') {
+            incomeLedger = parsed.incomeLedger;
+            saveIncomeLedger();
+          }
+          if (parsed.city) {
+            selectedCityKey = parsed.city;
+            localStorage.setItem('app_city_key', parsed.city);
+          }
+          if (parsed.user) {
+            currentUser = parsed.user;
+            localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
+          }
+          showToast("Backup restored successfully! 🎉");
+          renderAll();
+          showMainApp();
+        } catch(err) {
+          alert("Could not restore backup. Please ensure it is a valid backup file.");
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
+
+    function initPersistentStorage() {
+      if (navigator.storage && navigator.storage.persist) {
+        navigator.storage.persist().then(granted => {
+          if (granted) console.log("Storage persistence enabled.");
+        }).catch(() => {});
+      }
     }
 
     /* NAVIGATION TABS & CITY MODAL */
