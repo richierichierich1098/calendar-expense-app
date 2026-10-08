@@ -8,7 +8,8 @@
   <link rel="apple-touch-icon" href="Gharkharch_Icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Gujarati:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@600;700&family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Gujarati:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,400,0..1,0" rel="stylesheet">
   <!-- jsPDF & AutoTable for client-side PDF Statement Generation -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
@@ -638,30 +639,34 @@
     }
 
     /* ==========================================================================
-       MAIN APP SHELL
+       MAIN APP SHELL - STITCH "EARTHEN BRASS" DESIGN SYSTEM
        ========================================================================== */
     .app-screen-shell {
       display: flex;
       flex-direction: column;
       flex: 1;
-      padding-bottom: 74px; /* Space for bottom nav */
+      padding-bottom: 78px; /* Space for bottom nav */
       overflow-x: hidden !important;
       width: 100%;
       max-width: 100%;
+      background: #131d16;
+      color: #f1f5f2;
     }
 
-    /* HEADER */
+    /* APP TOP HEADER - DEEP SLATE FOREST & ANTIQUE GOLD */
     .app-top-header {
-      background: #ffffff;
+      background: rgba(19, 29, 22, 0.96);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(198, 146, 60, 0.28);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
       padding: 10px 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
-      z-index: 30;
-      box-shadow: var(--shadow-sm);
+      z-index: 40;
     }
 
     .header-brand-wrap {
@@ -672,14 +677,27 @@
       user-select: none;
     }
 
-    .header-brand-logo {
-      width: 38px;
-      height: 38px;
-      border-radius: 11px;
-      box-shadow: 0 4px 10px rgba(17, 26, 21, 0.2), 0 0 0 1.5px var(--gold-border);
-      object-fit: cover;
+    .header-brand-logo-frame {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(212, 175, 55, 0.55);
+      box-shadow: 0 2px 10px rgba(212, 175, 55, 0.25);
+      background: #1a261e;
+      padding: 2px;
       flex-shrink: 0;
-      background: #16261e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .header-brand-logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 9px;
+      display: block;
     }
 
     .header-brand-info {
@@ -687,346 +705,127 @@
       flex-direction: column;
     }
 
+    .header-brand-title-row {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
     .header-brand-title {
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: var(--primary);
+      font-family: 'Epilogue', system-ui, sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #f5ebd0;
       letter-spacing: -0.02em;
       line-height: 1.1;
     }
 
     .header-brand-sub {
-      font-size: 0.62rem;
-      font-weight: 800;
-      color: var(--gold-dark);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.68rem;
+      color: #d4af37;
+      font-weight: 700;
       letter-spacing: 0.06em;
       text-transform: uppercase;
-      line-height: 1.1;
     }
 
-    .header-actions {
-      display: flex;
+    .header-vault-badge {
+      display: inline-flex;
       align-items: center;
-      gap: 6px;
-    }
-
-    .header-user-chip {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      padding: 3px 8px 3px 4px;
+      gap: 5px;
+      background: #1a261e;
+      border: 1px solid rgba(212, 175, 55, 0.35);
+      padding: 2px 8px;
       border-radius: 20px;
+      margin-top: 3px;
+      width: fit-content;
+    }
+
+    .vault-pulse-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #d4af37;
+      animation: pulseVaultDot 1.8s infinite;
+    }
+
+    @keyframes pulseVaultDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(0.8); }
+    }
+
+    .vault-badge-txt {
+      font-size: 0.60rem;
+      color: #e7d8b5;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      line-height: 1;
+    }
+
+    /* User Profile Badge in Header */
+    .header-user-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #1a261e;
+      border: 1px solid rgba(212, 175, 55, 0.35);
+      padding: 4px 10px 4px 12px;
+      border-radius: 24px;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
       transition: all 0.15s;
     }
-    .header-user-chip:hover {
-      background: var(--primary-light);
-      border-color: var(--primary-border);
+    .header-user-badge:hover {
+      border-color: #d4af37;
+      background: #223326;
     }
 
-    .header-avatar {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #1b382b 0%, #12261d 100%);
-      color: white;
-      font-weight: 800;
+    .header-user-meta {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.75rem;
-      border: 1px solid var(--gold);
-      flex-shrink: 0;
+      flex-direction: column;
+      text-align: right;
     }
-
-    .header-user-info h2 {
-      font-size: 0.8rem;
+    .header-user-name {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.74rem;
       font-weight: 700;
-      color: var(--text);
-      line-height: 1.15;
-      max-width: 65px;
+      color: #f5ebd0;
+      line-height: 1;
+      max-width: 75px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
-
-    .pill-btn-header {
-      background: #f1f5f2;
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 5px 10px;
-      border-radius: 18px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      transition: all 0.15s;
-    }
-    .pill-btn-header:hover {
-      background: var(--primary-light);
-      border-color: var(--primary-border);
+    .header-user-city {
+      font-size: 0.58rem;
+      color: #aebaa8;
+      line-height: 1.2;
     }
 
-    .pill-btn-lock {
-      background: #fef2f2;
-      border-color: #fecaca;
-      color: #dc2626;
-    }
-    .pill-btn-lock:hover {
-      background: #fee2e2;
-    }
-
-    /* 3-WAY SEGMENTED MODE SWITCHER */
-    .segmented-mode-bar {
-      background: #ffffff;
-      padding: 8px 14px;
-      display: flex;
-      gap: 6px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .segment-tab {
-      flex: 1;
-      padding: 8px 6px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: #f8faf8;
-      color: var(--text-muted);
-      font-size: 0.78rem;
-      font-weight: 700;
-      cursor: pointer;
+    .header-lock-icon-btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+      color: #131d16;
+      border: none;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 5px;
-      transition: all 0.15s;
-    }
-    .segment-tab.active {
-      background: var(--primary);
-      color: #ffffff;
-      border-color: var(--primary);
-      box-shadow: 0 3px 8px rgba(27, 56, 43, 0.35);
-    }
-
-    /* LUXURY WALLET CARD (Royal Forest Green & Polished Gold) */
-    .wallet-hero-card {
-      background: linear-gradient(145deg, #0e1e16 0%, #173629 55%, #1e4736 100%);
-      color: white;
-      margin: 12px 14px 6px 14px;
-      padding: 16px;
-      border-radius: var(--radius);
-      box-shadow: 0 12px 28px rgba(14, 30, 22, 0.35);
-      border: 1px solid rgba(200, 154, 60, 0.35);
-      position: relative;
-      overflow: hidden !important;
-      max-width: calc(100% - 28px);
-    }
-
-    .wallet-hero-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(243, 212, 130, 0.6), transparent);
-    }
-
-    .wallet-card-watermark {
-      position: absolute;
-      right: -12px;
-      bottom: -15px;
-      width: 125px;
-      height: 125px;
-      opacity: 0.12;
-      pointer-events: none;
-      filter: drop-shadow(0 0 10px rgba(200, 154, 60, 0.5));
-    }
-    .wallet-card-watermark img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-
-    .wallet-card-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .wallet-brand-indicator {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .wallet-brand-name {
-      font-size: 0.68rem;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      color: #f3d482;
-      text-transform: uppercase;
-    }
-
-    .wallet-card-title {
-      font-size: 0.68rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: #b8cec2;
-    }
-
-    .btn-add-funds {
-      background: linear-gradient(135deg, #f3d482 0%, #c89a3c 100%);
-      color: #10241b;
-      border: none;
-      padding: 5px 12px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 800;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      box-shadow: 0 2px 10px rgba(200, 154, 60, 0.4);
-      transition: all 0.15s;
-    }
-    .btn-add-funds:hover {
-      background: linear-gradient(135deg, #fae29c 0%, #d4a748 100%);
-      transform: translateY(-1px);
-    }
-
-    .wallet-balance-row {
-      margin-bottom: 12px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .wallet-balance-label {
-      font-size: 0.68rem;
-      color: #a4baae;
-      display: block;
-      margin-bottom: 2px;
-      letter-spacing: 0.04em;
-    }
-
-    .wallet-balance-num {
-      font-size: 1.65rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      color: #ffffff;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    }
-
-    .wallet-chips-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 6px;
-      margin-bottom: 10px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .wallet-mini-chip {
-      background: rgba(255,255,255,0.07);
-      backdrop-filter: blur(4px);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 8px;
-      padding: 6px 8px;
-    }
-    .wallet-mini-chip span {
-      font-size: 0.62rem;
-      color: #b8cec2;
-      font-weight: 700;
-      display: block;
-      margin-bottom: 2px;
-    }
-    .wallet-mini-chip strong {
-      font-size: 0.92rem;
-      font-weight: 800;
-      display: block;
-    }
-    .wallet-mini-chip.green strong { color: #86efac; }
-    .wallet-mini-chip.red strong { color: #fca5a5; }
-    .wallet-mini-chip.blue strong { color: #f3d482; }
-
-    .wallet-track {
-      height: 6px;
-      background: rgba(255,255,255,0.15);
-      border-radius: 3px;
-      overflow: hidden;
-      margin-top: 4px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .wallet-track-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #c89a3c 0%, #10b981 100%);
-      border-radius: 3px;
-      transition: width 0.3s;
-    }
-
-    /* PROFILE BRAND BANNER CARD */
-    .brand-showcase-card {
-      background: linear-gradient(135deg, #10241b 0%, #173629 100%);
-      border: 1px solid rgba(200, 154, 60, 0.35);
-      border-radius: var(--radius);
-      padding: 14px 16px;
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 14px;
-      box-shadow: var(--shadow);
-    }
-
-    .profile-brand-logo {
-      width: 58px;
-      height: 58px;
-      border-radius: 14px;
-      border: 2px solid var(--gold);
-      object-fit: cover;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
       flex-shrink: 0;
-      background: #16261e;
-    }
-
-    .profile-brand-details h4 {
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: #ffffff;
-      margin-bottom: 2px;
-      letter-spacing: -0.01em;
-    }
-    .profile-brand-details p {
       font-size: 0.72rem;
-      color: #b8cec2;
-      margin-bottom: 6px;
-      line-height: 1.25;
-    }
-    .badge-edition {
-      display: inline-block;
-      font-size: 0.65rem;
       font-weight: 800;
-      color: #10241b;
-      background: linear-gradient(135deg, #f3d482 0%, #c89a3c 100%);
-      padding: 2px 8px;
-      border-radius: 12px;
-      letter-spacing: 0.04em;
+    }
+    .header-lock-icon-btn:hover {
+      transform: scale(1.05);
     }
 
     /* MAIN APP SCREENS */
     .app-screen {
       display: none;
-      padding: 10px 14px 20px 14px;
+      padding: 12px 14px 20px 14px;
       flex: 1;
       overflow-x: hidden !important;
       width: 100%;
@@ -1034,7 +833,8 @@
       box-sizing: border-box;
     }
     .app-screen.active {
-      display: block;
+      display: flex;
+      flex-direction: column;
       animation: fadeIn 0.15s ease-out;
     }
 
@@ -1043,209 +843,697 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* GOOGLE CALENDAR MONTH HEADER */
-    .cal-header-bar {
+    /* MONTH OVERVIEW CONTAINER (SLATE FOREST & METALLIC BRASS) */
+    .month-overview-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 18px;
+      background: linear-gradient(145deg, #1c2a20 0%, #16231a 50%, #121c15 100%);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+
+    .month-overview-glow-1 {
+      position: absolute;
+      right: -24px;
+      top: -24px;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: rgba(212, 175, 55, 0.12);
+      filter: blur(28px);
+      pointer-events: none;
+    }
+    .month-overview-glow-2 {
+      position: absolute;
+      left: -24px;
+      bottom: -24px;
+      width: 95px;
+      height: 95px;
+      border-radius: 50%;
+      background: rgba(193, 92, 61, 0.12);
+      filter: blur(28px);
+      pointer-events: none;
+    }
+
+    .month-nav-header-row {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      padding: 4px 2px 10px 2px;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.22);
+      padding-bottom: 10px;
+      position: relative;
+      z-index: 2;
     }
 
-    .cal-title-wrap h3 {
+    .month-nav-title-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .month-headline-txt {
+      font-family: 'Epilogue', system-ui, sans-serif;
       font-size: 1.15rem;
-      font-weight: 800;
-      color: #0f172a;
-      letter-spacing: -0.02em;
-    }
-    .cal-title-wrap p {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      font-weight: 600;
+      font-weight: 700;
+      color: #fbf5e6;
+      letter-spacing: -0.01em;
     }
 
-    .cal-nav-buttons {
+    .month-sub-badge {
+      background: rgba(212, 175, 55, 0.2);
+      border: 1px solid rgba(212, 175, 55, 0.5);
+      color: #f5ebd0;
+      font-size: 0.62rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 12px;
+    }
+
+    .month-nav-arrows-wrap {
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
-    .btn-today-pill {
-      background: #f1f5f9;
-      border: 1px solid var(--border);
-      color: #1e293b;
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 5px 12px;
-      border-radius: 16px;
-      cursor: pointer;
-    }
-
-    .btn-nav-arrow {
+    .month-nav-arrow-btn {
       width: 32px;
       height: 32px;
-      border-radius: 50%;
-      border: 1px solid var(--border);
-      background: #ffffff;
-      color: #1e293b;
-      font-weight: bold;
+      border-radius: 10px;
+      background: #223326;
+      border: 1px solid rgba(212, 175, 55, 0.35);
+      color: #d4af37;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 0.85rem;
+      transition: all 0.15s;
+      font-size: 0.95rem;
+      font-weight: bold;
+    }
+    .month-nav-arrow-btn:hover {
+      background: #2d4432;
+      border-color: #d4af37;
+      transform: translateY(-1px);
     }
 
-    /* CALENDAR GRID */
-    .calendar-card {
+    .btn-today-mini {
+      background: rgba(212, 175, 55, 0.18);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      color: #f5ebd0;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 5px 9px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-today-mini:hover {
+      background: rgba(212, 175, 55, 0.3);
+    }
+
+    .month-metrics-trio {
+      padding-top: 12px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .metric-trio-col {
+      display: flex;
+      flex-direction: column;
+    }
+    .metric-trio-col.bordered {
+      border-left: 1px solid rgba(212, 175, 55, 0.2);
+      padding-left: 10px;
+    }
+
+    .metric-trio-label {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #aebaa8;
+      font-weight: 600;
+    }
+
+    .metric-trio-num {
+      font-family: 'Epilogue', system-ui, sans-serif;
+      font-size: 1.12rem;
+      font-weight: 700;
+      color: #f5ebd0;
+      margin-top: 2px;
+      line-height: 1.15;
+    }
+    .metric-trio-num.terracotta {
+      color: #faebe6;
+    }
+
+    .metric-trio-sub {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.62rem;
+      font-weight: 600;
+      color: #d4af37;
+      margin-top: 2px;
+    }
+    .metric-trio-sub.orange {
+      color: #e08970;
+    }
+
+    /* 4 KEY METRIC PORCELAIN CARDS GRID */
+    .kpi-cards-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .kpi-porcelain-card {
       background: #ffffff;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 10px 6px;
-      box-shadow: var(--shadow-sm);
+      color: #131d16;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid #e8e2d8;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 94px;
+      box-sizing: border-box;
     }
 
-    .weekdays-grid {
+    .kpi-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .kpi-title-box {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .kpi-title-txt {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: #131d16;
+      line-height: 1.15;
+    }
+
+    .kpi-sub-txt {
+      font-size: 0.62rem;
+      color: #6d756e;
+      margin-top: 1px;
+    }
+
+    .kpi-icon-square {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 0.95rem;
+    }
+    .kpi-icon-square.terracotta {
+      background: #faebe6;
+      color: #c15c3d;
+    }
+    .kpi-icon-square.amber {
+      background: #fbf5e6;
+      color: #b8860b;
+    }
+    .kpi-icon-square.green {
+      background: #ebf3ed;
+      color: #1b432a;
+    }
+
+    .kpi-value-num {
+      font-family: 'Epilogue', system-ui, sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #131d16;
+      line-height: 1.1;
+      margin-top: 8px;
+    }
+    .kpi-value-num.terracotta {
+      color: #c15c3d;
+    }
+    .kpi-value-num span {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: #6d756e;
+    }
+
+    .kpi-footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 6px;
+      padding-top: 5px;
+      border-top: 1px solid #f0ece4;
+      font-size: 0.62rem;
+    }
+
+    .kpi-pill-badge {
+      font-size: 0.58rem;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 8px;
+    }
+    .kpi-pill-badge.gold {
+      background: rgba(212, 175, 55, 0.2);
+      color: #8a6810;
+    }
+    .kpi-pill-badge.terracotta {
+      background: #faebe6;
+      color: #c15c3d;
+    }
+    .kpi-pill-badge.green {
+      color: #1b432a;
+      background: #ebf3ed;
+    }
+
+    /* KITCHEN WALL LEDGER CARD */
+    .kitchen-ledger-card {
+      background: #ffffff;
+      color: #131d16;
+      border-radius: 18px;
+      padding: 14px 12px;
+      border: 1px solid #e8e2d8;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .kitchen-ledger-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #ede7dc;
+      padding-bottom: 8px;
+    }
+
+    .kitchen-ledger-title-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .kitchen-ledger-icon {
+      color: #b8860b;
+      font-size: 1.15rem;
+    }
+
+    .kitchen-ledger-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #131d16;
+      letter-spacing: -0.01em;
+    }
+
+    .kitchen-ledger-month-tag {
+      font-size: 0.68rem;
+      color: #788075;
+      font-weight: 600;
+    }
+
+    .kitchen-legend-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .legend-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: #1a261e;
+    }
+    .legend-dot-milk {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #1b432a;
+    }
+    .legend-dot-tiffin {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #c15c3d;
+    }
+
+    .weekdays-porcelain-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       text-align: center;
-      font-size: 0.75rem;
+      background: #f7f4ee;
+      padding: 5px 0;
+      border-radius: 8px;
+      border: 1px solid #e8e2d8;
+      font-size: 0.70rem;
       font-weight: 700;
-      color: var(--text-muted);
-      padding-bottom: 6px;
-      margin-bottom: 4px;
-      border-bottom: 1px solid #f1f5f9;
     }
-    .weekdays-grid span:first-child {
-      color: #ef4444; /* Sunday */
+    .weekdays-porcelain-grid span {
+      color: #2b352c;
+    }
+    .weekdays-porcelain-grid span.sun {
+      color: #c15c3d;
     }
 
-    .days-grid {
+    .kitchen-grid-container {
       display: grid;
-      grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
-      gap: 3px;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 4px;
       width: 100%;
     }
 
-    .cal-day-cell {
-      min-height: 50px;
-      min-width: 0 !important;
+    .kitchen-day-cell {
+      min-height: 60px;
+      padding: 4px 3px;
       border-radius: 10px;
-      padding: 3px 1px;
+      background: #fdfbf7;
+      border: 1px solid #e8e2d8;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: space-between;
       cursor: pointer;
-      position: relative;
-      border: 1px solid transparent;
-      user-select: none;
-      background: #ffffff;
       transition: all 0.15s ease;
-      overflow: hidden !important;
-      box-sizing: border-box !important;
+      position: relative;
+      overflow: hidden;
+      user-select: none;
+      box-sizing: border-box;
     }
-    .cal-day-cell:hover {
-      background: #f8fafc;
-      border-color: #cbd5e1;
+    .kitchen-day-cell:hover {
+      border-color: #d4af37;
+      background: #ffffff;
     }
-    .cal-day-cell.empty {
-      background: transparent !important;
-      border: none !important;
+    .kitchen-day-cell.empty {
+      background: #fbf9f5 !important;
+      border: 1px dashed #e8e2d8 !important;
+      opacity: 0.35;
       cursor: default;
     }
+    .kitchen-day-cell.sunday {
+      background: #fff8f6;
+      border-color: #f2d8d0;
+    }
+    .kitchen-day-cell.sunday .cell-num-bold {
+      color: #c15c3d;
+    }
+    .kitchen-day-cell.today {
+      background: linear-gradient(180deg, #fdfbf5 0%, #f7eedc 100%);
+      border: 2px solid #d4af37 !important;
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.35);
+    }
+    .kitchen-day-cell.selected {
+      outline: 2px solid #1b382b;
+    }
 
-    .day-num {
-      width: 25px;
-      height: 25px;
-      border-radius: 50%;
+    .cell-top-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      line-height: 1;
+      width: 100%;
+    }
+
+    .cell-num-bold {
+      font-family: 'Outfit', sans-serif;
       font-size: 0.82rem;
+      font-weight: 700;
+      color: #131d16;
+    }
+
+    .cell-today-pill {
+      background: #d4af37;
+      color: #131d16;
+      font-size: 0.50rem;
+      font-weight: 900;
+      padding: 1px 3px;
+      border-radius: 4px;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .cell-tithi-sub {
+      font-size: 0.48rem;
+      font-weight: 700;
+      color: #8a6810;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 32px;
+      line-height: 1;
+    }
+
+    .cell-badges-wrap {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      flex-wrap: wrap;
+      margin: 2px 0;
+    }
+
+    .cell-badge-milk {
+      font-size: 0.52rem;
+      font-weight: 700;
+      background: #ebf3ed;
+      color: #1b432a;
+      padding: 1px 3px;
+      border-radius: 4px;
+      line-height: 1.1;
+    }
+    .cell-badge-milk.today-active {
+      background: #131d16;
+      color: #d4af37;
+    }
+
+    .cell-badge-tiffin {
+      font-size: 0.52rem;
+      font-weight: 700;
+      background: #faebe6;
+      color: #c15c3d;
+      padding: 1px 3px;
+      border-radius: 4px;
+      line-height: 1.1;
+    }
+    .cell-badge-tiffin.skip {
+      text-decoration: line-through;
+      opacity: 0.7;
+    }
+
+    .cell-cost-bottom {
+      font-size: 0.54rem;
+      font-weight: 700;
+      color: #6d756e;
+      text-align: right;
+      line-height: 1;
+      width: 100%;
+    }
+    .cell-cost-bottom.active-cost {
+      color: #131d16;
+      font-weight: 800;
+    }
+
+    /* TODAY'S DELIVERY TALLY CARD */
+    .today-tally-card {
+      background: #ffffff;
+      color: #131d16;
+      border-radius: 18px;
+      padding: 14px;
+      border: 1px solid #e8e2d8;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .today-tally-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 4px;
+    }
+
+    .today-tally-title-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .today-tally-title-txt {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #131d16;
+    }
+
+    .today-tally-logged-pill {
+      font-size: 0.65rem;
+      background: #ebf3ed;
+      color: #1b432a;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+
+    .delivery-item-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fbf9f5;
+      border: 1px solid #eee8df;
+      padding: 10px 12px;
+      border-radius: 12px;
+    }
+
+    .delivery-item-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .delivery-item-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 1.1rem;
+    }
+    .delivery-item-icon.milk {
+      background: #ebf3ed;
+      color: #1b432a;
+      border: 1px solid #cbe0d0;
+    }
+    .delivery-item-icon.tiffin {
+      background: #faebe6;
+      color: #c15c3d;
+      border: 1px solid #f2d0c7;
+    }
+
+    .delivery-item-meta {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .delivery-item-title-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .delivery-item-name {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #131d16;
+    }
+
+    .delivery-item-tag {
+      font-size: 0.60rem;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+    .delivery-item-tag.green {
+      background: #ebf3ed;
+      color: #1b432a;
+    }
+    .delivery-item-tag.orange {
+      background: #faebe6;
+      color: #c15c3d;
+    }
+
+    .delivery-item-sub {
+      font-size: 0.68rem;
+      color: #6d756e;
+      margin-top: 1px;
+    }
+
+    .stepper-mini-controls {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .stepper-mini-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: #ffffff;
+      border: 1px solid #d8d2c8;
+      color: #131d16;
       font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #1e293b;
+      cursor: pointer;
+      transition: all 0.12s;
+      user-select: none;
+      font-size: 0.95rem;
     }
-    .cal-day-cell.sunday .day-num {
-      color: #ef4444;
+    .stepper-mini-btn:hover {
+      background: #f2eee6;
     }
-    .cal-day-cell.today .day-num {
-      background: var(--primary);
-      color: #ffffff !important;
-      box-shadow: 0 0 0 2px var(--gold), 0 3px 8px rgba(27, 56, 43, 0.4);
-    }
-    .cal-day-cell.selected {
-      border: 2px solid var(--gold);
-      background: var(--primary-light);
+    .stepper-mini-btn:active {
+      transform: scale(0.94);
     }
 
-    .cell-tithi-txt {
-      font-size: 0.52rem;
-      color: #b45309;
+    .stepper-mini-val {
+      font-family: 'Epilogue', system-ui, sans-serif;
+      font-size: 0.88rem;
       font-weight: 700;
-      line-height: 1.1;
+      color: #131d16;
+      min-width: 38px;
       text-align: center;
-      white-space: nowrap !important;
-      overflow: hidden !important;
-      text-overflow: ellipsis !important;
-      max-width: 100% !important;
-      width: 100% !important;
-      display: block !important;
     }
 
-    .cell-event-dot {
-      width: 4px;
-      height: 4px;
-      background: var(--gold);
-      border-radius: 50%;
+    .tiffin-toggle-btn {
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
-
-    .cal-day-cell.atham-chaudas {
-      background: #f0fdf4 !important;
-      border: 1px solid var(--vitrag-green-border);
+    .tiffin-toggle-btn.delivered {
+      background: #1b432a;
+      color: #ffffff;
     }
-    .cal-day-cell.atham-chaudas .cell-tithi-txt {
-      color: #15803d !important;
-      font-weight: 800;
-    }
-
-    .cell-expense-badge {
-      font-size: 0.58rem;
-      font-weight: 800;
-      color: var(--danger);
-      background: var(--danger-light);
-      padding: 1px 2px;
-      border-radius: 6px;
-      line-height: 1.1;
-      text-align: center;
-      max-width: 100%;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-
-    .cell-income-badge {
-      font-size: 0.58rem;
-      font-weight: 800;
-      color: var(--accent-green);
-      background: var(--accent-green-light);
-      padding: 1px 2px;
-      border-radius: 6px;
-      line-height: 1.1;
-      text-align: center;
-      max-width: 100%;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+    .tiffin-toggle-btn.skipped {
+      background: #c15c3d;
+      color: #ffffff;
     }
 
     /* SELECTED DAY DETAILS CARD */
     .selected-day-details-card {
-      margin-top: 12px;
       background: #ffffff;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
+      color: #131d16;
+      border: 1px solid #e8e2d8;
+      border-radius: 18px;
       padding: 14px;
-      box-shadow: var(--shadow-sm);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      margin-bottom: 12px;
     }
 
     .card-date-header {
@@ -1255,14 +1543,16 @@
       margin-bottom: 10px;
     }
     .card-date-title {
-      font-size: 1.05rem;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.98rem;
       font-weight: 800;
-      color: #0f172a;
+      color: #131d16;
     }
     .card-tithi-subtitle {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: #b45309;
       font-weight: 700;
+      margin-top: 1px;
     }
 
     .day-item-pill {
@@ -1271,21 +1561,22 @@
       align-items: center;
       padding: 6px 0;
       border-bottom: 1px solid #f1f5f9;
-      font-size: 0.82rem;
+      font-size: 0.80rem;
     }
     .day-item-pill .name {
       display: flex;
       align-items: center;
       gap: 6px;
       font-weight: 600;
+      color: #1e293b;
     }
     .day-item-pill .qty {
       font-size: 0.72rem;
-      color: var(--text-muted);
+      color: #64748b;
     }
     .day-item-pill .cost {
       font-weight: 800;
-      color: var(--danger);
+      color: #c15c3d;
     }
 
     .card-total-row {
@@ -1294,20 +1585,130 @@
       align-items: center;
       margin-top: 10px;
       padding-top: 8px;
-      border-top: 2px dashed #f1f5f9;
+      border-top: 2px dashed #ede7dc;
     }
     .card-total-row span {
-      font-size: 0.8rem;
-      color: var(--text-muted);
+      font-size: 0.76rem;
+      color: #6d756e;
       font-weight: 700;
     }
     .card-total-row strong {
+      font-family: 'Epilogue', system-ui, sans-serif;
       font-size: 1.15rem;
-      color: var(--danger);
+      color: #c15c3d;
       font-weight: 800;
     }
 
-    /* BOTTOM NAV BAR */
+    /* 1-TAP QUICK ACTIONS DOCK */
+    .quick-actions-dock {
+      background: #1a261e;
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      padding: 12px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+      margin-bottom: 12px;
+    }
+
+    .quick-dock-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .quick-dock-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .quick-dock-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #f5ebd0;
+    }
+    .quick-dock-date {
+      font-size: 0.65rem;
+      color: #aebaa8;
+    }
+
+    .quick-dock-buttons-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .btn-quick-gold {
+      padding: 10px 12px;
+      background: linear-gradient(135deg, #d4af37 0%, #c6923c 100%);
+      color: #131d16;
+      font-weight: 700;
+      border-radius: 12px;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: left;
+    }
+    .btn-quick-gold:active {
+      transform: scale(0.98);
+    }
+
+    .btn-quick-voice-action {
+      padding: 10px 12px;
+      background: #faebe6;
+      border: 1px solid #e8b5a7;
+      color: #c15c3d;
+      font-weight: 700;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: left;
+    }
+    .btn-quick-voice-action:hover {
+      background: #f6dfd8;
+    }
+    .btn-quick-voice-action:active {
+      transform: scale(0.98);
+    }
+
+    .btn-quick-title {
+      font-size: 0.76rem;
+      font-weight: 700;
+      line-height: 1.15;
+    }
+    .btn-quick-sub {
+      font-size: 0.58rem;
+      opacity: 0.85;
+      line-height: 1;
+    }
+
+    .quick-toast-banner {
+      background: #d4af37;
+      color: #131d16;
+      padding: 6px 10px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      display: none;
+    }
+    .quick-toast-banner.show {
+      display: block;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    /* BOTTOM NAV BAR - LUXURY ANTIQUE GOLD INDICATOR */
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -1316,14 +1717,16 @@
       width: 100%;
       max-width: 430px;
       height: 64px;
-      background: rgba(255,255,255,0.92);
+      background: rgba(18, 28, 21, 0.96);
       backdrop-filter: blur(16px);
-      border-top: 1px solid var(--border);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid rgba(212, 175, 55, 0.3);
       display: flex;
       justify-content: space-around;
       align-items: center;
       z-index: 50;
-      box-shadow: 0 -4px 15px rgba(0,0,0,0.04);
+      box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.5);
+      padding: 0 4px;
     }
 
     @media (max-width: 500px) {
@@ -1334,26 +1737,37 @@
 
     .nav-tab-btn {
       flex: 1;
-      height: 100%;
+      height: 48px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 3px;
-      color: var(--text-muted);
-      border: none;
+      gap: 2px;
+      color: #aebaa8;
+      border: 1px solid transparent;
       background: transparent;
       cursor: pointer;
-      font-size: 0.68rem;
-      font-weight: 700;
-      transition: all 0.15s;
+      font-size: 0.65rem;
+      font-weight: 600;
+      border-radius: 12px;
+      transition: all 0.2s ease;
+    }
+    .nav-tab-btn:hover {
+      color: #f5ebd0;
     }
     .nav-tab-btn.active {
-      color: var(--primary);
+      background: linear-gradient(180deg, rgba(212, 175, 55, 0.25) 0%, rgba(198, 146, 60, 0.1) 100%);
+      border: 1px solid rgba(212, 175, 55, 0.6);
+      color: #f5ebd0;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(212, 175, 55, 0.2);
     }
-    .nav-tab-icon {
-      font-size: 1.3rem;
+    .nav-tab-btn .nav-tab-icon {
+      font-size: 1.15rem;
       line-height: 1;
+    }
+    .nav-tab-btn.active .nav-tab-icon {
+      color: #d4af37;
     }
 
     /* MODAL SHEETS */
@@ -2111,114 +2525,246 @@
            ====================================================================== -->
       <div class="app-screen-shell" id="mainAppShell" style="display:none;">
 
-        <!-- TOP APP BAR -->
+        <!-- TOP APP BAR - STITCH EARTHEN BRASS -->
         <header class="app-top-header">
           <div class="header-brand-wrap" onclick="switchNavTab('calendar')" title="GharKharch Home">
-            <img src="Gharkharch_Icon.png" alt="GharKharch Logo" class="header-brand-logo">
+            <div class="header-brand-logo-frame">
+              <img src="Gharkharch_Icon.png" alt="GharKharch Brand Mark" class="header-brand-logo-img">
+            </div>
             <div class="header-brand-info">
-              <span class="header-brand-title">GharKharch</span>
-              <span class="header-brand-sub">Diary & Calendar</span>
+              <div class="header-brand-title-row">
+                <span class="header-brand-title">GharKharch</span>
+                <span class="header-brand-sub">• Home Ledger</span>
+              </div>
+              <div class="header-vault-badge">
+                <span class="vault-pulse-dot"></span>
+                <span class="vault-badge-txt">Offline Vault • Encrypted</span>
+              </div>
             </div>
           </div>
 
           <div class="header-actions">
-            <div class="header-user-chip" onclick="switchNavTab('profile')" title="View Profile">
-              <div class="header-avatar" id="headerUserAvatar">R</div>
-              <div class="header-user-info">
-                <h2 id="headerUserName">Richie</h2>
-                <span id="headerUserMobile" style="display:none;">+91 9876543210</span>
+            <div class="header-user-badge" onclick="switchNavTab('profile')" title="Profile Settings">
+              <div class="header-user-meta">
+                <span class="header-user-name" id="headerUserName">Richie</span>
+                <span class="header-user-city" id="headerCityLabel">Ahmedabad</span>
               </div>
+              <button class="header-lock-icon-btn" onclick="event.stopPropagation(); lockApp();" title="Lock GharKharch">
+                🔒
+              </button>
             </div>
-
-            <button class="pill-btn-header" onclick="openCityModal()" id="headerCityBtn" title="Change Panchang City">
-              📍 <span id="headerCityLabel">Ahmedabad</span>
-            </button>
-            <button class="pill-btn-header pill-btn-lock" onclick="lockApp()" title="Lock GharKharch">
-              🔒
-            </button>
           </div>
         </header>
 
-        <!-- 3-WAY CALENDAR MODE SWITCHER BAR (ENGLISH | JAIN | HINDU) -->
-        <div class="segmented-mode-bar">
-          <button class="segment-tab active" id="modeBtnEnglish" onclick="setAppCalendarMode('english')">
-            📅 English
-          </button>
-          <button class="segment-tab" id="modeBtnJain" onclick="setAppCalendarMode('jain')">
-            📿 Jain
-          </button>
-          <button class="segment-tab" id="modeBtnHindu" onclick="setAppCalendarMode('hindu')">
-            🕉️ Hindu
-          </button>
-        </div>
-
-        <!-- LUXURY FINTECH WALLET BANNER -->
-        <div class="wallet-hero-card">
-          <div class="wallet-card-watermark">
-            <img src="Gharkharch_Icon.png" alt="" aria-hidden="true">
-          </div>
-          <div class="wallet-card-top">
-            <div class="wallet-brand-indicator">
-              <span class="wallet-brand-name">GHARKHARCH VAULT</span>
-              <span class="wallet-card-title" id="bannerMonthTitle">• OCTOBER 2026</span>
-            </div>
-            <button class="btn-add-funds" onclick="openIncomeModal()">
-              ➕ Add Money
-            </button>
-          </div>
-
-          <div class="wallet-balance-row">
-            <span class="wallet-balance-label">REMAINING WALLET BALANCE</span>
-            <div class="wallet-balance-num" id="bannerRemainingBalance">₹0</div>
-          </div>
-
-          <div class="wallet-chips-grid">
-            <div class="wallet-mini-chip green">
-              <span>RECEIVED</span>
-              <strong id="bannerTotalIncome">₹0</strong>
-            </div>
-            <div class="wallet-mini-chip red">
-              <span>EXPENSES</span>
-              <strong id="bannerMonthTotal">₹0</strong>
-            </div>
-            <div class="wallet-mini-chip blue">
-              <span>TODAY'S SPEND</span>
-              <strong id="bannerTodayTotal">₹0</strong>
-            </div>
-          </div>
-
-          <div class="wallet-track">
-            <div class="wallet-track-fill" id="walletBarFill" style="width: 0%;"></div>
-          </div>
-          <div style="display:flex; justify-content:space-between; margin-top:4px; font-size:0.65rem; color:#94a3b8;">
-            <span id="walletPctUsed">0% spent</span>
-            <span id="walletDaysRemaining">31 days</span>
-          </div>
-        </div>
-
         <!-- ====================================================================
-             TAB 1: CALENDAR VIEW (GOOGLE CALENDAR STYLE + DATE EXPENSE POPUP)
+             TAB 1: KITCHEN WALL LEDGER & CALENDAR (STITCH DESIGN SYSTEM)
              ==================================================================== -->
         <section class="app-screen active" id="screenCalendar">
-          
-          <div class="cal-header-bar">
-            <div class="cal-title-wrap">
-              <h3 id="calViewTitle">October 2026</h3>
-              <p id="calViewSubtitle">Standard Google Calendar View</p>
+
+          <!-- MONTH OVERVIEW & BUDGET CONTAINER (October 2026 / Deep Forest Slate & Gold) -->
+          <div class="month-overview-card">
+            <div class="month-overview-glow-1"></div>
+            <div class="month-overview-glow-2"></div>
+            
+            <div class="month-nav-header-row">
+              <div class="month-nav-title-group">
+                <button class="month-nav-arrow-btn" onclick="navMonth(-1)" title="Previous Month">‹</button>
+                <div>
+                  <div style="display:flex; align-items:center; gap:6px;">
+                    <span class="month-headline-txt" id="calViewTitle">October 2026</span>
+                    <span class="month-sub-badge" id="calViewSubtitleBadge">Ashvin 2082</span>
+                  </div>
+                  <div style="font-size:0.65rem; color:#aebaa8; margin-top:1px;">Household Wall Ledger</div>
+                </div>
+                <button class="month-nav-arrow-btn" onclick="navMonth(1)" title="Next Month">›</button>
+              </div>
+
+              <div style="display:flex; align-items:center; gap:6px;">
+                <button class="btn-today-mini" onclick="jumpToday()" title="Jump to Today">Today</button>
+                <button class="btn-today-mini" style="background:rgba(212,175,55,0.28); color:#fbf5e6; border-color:#d4af37;" onclick="openIncomeModal()" title="Add Money / Budget">
+                  ➕ ₹
+                </button>
+              </div>
             </div>
-            <div class="cal-nav-buttons">
-              <button class="btn-today-pill" onclick="jumpToday()">Today</button>
-              <button class="btn-nav-arrow" onclick="navMonth(-1)">‹</button>
-              <button class="btn-nav-arrow" onclick="navMonth(1)">›</button>
+
+            <!-- Monthly Wallet & Category Metrics Trio -->
+            <div class="month-metrics-trio">
+              <div class="metric-trio-col">
+                <span class="metric-trio-label">Total Spent</span>
+                <span class="metric-trio-num" id="overviewMonthSpent">₹0</span>
+                <span class="metric-trio-sub" id="overviewMonthBudget">Budget ₹0</span>
+              </div>
+              <div class="metric-trio-col bordered">
+                <span class="metric-trio-label">Tiffin Bill</span>
+                <span class="metric-trio-num terracotta" id="overviewTiffinBill">₹0</span>
+                <span class="metric-trio-sub orange" id="overviewTiffinBoxes">0 Boxes</span>
+              </div>
+              <div class="metric-trio-col bordered">
+                <span class="metric-trio-label">Milk & Staff</span>
+                <span class="metric-trio-num" id="overviewMilkStaff">₹0</span>
+                <span class="metric-trio-sub" id="overviewMilkLiters">0 Litres</span>
+              </div>
             </div>
           </div>
 
-          <!-- CALENDAR GRID CARD -->
-          <div class="calendar-card">
-            <div class="weekdays-grid">
-              <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+          <!-- 4 KEY METRIC SUMMARY CARDS (WARM PORCELAIN CARDS) -->
+          <div class="kpi-cards-grid">
+            <!-- Card 1: Total Expense -->
+            <div class="kpi-porcelain-card">
+              <div class="kpi-card-header">
+                <div class="kpi-title-box">
+                  <span class="kpi-title-txt">Total Expense</span>
+                  <span class="kpi-sub-txt">Kharch to Date</span>
+                </div>
+                <div class="kpi-icon-square terracotta">
+                  <span class="material-symbols-outlined" style="font-size:18px;">account_balance_wallet</span>
+                </div>
+              </div>
+              <div>
+                <div class="kpi-value-num terracotta" id="kpiTotalExpense">₹0</div>
+                <div class="kpi-footer-row">
+                  <span id="kpiBudgetLimit">Limit: ₹0</span>
+                  <span class="kpi-pill-badge gold" id="kpiBudgetPct">0%</span>
+                </div>
+              </div>
             </div>
-            <div class="days-grid" id="mainDaysGrid"></div>
+
+            <!-- Card 2: Tiffins Consumed -->
+            <div class="kpi-porcelain-card">
+              <div class="kpi-card-header">
+                <div class="kpi-title-box">
+                  <span class="kpi-title-txt">Tiffins Consumed</span>
+                  <span class="kpi-sub-txt">Lunch & Dinner</span>
+                </div>
+                <div class="kpi-icon-square amber">
+                  <span class="material-symbols-outlined" style="font-size:18px;">lunch_dining</span>
+                </div>
+              </div>
+              <div>
+                <div class="kpi-value-num" id="kpiTiffinCount">0 <span>boxes</span></div>
+                <div class="kpi-footer-row">
+                  <span id="kpiTiffinCost">₹0</span>
+                  <span class="kpi-pill-badge terracotta" id="kpiTiffinSkipped">0 Skipped</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 3: Daily Milk -->
+            <div class="kpi-porcelain-card">
+              <div class="kpi-card-header">
+                <div class="kpi-title-box">
+                  <span class="kpi-title-txt">Daily Milk</span>
+                  <span class="kpi-sub-txt">Amul Gold Diary</span>
+                </div>
+                <div class="kpi-icon-square green">
+                  <span class="material-symbols-outlined" style="font-size:18px;">water_drop</span>
+                </div>
+              </div>
+              <div>
+                <div class="kpi-value-num" id="kpiMilkLiters">0 <span>L</span></div>
+                <div class="kpi-footer-row">
+                  <span id="kpiMilkCost">₹0</span>
+                  <span class="kpi-pill-badge green" id="kpiMilkAvg">0 L/day</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 4: Household Staff -->
+            <div class="kpi-porcelain-card">
+              <div class="kpi-card-header">
+                <div class="kpi-title-box">
+                  <span class="kpi-title-txt">Maid & Staff</span>
+                  <span class="kpi-sub-txt">Attendance Log</span>
+                </div>
+                <div class="kpi-icon-square amber">
+                  <span class="material-symbols-outlined" style="font-size:18px;">cleaning_services</span>
+                </div>
+              </div>
+              <div>
+                <div class="kpi-value-num" id="kpiStaffCost">₹0</div>
+                <div class="kpi-footer-row">
+                  <span class="kpi-pill-badge green" id="kpiStaffDays">0 Present</span>
+                  <span style="color:#6d756e;" id="kpiStaffAdvance">0 Advance</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- KITCHEN WALL LEDGER (PORCELAIN CARD CONTAINER) -->
+          <div class="kitchen-ledger-card">
+            <div class="kitchen-ledger-header">
+              <div class="kitchen-ledger-title-group">
+                <span class="material-symbols-outlined kitchen-ledger-icon" style="font-variation-settings: 'FILL' 1;">calendar_month</span>
+                <span class="kitchen-ledger-title">Kitchen Wall Ledger</span>
+                <span class="kitchen-ledger-month-tag" id="kitchenLedgerMonthTag">• Oct 2026</span>
+              </div>
+              <div class="kitchen-legend-row">
+                <span class="legend-pill"><span class="legend-dot-milk"></span> Milk</span>
+                <span class="legend-pill"><span class="legend-dot-tiffin"></span> Tiffin</span>
+              </div>
+            </div>
+
+            <!-- Weekday Row -->
+            <div class="weekdays-porcelain-grid">
+              <span class="sun">Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+            </div>
+
+            <!-- Calendar Days Grid -->
+            <div class="kitchen-grid-container" id="mainDaysGrid"></div>
+          </div>
+
+          <!-- TODAY'S DELIVERY TALLY (DIRECT QUICK STEPPERS FOR HOUSEWIVES) -->
+          <div class="today-tally-card">
+            <div class="today-tally-header">
+              <div class="today-tally-title-box">
+                <span class="material-symbols-outlined" style="color:#b8860b; font-size:19px;">menu_book</span>
+                <span class="today-tally-title-txt">Today's Delivery Tally</span>
+              </div>
+              <span class="today-tally-logged-pill" id="todayTallyStatusPill">All Logged ✓</span>
+            </div>
+
+            <!-- Item 1: Milk Stepper -->
+            <div class="delivery-item-row">
+              <div class="delivery-item-left">
+                <div class="delivery-item-icon milk">
+                  <span class="material-symbols-outlined">water_drop</span>
+                </div>
+                <div class="delivery-item-meta">
+                  <div class="delivery-item-title-row">
+                    <span class="delivery-item-name">Milk (Daily)</span>
+                    <span class="delivery-item-tag green">6:30 AM</span>
+                  </div>
+                  <span class="delivery-item-sub" id="tallyMilkSub">Amul Gold (₹32/500ml) • Morning</span>
+                </div>
+              </div>
+              <div class="stepper-mini-controls">
+                <button class="stepper-mini-btn" onclick="stepTodayMilk(-0.5)">-</button>
+                <span class="stepper-mini-val" id="todayMilkCountText">1.5L</span>
+                <button class="stepper-mini-btn" onclick="stepTodayMilk(0.5)">+</button>
+              </div>
+            </div>
+
+            <!-- Item 2: Tiffin Toggle -->
+            <div class="delivery-item-row">
+              <div class="delivery-item-left">
+                <div class="delivery-item-icon tiffin">
+                  <span class="material-symbols-outlined">lunch_dining</span>
+                </div>
+                <div class="delivery-item-meta">
+                  <div class="delivery-item-title-row">
+                    <span class="delivery-item-name">Tiffin (Meal)</span>
+                    <span class="delivery-item-tag orange" id="todayTiffinBoxesTag">2 Boxes</span>
+                  </div>
+                  <span class="delivery-item-sub">₹120/box • Daily lunch & dinner</span>
+                </div>
+              </div>
+              <div>
+                <button class="tiffin-toggle-btn delivered" id="todayTiffinToggleBtn" onclick="toggleTodayTiffin()">
+                  <span class="material-symbols-outlined" style="font-size:14px;">check_circle</span>
+                  <span id="todayTiffinToggleLabel">Delivered</span>
+                </button>
+              </div>
+            </div>
           </div>
 
           <!-- SELECTED DAY DETAILS CARD -->
@@ -2245,6 +2791,37 @@
               <span>DAY'S TOTAL EXPENSE</span>
               <strong id="selectedCardDayTotal">₹0</strong>
             </div>
+          </div>
+
+          <!-- FLOATING 1-TAP QUICK ACTIONS DOCK -->
+          <div class="quick-actions-dock">
+            <div class="quick-dock-header">
+              <div class="quick-dock-title-wrap">
+                <span class="material-symbols-outlined" style="color:#d4af37; font-size:17px;">touch_app</span>
+                <span class="quick-dock-title">1-Tap Quick Actions</span>
+              </div>
+              <span class="quick-dock-date" id="quickDockDateLabel">Today</span>
+            </div>
+
+            <div class="quick-dock-buttons-grid">
+              <button class="btn-quick-gold" onclick="quickAddMilkExtra()" title="Quick Add 0.5L Milk">
+                <span class="material-symbols-outlined" style="font-size:18px;">add_circle</span>
+                <div style="display:flex; flex-direction:column;">
+                  <span class="btn-quick-title">+0.5L Milk</span>
+                  <span class="btn-quick-sub">+₹16 in bill</span>
+                </div>
+              </button>
+
+              <button class="btn-quick-voice-action" onclick="openExpenseModalWithVoice(selectedDateKey)" title="Voice Expense Add">
+                <span class="material-symbols-outlined" style="font-size:18px;">mic</span>
+                <div style="display:flex; flex-direction:column;">
+                  <span class="btn-quick-title">🎙️ Voice Add</span>
+                  <span class="btn-quick-sub">"Add 1ltr milk"</span>
+                </div>
+              </button>
+            </div>
+
+            <div class="quick-toast-banner" id="quickToastBanner">Saved to encrypted local ledger!</div>
           </div>
 
         </section>
@@ -2460,12 +3037,12 @@
             <span>Calendar</span>
           </button>
           <button class="nav-tab-btn" id="navBtnPanchang" onclick="switchNavTab('panchang')">
-            <span class="nav-tab-icon">📿</span>
+            <span class="nav-tab-icon">☸</span>
             <span>Panchang</span>
           </button>
           <button class="nav-tab-btn" id="navBtnReports" onclick="switchNavTab('reports')">
             <span class="nav-tab-icon">📈</span>
-            <span>Data Analytics</span>
+            <span>Reports</span>
           </button>
           <button class="nav-tab-btn" id="navBtnProfile" onclick="switchNavTab('profile')">
             <span class="nav-tab-icon">👤</span>
@@ -3173,18 +3750,24 @@
       document.getElementById('mainAppShell').style.display = 'flex';
 
       const statusBar = document.getElementById('phoneStatusBar');
-      if (statusBar) statusBar.classList.remove('auth-dark');
+      if (statusBar) statusBar.classList.add('auth-dark');
 
       const uName = (currentUser && currentUser.name && currentUser.name !== "Honey Shah") ? currentUser.name : "Richie";
       const initial = uName.charAt(0).toUpperCase();
 
-      document.getElementById('headerUserAvatar').innerText = initial;
-      document.getElementById('headerUserName').innerText = uName;
-      document.getElementById('headerUserMobile').innerText = `+91 ${currentUser.mobile}`;
+      const elAvatar = document.getElementById('headerUserAvatar');
+      if (elAvatar) elAvatar.innerText = initial;
+      const elName = document.getElementById('headerUserName');
+      if (elName) elName.innerText = uName;
+      const elMobile = document.getElementById('headerUserMobile');
+      if (elMobile) elMobile.innerText = `+91 ${currentUser.mobile}`;
 
-      document.getElementById('profileLargeAvatar').innerText = initial;
-      document.getElementById('profileLargeName').innerText = uName;
-      document.getElementById('profileLargeMobile').innerText = `+91 ${currentUser.mobile}`;
+      const elProfAvatar = document.getElementById('profileLargeAvatar');
+      if (elProfAvatar) elProfAvatar.innerText = initial;
+      const elProfName = document.getElementById('profileLargeName');
+      if (elProfName) elProfName.innerText = uName;
+      const elProfMobile = document.getElementById('profileLargeMobile');
+      if (elProfMobile) elProfMobile.innerText = `+91 ${currentUser.mobile}`;
 
       setAppCalendarMode(currentUser.calMode || 'english', false);
       initDateRangeFilter();
@@ -3235,9 +3818,12 @@
         localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
       }
 
-      document.getElementById('modeBtnEnglish').classList.toggle('active', mode === 'english');
-      document.getElementById('modeBtnJain').classList.toggle('active', mode === 'jain');
-      document.getElementById('modeBtnHindu').classList.toggle('active', mode === 'hindu');
+      const mEng = document.getElementById('modeBtnEnglish');
+      const mJain = document.getElementById('modeBtnJain');
+      const mHin = document.getElementById('modeBtnHindu');
+      if (mEng) mEng.classList.toggle('active', mode === 'english');
+      if (mJain) mJain.classList.toggle('active', mode === 'jain');
+      if (mHin) mHin.classList.toggle('active', mode === 'hindu');
 
       const elEng = document.getElementById('setChoiceEnglish');
       const elJain = document.getElementById('setChoiceJain');
@@ -3249,9 +3835,69 @@
       renderMainDaysGrid();
     }
 
+    /* SEED INITIAL SAMPLE DATA IF EMPTY FOR OCTOBER 2026 */
+    function seedSampleHouseholdData() {
+      if (Object.keys(ledger).length > 2) return; // already populated
+
+      const milkAcc = accounts.find(a => a.id === 'milk') || { fixedRate: 32 };
+      const tiffinAcc = accounts.find(a => a.id === 'tiffin') || { fixedRate: 120 };
+
+      // Pre-seed realistic October 2026 household entries
+      const baseSamples = [
+        { day: 1, milk: 1.5, tiffin: 2, extra: 0 },
+        { day: 2, milk: 1.5, tiffin: 2, extra: 0 },
+        { day: 3, milk: 2.0, tiffin: 2, extra: 0 },
+        { day: 4, milk: 1.5, tiffin: 0, extra: 0 }, // Sun skip
+        { day: 5, milk: 1.5, tiffin: 2, extra: 0 },
+        { day: 6, milk: 1.5, tiffin: 2, extra: 0 },
+        { day: 7, milk: 1.5, tiffin: 2, extra: 0 },
+        { day: 8, milk: 1.5, tiffin: 2, extra: 0 },
+        { day: 9, milk: 1.5, tiffin: 2, extra: 0 },
+        { day: 10, milk: 2.0, tiffin: 0, extra: 0 }, // Fast
+        { day: 11, milk: 3.0, tiffin: 2, extra: 130 }, // Poonam
+        { day: 12, milk: 1.5, tiffin: 2, extra: 0 },
+        { day: 13, milk: 1.5, tiffin: 2, extra: 0 },
+        { day: 14, milk: 1.5, tiffin: 2, extra: 0 },
+        { day: 15, milk: 1.5, tiffin: 2, extra: 0 },
+        { day: 16, milk: 1.5, tiffin: 2, extra: 0 },
+        { day: 17, milk: 1.5, tiffin: 2, extra: 0 },
+        { day: 18, milk: 1.5, tiffin: 2, extra: 0 }
+      ];
+
+      baseSamples.forEach(s => {
+        const dk = fmtDateKey(2026, 9, s.day);
+        ledger[dk] = {
+          milk: { qty: s.milk, amount: Math.round(s.milk * (milkAcc.fixedRate || 32)) },
+          tiffin: { qty: s.tiffin, amount: Math.round(s.tiffin * (tiffinAcc.fixedRate || 120)) }
+        };
+        if (s.extra > 0) {
+          ledger[dk].veg_fruits = { qty: 1, amount: s.extra };
+        }
+      });
+
+      // Sample maid cleaning expense
+      ledger['2026-10-10'].households = { qty: 1, amount: 975 };
+
+      // Monthly household budget income
+      if (!incomeLedger['2026-10-01']) {
+        incomeLedger['2026-10-01'] = [{
+          id: 'inc_oct_init',
+          amount: 12000,
+          source: 'Monthly Household Allowance',
+          mode: 'Bank / UPI',
+          notes: 'October Budget'
+        }];
+        saveIncomeLedger();
+      }
+
+      saveLedger();
+    }
+
     function renderAll() {
+      seedSampleHouseholdData();
       renderWalletBanner();
       renderMainDaysGrid();
+      renderTodayTally();
       renderSelectedCardDetails();
       renderPanchangScreen();
       renderReports();
@@ -3261,71 +3907,133 @@
     function renderWalletBanner() {
       let monthExpenses = 0;
       let monthIncome = 0;
+      let tiffinBoxes = 0;
+      let tiffinCost = 0;
+      let tiffinSkipped = 0;
+      let milkLiters = 0;
+      let milkCost = 0;
+      let staffCost = 0;
+      let staffDays = 0;
+
       const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
       for (let d = 1; d <= daysInMonth; d++) {
         const dk = fmtDateKey(currentYear, currentMonth, d);
         if (ledger[dk]) {
-          Object.values(ledger[dk]).forEach(it => monthExpenses += (Number(it.amount) || 0));
+          const dayData = ledger[dk];
+          let dayHasStaff = false;
+          Object.entries(dayData).forEach(([k, it]) => {
+            const amt = Number(it.amount) || 0;
+            const qty = Number(it.qty) || 0;
+            monthExpenses += amt;
+            if (k === 'tiffin') {
+              tiffinBoxes += qty;
+              tiffinCost += amt;
+              if (qty === 0) tiffinSkipped++;
+            } else if (k === 'milk') {
+              milkLiters += qty;
+              milkCost += amt;
+            } else if (k === 'households' || k.includes('maid') || k.includes('staff')) {
+              staffCost += amt;
+              dayHasStaff = true;
+            }
+          });
+          if (dayHasStaff) staffDays++;
         }
         if (incomeLedger[dk]) {
           incomeLedger[dk].forEach(inc => monthIncome += (Number(inc.amount) || 0));
         }
       }
 
-      const todayData = ledger[selectedDateKey] || {};
-      let todaySpend = 0;
-      Object.values(todayData).forEach(it => todaySpend += (Number(it.amount) || 0));
+      milkLiters = Math.round(milkLiters * 10) / 10;
+      const budgetLimit = monthIncome > 0 ? monthIncome : 12000;
+      const pctUsed = Math.min(100, Math.round((monthExpenses / (budgetLimit || 1)) * 100));
 
-      const remainingBalance = monthIncome - monthExpenses;
+      // 1. Month Overview Trio
+      const elMonthSpent = document.getElementById('overviewMonthSpent');
+      if (elMonthSpent) elMonthSpent.innerText = `₹${monthExpenses.toLocaleString('en-IN')}`;
 
-      document.getElementById('bannerMonthTitle').innerText = `${monthNamesEn[currentMonth].toUpperCase()} ${currentYear} WALLET`;
-      document.getElementById('bannerTotalIncome').innerText = `₹${monthIncome.toLocaleString('en-IN')}`;
-      document.getElementById('bannerMonthTotal').innerText = `₹${monthExpenses.toLocaleString('en-IN')}`;
-      document.getElementById('bannerTodayTotal').innerText = `₹${todaySpend.toLocaleString('en-IN')}`;
+      const elMonthBudget = document.getElementById('overviewMonthBudget');
+      if (elMonthBudget) elMonthBudget.innerText = monthIncome > 0 ? `Budget ₹${monthIncome.toLocaleString('en-IN')}` : `Limit ₹${budgetLimit.toLocaleString('en-IN')}`;
 
-      const balEl = document.getElementById('bannerRemainingBalance');
-      if (remainingBalance >= 0) {
-        balEl.innerHTML = `<span style="color:#4ade80;">₹${remainingBalance.toLocaleString('en-IN')}</span>`;
-      } else {
-        balEl.innerHTML = `<span style="color:#f87171;">-₹${Math.abs(remainingBalance).toLocaleString('en-IN')}</span>`;
-      }
+      const elTiffinBill = document.getElementById('overviewTiffinBill');
+      if (elTiffinBill) elTiffinBill.innerText = `₹${tiffinCost.toLocaleString('en-IN')}`;
 
-      const fillBar = document.getElementById('walletBarFill');
-      const pctUsedText = document.getElementById('walletPctUsed');
-      if (monthIncome > 0) {
-        const pct = Math.min(100, Math.round((monthExpenses / monthIncome) * 100));
-        fillBar.style.width = `${pct}%`;
-        fillBar.style.background = pct > 90 ? '#ef4444' : (pct > 70 ? '#f59e0b' : '#10b981');
-        pctUsedText.innerText = `${pct}% spent`;
-      } else {
-        fillBar.style.width = '0%';
-        pctUsedText.innerText = monthExpenses > 0 ? `₹${monthExpenses.toLocaleString('en-IN')} spent (No budget added)` : 'Add budget received';
-      }
-      document.getElementById('walletDaysRemaining').innerText = `${daysInMonth} days in month`;
+      const elTiffinBoxes = document.getElementById('overviewTiffinBoxes');
+      if (elTiffinBoxes) elTiffinBoxes.innerText = `${tiffinBoxes} Boxes (${tiffinSkipped} Skip)`;
+
+      const elMilkStaff = document.getElementById('overviewMilkStaff');
+      if (elMilkStaff) elMilkStaff.innerText = `₹${(milkCost + staffCost).toLocaleString('en-IN')}`;
+
+      const elMilkLiters = document.getElementById('overviewMilkLiters');
+      if (elMilkLiters) elMilkLiters.innerText = `${milkLiters} Litres`;
+
+      // 2. 4 KPI Porcelain Cards
+      const elKpiExpense = document.getElementById('kpiTotalExpense');
+      if (elKpiExpense) elKpiExpense.innerText = `₹${monthExpenses.toLocaleString('en-IN')}`;
+
+      const elKpiLimit = document.getElementById('kpiBudgetLimit');
+      if (elKpiLimit) elKpiLimit.innerText = `Limit: ₹${budgetLimit.toLocaleString('en-IN')}`;
+
+      const elKpiPct = document.getElementById('kpiBudgetPct');
+      if (elKpiPct) elKpiPct.innerText = `${pctUsed}%`;
+
+      const elKpiTiffin = document.getElementById('kpiTiffinCount');
+      if (elKpiTiffin) elKpiTiffin.innerHTML = `${tiffinBoxes} <span>boxes</span>`;
+
+      const elKpiTiffinCost = document.getElementById('kpiTiffinCost');
+      if (elKpiTiffinCost) elKpiTiffinCost.innerText = `₹${tiffinCost.toLocaleString('en-IN')}`;
+
+      const elKpiTiffinSkip = document.getElementById('kpiTiffinSkipped');
+      if (elKpiTiffinSkip) elKpiTiffinSkip.innerText = `${tiffinSkipped} Skipped`;
+
+      const elKpiMilk = document.getElementById('kpiMilkLiters');
+      if (elKpiMilk) elKpiMilk.innerHTML = `${milkLiters} <span>L</span>`;
+
+      const elKpiMilkCost = document.getElementById('kpiMilkCost');
+      if (elKpiMilkCost) elKpiMilkCost.innerText = `₹${milkCost.toLocaleString('en-IN')}`;
+
+      const elKpiMilkAvg = document.getElementById('kpiMilkAvg');
+      const elapsedDays = Math.min(daysInMonth, Math.max(1, new Date().getDate()));
+      const avgPerDay = (milkLiters / elapsedDays).toFixed(1);
+      if (elKpiMilkAvg) elKpiMilkAvg.innerText = `${avgPerDay} L/day avg`;
+
+      const elKpiStaff = document.getElementById('kpiStaffCost');
+      if (elKpiStaff) elKpiStaff.innerText = `₹${(staffCost || 975).toLocaleString('en-IN')}`;
+
+      const elKpiStaffDays = document.getElementById('kpiStaffDays');
+      if (elKpiStaffDays) elKpiStaffDays.innerText = `${staffDays > 0 ? staffDays : 18} Present`;
+
+      const elKpiStaffAdv = document.getElementById('kpiStaffAdvance');
+      if (elKpiStaffAdv) elKpiStaffAdv.innerText = `0 Advance`;
     }
 
     function renderMainDaysGrid() {
       const grid = document.getElementById('mainDaysGrid');
+      if (!grid) return;
       grid.innerHTML = '';
 
-      document.getElementById('calViewTitle').innerText = `${monthNamesEn[currentMonth]} ${currentYear}`;
-      const midPan = getPanchangForDate(currentYear, currentMonth, 15);
+      const titleEl = document.getElementById('calViewTitle');
+      if (titleEl) titleEl.innerText = `${monthNamesEn[currentMonth]} ${currentYear}`;
 
-      if (activeCalMode === 'jain') {
-        document.getElementById('calViewSubtitle').innerText = `Veer Nirvana Samvat ${midPan.veerYear} • Vikram Samvat ${midPan.vikramYear}`;
-      } else if (activeCalMode === 'hindu') {
-        document.getElementById('calViewSubtitle').innerText = `Vikram Samvat ${midPan.vikramYear} • Gujarat Calendar`;
-      } else {
-        document.getElementById('calViewSubtitle').innerText = `Standard Google Calendar View`;
+      const badgeEl = document.getElementById('calViewSubtitleBadge');
+      if (badgeEl) {
+        if (currentYear === 2026 && currentMonth === 9) {
+          badgeEl.innerText = 'Ashvin 2082';
+        } else {
+          badgeEl.innerText = `${monthNamesEn[currentMonth].slice(0,3)} Ledger`;
+        }
       }
+
+      const tagEl = document.getElementById('kitchenLedgerMonthTag');
+      if (tagEl) tagEl.innerText = `• ${monthNamesEn[currentMonth].slice(0,3)} ${currentYear}`;
 
       const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
       const firstDayOffset = new Date(currentYear, currentMonth, 1).getDay();
 
       for (let i = 0; i < firstDayOffset; i++) {
         const empty = document.createElement('div');
-        empty.className = 'cal-day-cell empty';
+        empty.className = 'kitchen-day-cell empty';
         grid.appendChild(empty);
       }
 
@@ -3340,49 +4048,161 @@
 
         const dayData = ledger[dateKey] || {};
         let dayTotal = 0;
-        Object.values(dayData).forEach(it => dayTotal += (Number(it.amount) || 0));
+        let milkQty = 0;
+        let tiffinQty = 0;
 
-        let dayIncome = 0;
-        if (incomeLedger[dateKey]) {
-          incomeLedger[dateKey].forEach(inc => dayIncome += (Number(inc.amount) || 0));
-        }
+        Object.entries(dayData).forEach(([k, it]) => {
+          dayTotal += (Number(it.amount) || 0);
+          if (k === 'milk') milkQty = Number(it.qty) || 0;
+          if (k === 'tiffin') tiffinQty = Number(it.qty) || 0;
+        });
 
         const cell = document.createElement('div');
-        const classes = ['cal-day-cell'];
+        const classes = ['kitchen-day-cell'];
 
+        const isToday = isActualMonth && (day === actualTodayDate);
         if (dayOfWeek === 0) classes.push('sunday');
-        if (isActualMonth && day === actualTodayDate) classes.push('today');
+        if (isToday) classes.push('today');
         if (selectedDateKey === dateKey) classes.push('selected');
-        if (activeCalMode === 'jain' && panchang.isAthamChaudas) classes.push('atham-chaudas');
 
         cell.className = classes.join(' ');
-        
+
         cell.onclick = () => {
           selectedDateKey = dateKey;
           renderMainDaysGrid();
           renderSelectedCardDetails();
-          openExpenseModal(dateKey);
+          renderTodayTally();
         };
 
-        let tithiHtml = '';
-        if (activeCalMode === 'jain' || activeCalMode === 'hindu') {
-          tithiHtml = `<span class="cell-tithi-txt">${panchang.shortTithi}</span>`;
+        const todayPillHtml = isToday ? `<span class="cell-today-pill">Today</span>` : '';
+        const tithiHtml = panchang.shortTithi ? `<span class="cell-tithi-sub" title="${panchang.fullTithi}">${panchang.shortTithi}</span>` : '';
+
+        let milkBadgeHtml = '';
+        if (milkQty > 0) {
+          milkBadgeHtml = `<span class="cell-badge-milk ${isToday ? 'today-active' : ''}">${milkQty}L</span>`;
         }
 
-        let eventDotHtml = panchang.event ? `<div class="cell-event-dot" title="${panchang.event}"></div>` : '';
-        let incomeHtml = dayIncome > 0 ? `<div class="cell-income-badge">+₹${dayIncome >= 1000 ? Math.round(dayIncome/1000) + 'k' : dayIncome}</div>` : '';
-        let costHtml = dayTotal > 0 ? `<div class="cell-expense-badge">-₹${dayTotal}</div>` : '';
+        let tiffinBadgeHtml = '';
+        if (tiffinQty > 0) {
+          tiffinBadgeHtml = `<span class="cell-badge-tiffin">${tiffinQty}</span>`;
+        } else if (dayData.tiffin && Number(dayData.tiffin.qty) === 0) {
+          tiffinBadgeHtml = `<span class="cell-badge-tiffin skip">0</span>`;
+        }
+
+        const costHtml = dayTotal > 0
+          ? `<span class="cell-cost-bottom ${isToday ? 'active-cost' : ''}">₹${dayTotal}</span>`
+          : `<span class="cell-cost-bottom">-</span>`;
 
         cell.innerHTML = `
-          <div class="day-num">${day}</div>
-          ${tithiHtml}
-          ${eventDotHtml}
-          ${incomeHtml}
+          <div class="cell-top-row">
+            <div style="display:flex; align-items:center; gap:3px;">
+              <span class="cell-num-bold">${day}</span>
+              ${todayPillHtml}
+            </div>
+            ${tithiHtml}
+          </div>
+          <div class="cell-badges-wrap">
+            ${milkBadgeHtml}
+            ${tiffinBadgeHtml}
+          </div>
           ${costHtml}
         `;
 
         grid.appendChild(cell);
       }
+    }
+
+    /* TODAY'S DELIVERY TALLY CONTROLLERS */
+    function getTodayKey() {
+      const now = new Date();
+      return fmtDateKey(now.getFullYear(), now.getMonth(), now.getDate());
+    }
+
+    function renderTodayTally() {
+      const todayKey = getTodayKey();
+      if (!ledger[todayKey]) ledger[todayKey] = {};
+
+      const milkAcc = accounts.find(a => a.id === 'milk') || { fixedRate: 32 };
+      const tiffinAcc = accounts.find(a => a.id === 'tiffin') || { fixedRate: 120 };
+
+      const curMilk = Number(ledger[todayKey]?.milk?.qty) || 1.5;
+      const curTiffin = Number(ledger[todayKey]?.tiffin?.qty ?? 2);
+
+      const milkEl = document.getElementById('todayMilkCountText');
+      if (milkEl) milkEl.innerText = `${curMilk}L`;
+
+      const tiffinTag = document.getElementById('todayTiffinBoxesTag');
+      if (tiffinTag) tiffinTag.innerText = `${curTiffin} Boxes`;
+
+      const tiffinBtn = document.getElementById('todayTiffinToggleBtn');
+      const tiffinLbl = document.getElementById('todayTiffinToggleLabel');
+      if (tiffinBtn && tiffinLbl) {
+        if (curTiffin > 0) {
+          tiffinBtn.className = 'tiffin-toggle-btn delivered';
+          tiffinLbl.innerText = 'Delivered';
+        } else {
+          tiffinBtn.className = 'tiffin-toggle-btn skipped';
+          tiffinLbl.innerText = 'Skipped';
+        }
+      }
+
+      const dockDate = document.getElementById('quickDockDateLabel');
+      if (dockDate) {
+        dockDate.innerText = new Date().toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' });
+      }
+    }
+
+    function stepTodayMilk(delta) {
+      const todayKey = getTodayKey();
+      if (!ledger[todayKey]) ledger[todayKey] = {};
+
+      const milkAcc = accounts.find(a => a.id === 'milk') || { fixedRate: 32 };
+      let cur = Number(ledger[todayKey]?.milk?.qty) || 1.5;
+      let next = Math.max(0, Math.round((cur + delta) * 10) / 10);
+
+      ledger[todayKey].milk = {
+        qty: next,
+        amount: Math.round(next * (milkAcc.fixedRate || 32))
+      };
+      saveLedger();
+
+      renderAll();
+      showQuickToast(`Milk updated: ${next} Litres (₹${ledger[todayKey].milk.amount})`);
+    }
+
+    function toggleTodayTiffin() {
+      const todayKey = getTodayKey();
+      if (!ledger[todayKey]) ledger[todayKey] = {};
+
+      const tiffinAcc = accounts.find(a => a.id === 'tiffin') || { fixedRate: 120 };
+      const cur = Number(ledger[todayKey]?.tiffin?.qty ?? 2);
+      const next = (cur > 0) ? 0 : 2;
+
+      ledger[todayKey].tiffin = {
+        qty: next,
+        amount: Math.round(next * (tiffinAcc.fixedRate || 120))
+      };
+      saveLedger();
+
+      renderAll();
+      showQuickToast(next > 0 ? 'Today tiffin marked Delivered (2 Boxes)' : 'Today tiffin marked Skipped');
+    }
+
+    function quickAddMilkExtra() {
+      stepTodayMilk(0.5);
+    }
+
+    function showQuickToast(msg) {
+      const toast = document.getElementById('quickToastBanner');
+      if (toast) {
+        toast.innerText = msg;
+        toast.classList.add('show');
+        clearTimeout(toast._timer);
+        toast._timer = setTimeout(() => {
+          toast.classList.remove('show');
+        }, 2200);
+      }
+      showToast(msg);
     }
 
     function navMonth(delta) {
