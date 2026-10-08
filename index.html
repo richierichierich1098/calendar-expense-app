@@ -1430,6 +1430,175 @@
       justify-content: center;
     }
 
+    /* LUXURY VOICE EXPENSE COMMAND COMPONENT */
+    .voice-expense-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: linear-gradient(135deg, rgba(27, 56, 43, 0.05) 0%, rgba(200, 154, 60, 0.1) 100%);
+      border: 1.5px solid rgba(200, 154, 60, 0.35);
+      border-radius: 16px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      position: relative;
+      transition: all 0.25s ease;
+    }
+
+    .voice-expense-card.listening {
+      background: linear-gradient(135deg, rgba(220, 38, 38, 0.08) 0%, rgba(200, 154, 60, 0.15) 100%);
+      border-color: #ef4444;
+      box-shadow: 0 0 16px rgba(239, 68, 68, 0.25);
+    }
+
+    .voice-mic-main-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(135deg, #1b382b 0%, #11221a 100%);
+      color: #f3d482;
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(27, 56, 43, 0.3), 0 0 0 1.5px rgba(200, 154, 60, 0.4);
+      transition: all 0.2s ease;
+      margin-top: 2px;
+    }
+
+    .voice-mic-main-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(27, 56, 43, 0.4), 0 0 0 2px var(--gold);
+    }
+
+    .voice-expense-card.listening .voice-mic-main-btn {
+      background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+      color: #ffffff;
+      animation: micGlowAnim 1.2s infinite;
+    }
+
+    @keyframes micGlowAnim {
+      0%, 100% { box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.4); transform: scale(1); }
+      50% { box-shadow: 0 0 0 9px rgba(239, 68, 68, 0.15); transform: scale(1.08); }
+    }
+
+    .voice-card-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .voice-card-status {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      margin-bottom: 2px;
+    }
+
+    .voice-expense-card.listening .voice-card-status {
+      color: #dc2626;
+    }
+
+    .voice-card-hint {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .voice-type-fallback {
+      display: flex;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .voice-quick-input {
+      flex: 1;
+      padding: 6px 10px;
+      font-size: 0.76rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #ffffff;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .voice-quick-input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 2px var(--gold-light);
+    }
+
+    .btn-voice-enter {
+      padding: 6px 10px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-voice-enter:hover {
+      background: var(--primary-dark);
+    }
+
+    .voice-card-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .btn-voice-lang-pill {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 4px 8px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.15s;
+    }
+
+    .btn-voice-lang-pill:hover {
+      border-color: var(--gold);
+      color: var(--gold-dark);
+    }
+
+    .btn-voice-quick {
+      background: linear-gradient(135deg, #1b382b 0%, #152c22 100%);
+      color: #f3d482;
+      border: 1px solid rgba(200, 154, 60, 0.35);
+      border-radius: 10px;
+      padding: 6px 12px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.18s ease;
+    }
+
+    .btn-voice-quick:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(27, 56, 43, 0.25);
+      border-color: var(--gold);
+    }
+
     .sheet-items-list {
       display: flex;
       flex-direction: column;
@@ -2059,9 +2228,14 @@
                 <div class="card-date-title" id="selectedCardDateLabel">Wednesday, 7 October 2026</div>
                 <div class="card-tithi-subtitle" id="selectedCardTithiLabel">Aso Vad Ekadashi</div>
               </div>
-              <button class="btn btn-primary" style="width:auto; padding:6px 14px; font-size:0.78rem;" onclick="openExpenseModal(selectedDateKey)">
-                ✏️ Edit Expenses
-              </button>
+              <div style="display:flex; gap:6px;">
+                <button class="btn-voice-quick" onclick="openExpenseModalWithVoice(selectedDateKey)" title="Add Expense by Voice">
+                  🎙️ Voice Add
+                </button>
+                <button class="btn btn-primary" style="width:auto; padding:6px 12px; font-size:0.78rem;" onclick="openExpenseModal(selectedDateKey)">
+                  ✏️ Edit
+                </button>
+              </div>
             </div>
 
             <div id="selectedCardIncomeBox" style="display:none; margin-bottom:8px;"></div>
@@ -2326,6 +2500,27 @@
       </div>
 
       <div id="modalIncomeNotice" style="display:none; margin-bottom:12px;"></div>
+
+      <!-- LUXURY VOICE EXPENSE COMMAND HERO BANNER -->
+      <div class="voice-expense-card" id="modalVoiceCard">
+        <button class="voice-mic-main-btn" id="btnVoiceMicModal" onclick="toggleVoiceListening()" title="Click to Speak Expense">
+          <span class="mic-icon" id="micIconStatus">🎙️</span>
+        </button>
+        <div class="voice-card-content">
+          <div class="voice-card-status" id="voiceStatusText">Tap Mic to Speak Expense</div>
+          <div class="voice-card-hint" id="voiceHintText">e.g. "Add 1ltr milk", "₹150 Vegetables", "2 Tiffin"</div>
+          <!-- Quick Fallback Input for typing or quiet environments -->
+          <div class="voice-type-fallback" id="voiceTypeFallback">
+            <input type="text" id="voiceTypeInput" class="voice-quick-input" placeholder='Or type: e.g. "1ltr milk"' onkeydown="if(event.key==='Enter') submitVoiceTextFallback()">
+            <button class="btn-voice-enter" onclick="submitVoiceTextFallback()">Add</button>
+          </div>
+        </div>
+        <div class="voice-card-actions">
+          <button class="btn-voice-lang-pill" id="voiceLangPill" onclick="toggleVoiceLang()" title="Switch Voice Language">
+            🌐 <span id="voiceLangLabel">en-IN</span>
+          </button>
+        </div>
+      </div>
 
       <div class="sheet-items-list" id="modalItemsListContainer"></div>
 
@@ -3298,10 +3493,24 @@
       }
 
       renderModalItems();
+      const statusEl = document.getElementById('voiceStatusText');
+      if (statusEl) statusEl.innerText = 'Tap Mic to Speak Expense';
+      const hintEl = document.getElementById('voiceHintText');
+      if (hintEl) hintEl.innerText = 'e.g. "Add 1ltr milk", "₹150 Vegetables", "2 Tiffin"';
+      const langLbl = document.getElementById('voiceLangLabel');
+      if (langLbl && typeof currentVoiceLang !== 'undefined') langLbl.innerText = currentVoiceLang;
       document.getElementById('expenseModalOverlay').classList.add('active');
     }
 
+    function openExpenseModalWithVoice(dateKey) {
+      openExpenseModal(dateKey);
+      setTimeout(() => {
+        if (typeof startVoiceListening === 'function') startVoiceListening();
+      }, 350);
+    }
+
     function closeExpenseModal() {
+      if (typeof stopVoiceListening === 'function') stopVoiceListening();
       document.getElementById('expenseModalOverlay').classList.remove('active');
     }
 
@@ -3463,6 +3672,342 @@
       renderModalItems();
       renderProfileItemsMaster();
       showToast(`Added '${name}'! 🎉`);
+    }
+
+    /* ==========================================================================
+       VOICE COMMAND ENGINE (SMART SPEECH-TO-EXPENSE RECOGNITION & CALCULATION)
+       ========================================================================== */
+    const GU_DIGITS = {'૦':'0','૧':'1','૨':'2','૩':'3','૪':'4','૫':'5','૬':'6','૭':'7','૮':'8','૯':'9'};
+    const HI_DIGITS = {'०':'0','१':'1','२':'2','३':'3','४':'4','५':'5','६':'6','७':'7','૮':'8','९':'9'};
+
+    const NUMBER_WORDS = {
+      'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5,
+      'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10,
+      'ek': 1, 'be': 2, 'do': 2, 'tran': 3, 'teen': 3, 'char': 4, 'chaar': 4,
+      'panch': 5, 'chha': 6, 'chhe': 6, 'saat': 7, 'aath': 8, 'nau': 9, 'das': 10,
+      'half': 0.5, 'adha': 0.5, 'aadha': 0.5, 'adho': 0.5,
+      'quarter': 0.25, 'dedh': 1.5, 'dhai': 2.5,
+      'sau': 100, 'so': 100, 'hazar': 1000, 'hajar': 1000, 'hajaar': 1000,
+      'એક': 1, 'બે': 2, 'ત્રણ': 3, 'ચાર': 4, 'પાંચ': 5, 'છ': 6, 'સાત': 7, 'આઠ': 8, 'નવ': 9, 'દસ': 10,
+      'અડધો': 0.5, 'દોઢ': 1.5, 'અઢી': 2.5, 'સો': 100, 'હજાર': 1000,
+      'एक': 1, 'दो': 2, 'तीन': 3, 'चार': 4, 'पांच': 5, 'छह': 6, 'सात': 7, 'आठ': 8, 'नौ': 9, 'दस': 10,
+      'आधा': 0.5, 'डेढ़': 1.5, 'ढाई': 2.5, 'सौ': 100
+    };
+
+    const ACCOUNT_ALIASES = {
+      'milk': ['milk', 'doodh', 'dudh', 'chhas', 'chaas', 'buttermilk', 'curd', 'dahi', 'dairy', 'amul', 'દૂધ', 'દુધ', 'છાશ', 'દહીં', 'दूध', 'दही', 'छाछ'],
+      'tiffin': ['tiffin', 'thali', 'dabba', 'meal', 'meals', 'lunch', 'dinner', 'khana', 'ટિફિન', 'ટિફીન', 'ડબ્બો', 'થાળી', 'टिफिन', 'थाली'],
+      'veg_fruits': ['veg', 'vegetable', 'vegetables', 'fruit', 'fruits', 'sabji', 'sabzi', 'shaak', 'bhaji', 'tarkari', 'aloo', 'bataka', 'tameta', 'શાકભાજી', 'શાક', 'ભાજી', 'ફળ', 'સબ્જી', 'सब्जी', 'भाजी', 'फल'],
+      'groceries': ['grocery', 'groceries', 'kirana', 'ration', 'supermarket', 'mart', 'store', 'masala', 'tel', 'oil', 'atta', 'gehu', 'chawal', 'rice', 'sugar', 'dal', 'કરીયાણું', 'કરિયાણું', 'રાશન', 'કિરાના', 'किराना', 'राशन'],
+      'medicines': ['medicine', 'medicines', 'medical', 'dawa', 'dawai', 'chemist', 'pharmacy', 'doctor', 'tablet', 'tablets', 'syrup', 'દવા', 'દવાઓ', 'મેડિકલ', 'दवा', 'दवाई', 'मेडिकल']
+    };
+
+    let voiceRecognition = null;
+    let isVoiceListening = false;
+    let currentVoiceLang = localStorage.getItem('app_voice_lang') || 'en-IN';
+
+    const VOICE_LANGS = [
+      { code: 'en-IN', label: 'en-IN (English/Hinglish)' },
+      { code: 'gu-IN', label: 'gu-IN (ગુજરાતી)' },
+      { code: 'hi-IN', label: 'hi-IN (हिंदी)' }
+    ];
+
+    function toggleVoiceLang() {
+      let idx = VOICE_LANGS.findIndex(l => l.code === currentVoiceLang);
+      idx = (idx + 1) % VOICE_LANGS.length;
+      currentVoiceLang = VOICE_LANGS[idx].code;
+      localStorage.setItem('app_voice_lang', currentVoiceLang);
+      const lbl = document.getElementById('voiceLangLabel');
+      if (lbl) lbl.innerText = currentVoiceLang;
+      showToast(`Voice language set to: ${VOICE_LANGS[idx].label} 🌐`);
+    }
+
+    function getVoiceRecognitionInstance() {
+      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRec) return null;
+      if (!voiceRecognition) {
+        voiceRecognition = new SpeechRec();
+        voiceRecognition.continuous = false;
+        voiceRecognition.interimResults = false;
+
+        voiceRecognition.onstart = () => {
+          isVoiceListening = true;
+          updateVoiceUIState('listening');
+        };
+
+        voiceRecognition.onresult = (event) => {
+          if (event.results && event.results[0] && event.results[0][0]) {
+            const transcript = event.results[0][0].transcript;
+            processVoiceTranscript(transcript);
+          }
+        };
+
+        voiceRecognition.onerror = (event) => {
+          isVoiceListening = false;
+          updateVoiceUIState('error', event.error);
+        };
+
+        voiceRecognition.onend = () => {
+          isVoiceListening = false;
+          updateVoiceUIState('idle');
+        };
+      }
+      voiceRecognition.lang = currentVoiceLang;
+      return voiceRecognition;
+    }
+
+    function toggleVoiceListening() {
+      if (isVoiceListening) {
+        stopVoiceListening();
+      } else {
+        startVoiceListening();
+      }
+    }
+
+    function startVoiceListening() {
+      const rec = getVoiceRecognitionInstance();
+      if (!rec) {
+        showToast("⚠️ Speech recognition not supported in this browser. Please use the quick text box!");
+        const input = document.getElementById('voiceTypeInput');
+        if (input) input.focus();
+        return;
+      }
+      try {
+        rec.lang = currentVoiceLang;
+        rec.start();
+      } catch(e) {
+        console.warn("Speech recognition notice:", e);
+      }
+    }
+
+    function stopVoiceListening() {
+      if (voiceRecognition && isVoiceListening) {
+        try { voiceRecognition.stop(); } catch(e) {}
+      }
+      isVoiceListening = false;
+      updateVoiceUIState('idle');
+    }
+
+    function updateVoiceUIState(state, errorMsg) {
+      const card = document.getElementById('modalVoiceCard');
+      const statusEl = document.getElementById('voiceStatusText');
+      const hintEl = document.getElementById('voiceHintText');
+      const micIcon = document.getElementById('micIconStatus');
+
+      if (state === 'listening') {
+        if (card) card.classList.add('listening');
+        if (micIcon) micIcon.innerText = '🔴';
+        if (statusEl) statusEl.innerText = 'Listening... Speak now 🎙️';
+        if (hintEl) hintEl.innerText = 'Say: "Add 1ltr milk", "₹150 Vegetables", "2 Tiffin"...';
+      } else if (state === 'error') {
+        if (card) card.classList.remove('listening');
+        if (micIcon) micIcon.innerText = '🎙️';
+        let msg = 'Could not access microphone.';
+        if (errorMsg === 'not-allowed') msg = 'Microphone permission blocked. Please allow mic in browser.';
+        else if (errorMsg === 'no-speech') msg = 'No speech detected. Please tap mic again.';
+        if (statusEl) statusEl.innerText = '⚠️ ' + msg;
+        if (hintEl) hintEl.innerText = 'You can also type in the box below!';
+        showToast('⚠️ ' + msg);
+      } else {
+        if (card) card.classList.remove('listening');
+        if (micIcon) micIcon.innerText = '🎙️';
+        if (statusEl && !statusEl.innerText.startsWith('✅') && !statusEl.innerText.startsWith('❓')) {
+          statusEl.innerText = 'Tap Mic to Speak Expense';
+          if (hintEl) hintEl.innerText = 'e.g. "Add 1ltr milk", "₹150 Vegetables", "2 Tiffin"';
+        }
+      }
+    }
+
+    function normalizeSpokenText(str) {
+      let s = (str || '').toLowerCase();
+      for (const [d, v] of Object.entries(GU_DIGITS)) s = s.replaceAll(d, v);
+      for (const [d, v] of Object.entries(HI_DIGITS)) s = s.replaceAll(d, v);
+
+      s = s.replace(/(\d+(?:\.\d+)?)\s*(ltr|litre|liter|litres|l|લીટર|લિટર|लीटर)\b/gi, '$1 liter ');
+      s = s.replace(/(\d+(?:\.\d+)?)\s*(ml|milli|મિલી|मिली)\b/gi, '$1 ml ');
+      s = s.replace(/(\d+(?:\.\d+)?)\s*(rs|rupees|rupee|inr|rupya|rupiya|રૂપિયા|રૂ|रुपये|रुपया|₹|\$)\b/gi, '$1 rs ');
+      s = s.replace(/(\d+(?:\.\d+)?)\s*(kg|kilo|kilos|કિલો|किलो)\b/gi, '$1 kg ');
+
+      for (const [w, val] of Object.entries(NUMBER_WORDS)) {
+        const reg = new RegExp('(\\b|\\s|^)' + w + '(\\b|\\s|$)', 'gi');
+        s = s.replace(reg, '$1' + val + '$2');
+      }
+      return s;
+    }
+
+    function parseVoiceSegment(segment, currentAccounts) {
+      const norm = normalizeSpokenText(segment);
+      if (!norm.trim()) return null;
+
+      let matchedAcc = null;
+      for (const acc of currentAccounts) {
+        const aliases = ACCOUNT_ALIASES[acc.id] || [];
+        const accWords = acc.name.toLowerCase().replace(/[^a-z0-9\u0A80-\u0AFF\u0900-\u097F ]/g, '').split(/\s+/).filter(Boolean);
+        const allKeywords = [...aliases, acc.id, ...accWords];
+        for (const kw of allKeywords) {
+          if (norm.includes(kw)) {
+            matchedAcc = acc;
+            break;
+          }
+        }
+        if (matchedAcc) break;
+      }
+
+      let mlMatch = norm.match(/(\d+(?:\.\d+)?)\s*ml\b/i);
+      let literMatch = norm.match(/(\d+(?:\.\d+)?)\s*liter\b/i);
+      let rsMatch = norm.match(/(?:rs|rupees|rupiya|રૂપિયા|रुपये|₹|\$)\s*(\d+(?:\.\d+)?)|(\d+(?:\.\d+)?)\s*(?:rs|rupees|rupiya|રૂપિયા|रुपये|₹|\$)/i);
+      let anyNumMatch = norm.match(/(\d+(?:\.\d+)?)/);
+
+      let num = null;
+      let isRs = false;
+      let isLiter = false;
+
+      if (mlMatch) {
+        num = parseFloat(mlMatch[1]) / 1000;
+        isLiter = true;
+      } else if (literMatch) {
+        num = parseFloat(literMatch[1]);
+        isLiter = true;
+      } else if (rsMatch) {
+        num = parseFloat(rsMatch[1] || rsMatch[2]);
+        isRs = true;
+      } else if (anyNumMatch) {
+        num = parseFloat(anyNumMatch[1]);
+      }
+
+      if (!matchedAcc) {
+        const cleanedText = norm.replace(/add|please|karo|lakh|nakh|ઉમેરો|નાખો|લખો|જોડો|ડિપોઝિટ|rs|rupees|rupiya|રૂપિયા|रुपये|\d+(?:\.\d+)?/gi, '').trim();
+        if (cleanedText && num !== null) {
+          return {
+            action: 'new_item',
+            itemName: cleanedText.charAt(0).toUpperCase() + cleanedText.slice(1),
+            amount: Math.round(num),
+            qty: 0,
+            type: 'direct'
+          };
+        }
+        return null;
+      }
+
+      let finalQty = 0;
+      let finalAmount = 0;
+
+      if (matchedAcc.type === 'fixed') {
+        if (isRs && num !== null && !isLiter) {
+          finalAmount = Math.round(num);
+          finalQty = Math.round((finalAmount / (matchedAcc.fixedRate || 1)) * 10) / 10;
+        } else {
+          finalQty = num !== null ? num : (matchedAcc.step || 1);
+          finalAmount = Math.round(finalQty * (matchedAcc.fixedRate || 0));
+        }
+      } else {
+        finalAmount = num !== null ? Math.round(num) : 0;
+        finalQty = 0;
+      }
+
+      return {
+        action: 'update_item',
+        accId: matchedAcc.id,
+        accName: matchedAcc.name,
+        qty: finalQty,
+        amount: finalAmount,
+        unit: matchedAcc.unit || '',
+        type: matchedAcc.type
+      };
+    }
+
+    function parseFullVoiceTranscript(transcript, currentAccounts) {
+      const segments = (transcript || '').split(/\s+(?:and|plus|ane|aur|અને|और|,)\s+/i);
+      const results = [];
+      for (const seg of segments) {
+        const r = parseVoiceSegment(seg, currentAccounts);
+        if (r) results.push(r);
+      }
+      return results;
+    }
+
+    function applyVoiceExpenseResults(results, dateKey = selectedDateKey) {
+      if (!results || results.length === 0) return { count: 0, summary: [] };
+      if (!ledger[dateKey]) ledger[dateKey] = {};
+
+      const summary = [];
+      results.forEach(res => {
+        if (res.action === 'new_item') {
+          const newId = 'custom_' + Date.now() + '_' + Math.floor(Math.random()*1000);
+          accounts.push({
+            id: newId,
+            name: `📌 ${res.itemName}`,
+            type: 'direct',
+            fixedRate: null,
+            unit: '₹',
+            step: 1
+          });
+          saveAccounts();
+          ledger[dateKey][newId] = { qty: 0, amount: res.amount };
+          summary.push(`${res.itemName} ₹${res.amount}`);
+        } else if (res.action === 'update_item') {
+          ledger[dateKey][res.accId] = { qty: res.qty, amount: res.amount };
+          if (res.type === 'fixed') {
+            summary.push(`${res.accName} (${res.qty} ${res.unit || ''}) = ₹${res.amount}`);
+          } else {
+            summary.push(`${res.accName} = ₹${res.amount}`);
+          }
+        }
+      });
+
+      saveLedger();
+      renderAll();
+
+      const modal = document.getElementById('expenseModalOverlay');
+      if (modal && modal.classList.contains('active')) {
+        renderModalItems();
+      }
+
+      return { count: results.length, summary };
+    }
+
+    function processVoiceTranscript(transcript) {
+      if (!transcript || !transcript.trim()) return;
+      const statusEl = document.getElementById('voiceStatusText');
+      const hintEl = document.getElementById('voiceHintText');
+
+      const results = parseFullVoiceTranscript(transcript, accounts);
+      if (results && results.length > 0) {
+        const applied = applyVoiceExpenseResults(results, selectedDateKey);
+        const summaryStr = applied.summary.join(', ');
+        if (statusEl) statusEl.innerText = `✅ Added: ${summaryStr}`;
+        if (hintEl) hintEl.innerText = `Heard: "${transcript}" • Day calculation updated!`;
+        showToast(`🎙️ Added: ${summaryStr}`);
+        speakConfirmation(`Added ${summaryStr}`);
+      } else {
+        if (statusEl) statusEl.innerText = `❓ Could not recognize expense`;
+        if (hintEl) hintEl.innerText = `Heard: "${transcript}". Try saying "1ltr milk" or "100 vegetables"`;
+        showToast(`Could not recognize: "${transcript}". Try "1ltr milk"`);
+      }
+    }
+
+    function submitVoiceTextFallback() {
+      const input = document.getElementById('voiceTypeInput');
+      if (!input) return;
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = '';
+      processVoiceTranscript(text);
+    }
+
+    function speakConfirmation(text) {
+      if ('speechSynthesis' in window && text) {
+        try {
+          window.speechSynthesis.cancel();
+          const utter = new SpeechSynthesisUtterance(text);
+          utter.rate = 1.05;
+          utter.pitch = 1.0;
+          if (currentVoiceLang === 'gu-IN') utter.lang = 'gu-IN';
+          else if (currentVoiceLang === 'hi-IN') utter.lang = 'hi-IN';
+          else utter.lang = 'en-IN';
+          window.speechSynthesis.speak(utter);
+        } catch(e) {}
+      }
     }
 
     /* MONEY RECEIVED (INCOME) */
