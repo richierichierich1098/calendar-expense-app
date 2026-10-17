@@ -3495,7 +3495,18 @@
       try {
         initPersistentStorage();
         let u = localStorage.getItem(STORAGE_KEY_USER);
-        if (u) {
+        if (!u) {
+          // Default Richie profile so user never gets locked out on any device or fresh tab!
+          const defaultUser = {
+            name: "Richie",
+            mobile: "9876543210",
+            pin: "1234",
+            calMode: "english",
+            createdAt: new Date().toISOString()
+          };
+          localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(defaultUser));
+          u = JSON.stringify(defaultUser);
+        } else {
           try {
             const parsed = JSON.parse(u);
             if (parsed.name === "Honey Shah") {
@@ -3504,20 +3515,17 @@
               u = JSON.stringify(parsed);
             }
           } catch(e) {}
+        }
 
-          const sess = localStorage.getItem(STORAGE_KEY_SESSION);
-          if (sess === 'active') {
-            currentUser = JSON.parse(u);
-            showMainApp();
-          } else {
-            showAuthScreen('signIn');
-          }
+        const sess = localStorage.getItem(STORAGE_KEY_SESSION);
+        if (sess === 'active') {
+          currentUser = JSON.parse(u);
+          showMainApp();
         } else {
-          // New device or first visit: show onboarding / create profile directly
-          showAuthScreen('signUp');
+          showAuthScreen('signIn');
         }
       } catch(e) {
-        showAuthScreen('signUp');
+        showAuthScreen('signIn');
       }
     }
 
@@ -3546,9 +3554,9 @@
           document.getElementById('lockAvatar').innerText = uName.charAt(0).toUpperCase();
           document.getElementById('lockGreeting').innerText = 'Welcome back';
         } else {
-          document.getElementById('lockUserName').innerText = 'New User';
-          document.getElementById('lockAvatar').innerText = '👤';
-          document.getElementById('lockGreeting').innerText = 'Create Profile';
+          document.getElementById('lockUserName').innerText = 'Richie';
+          document.getElementById('lockAvatar').innerText = 'R';
+          document.getElementById('lockGreeting').innerText = 'Welcome back';
         }
       }
     }
@@ -3591,12 +3599,20 @@
     }
 
     function verifyPinAndUnlock() {
+      let savedUser = null;
       const savedUserStr = localStorage.getItem(STORAGE_KEY_USER);
-      if (!savedUserStr) {
-        showAuthScreen('signUp');
-        return;
+      if (savedUserStr) {
+        try { savedUser = JSON.parse(savedUserStr); } catch(e) {}
       }
-      const savedUser = JSON.parse(savedUserStr);
+      if (!savedUser) {
+        savedUser = {
+          name: "Richie",
+          mobile: "9876543210",
+          pin: "1234",
+          calMode: "english"
+        };
+        localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(savedUser));
+      }
 
       if (enteredPin === savedUser.pin) {
         for (let i = 1; i <= 4; i++) {
@@ -3744,6 +3760,22 @@
     }
 
     function showMainApp() {
+      if (!currentUser) {
+        const saved = localStorage.getItem(STORAGE_KEY_USER);
+        if (saved) {
+          try { currentUser = JSON.parse(saved); } catch(e) {}
+        }
+        if (!currentUser) {
+          currentUser = {
+            name: "Richie",
+            mobile: "9876543210",
+            pin: "1234",
+            calMode: "english"
+          };
+          localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
+        }
+      }
+
       document.getElementById('screenSignUp').style.display = 'none';
       document.getElementById('screenSignIn').style.display = 'none';
       document.getElementById('screenForgotPin').style.display = 'none';
@@ -3753,6 +3785,7 @@
       if (statusBar) statusBar.classList.add('auth-dark');
 
       const uName = (currentUser && currentUser.name && currentUser.name !== "Honey Shah") ? currentUser.name : "Richie";
+      const uMobile = (currentUser && currentUser.mobile) ? currentUser.mobile : "9876543210";
       const initial = uName.charAt(0).toUpperCase();
 
       const elAvatar = document.getElementById('headerUserAvatar');
@@ -3760,14 +3793,14 @@
       const elName = document.getElementById('headerUserName');
       if (elName) elName.innerText = uName;
       const elMobile = document.getElementById('headerUserMobile');
-      if (elMobile) elMobile.innerText = `+91 ${currentUser.mobile}`;
+      if (elMobile) elMobile.innerText = `+91 ${uMobile}`;
 
       const elProfAvatar = document.getElementById('profileLargeAvatar');
       if (elProfAvatar) elProfAvatar.innerText = initial;
       const elProfName = document.getElementById('profileLargeName');
       if (elProfName) elProfName.innerText = uName;
       const elProfMobile = document.getElementById('profileLargeMobile');
-      if (elProfMobile) elProfMobile.innerText = `+91 ${currentUser.mobile}`;
+      if (elProfMobile) elProfMobile.innerText = `+91 ${uMobile}`;
 
       setAppCalendarMode(currentUser.calMode || 'english', false);
       initDateRangeFilter();
