@@ -1543,6 +1543,27 @@
       color: #ffffff;
     }
 
+    .btn-change-rate-chip {
+      background: rgba(212, 175, 55, 0.15);
+      border: 1px solid rgba(212, 175, 55, 0.45);
+      color: #b8860b;
+      font-size: 0.62rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      transition: all 0.15s ease;
+      line-height: 1.2;
+    }
+    .btn-change-rate-chip:hover {
+      background: rgba(212, 175, 55, 0.28);
+      border-color: #d4af37;
+      transform: translateY(-1px);
+    }
+
     /* SELECTED DAY DETAILS CARD */
     .selected-day-details-card {
       background: #ffffff;
@@ -2752,7 +2773,10 @@
                     <span class="delivery-item-name">Milk (Daily)</span>
                     <span class="delivery-item-tag green">6:30 AM</span>
                   </div>
-                  <span class="delivery-item-sub" id="tallyMilkSub">Amul Gold (₹32/500ml) • Morning</span>
+                  <div style="display:flex; align-items:center; gap:6px; margin-top:2px;">
+                    <span class="delivery-item-sub" id="tallyMilkSub">₹63/Liter • Morning</span>
+                    <button class="btn-change-rate-chip" onclick="openQuickRateModal('milk')" title="Change Milk Rate / દૂધનો ભાવ બદલો">✏️ ભાવ બદલો</button>
+                  </div>
                 </div>
               </div>
               <div class="stepper-mini-controls">
@@ -2773,7 +2797,10 @@
                     <span class="delivery-item-name">Tiffin (Meal)</span>
                     <span class="delivery-item-tag orange" id="todayTiffinBoxesTag">2 Boxes</span>
                   </div>
-                  <span class="delivery-item-sub">₹120/box • Daily lunch & dinner</span>
+                  <div style="display:flex; align-items:center; gap:6px; margin-top:2px;">
+                    <span class="delivery-item-sub" id="tallyTiffinSub">₹120/Box • Daily</span>
+                    <button class="btn-change-rate-chip" onclick="openQuickRateModal('tiffin')" title="Change Tiffin Rate / ટિફિનનો ભાવ બદલો">✏️ ભાવ બદલો</button>
+                  </div>
                 </div>
               </div>
               <div>
@@ -2826,7 +2853,7 @@
                 <span class="material-symbols-outlined" style="font-size:18px;">add_circle</span>
                 <div style="display:flex; flex-direction:column;">
                   <span class="btn-quick-title">+0.5L Milk</span>
-                  <span class="btn-quick-sub">+₹16 in bill</span>
+                  <span class="btn-quick-sub" id="quickMilkSubText">+₹32 in bill</span>
                 </div>
               </button>
 
@@ -3267,12 +3294,80 @@
           <label class="form-label-clean">Stepper Increment (+ / - Step)</label>
           <input type="number" step="any" id="editItemStep" class="input-clean" placeholder="1 or 0.5">
         </div>
+        <div class="form-group-clean" style="margin-top:10px; background:#f8fafc; padding:10px; border-radius:10px; border:1px solid #e2e8f0;">
+          <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.8rem; font-weight:700; color:#1e293b;">
+            <input type="checkbox" id="editApplyAllPast" style="width:16px; height:16px; accent-color:#1b382b;">
+            <span>આખા મહિનાની પાછલી બધી તારીખોમાં પણ આ નવો ભાવ ગણો</span>
+          </label>
+          <span style="font-size:0.68rem; color:#64748b; margin-left:24px; display:block;">(જો ટીક કરશો તો આ મહિનાના બધા જ દિવસોનું બિલ આપોઆપ નવા ભાવ પ્રમાણે ફરી ગણાશે)</span>
+        </div>
       </div>
 
       <div style="display:flex; gap:10px; margin-top:14px;">
         <button class="btn btn-primary" style="flex:1;" onclick="saveEditedItem()">💾 Save Changes</button>
         <button class="btn btn-secondary" style="width:80px; color:#ef4444;" onclick="deleteEditedItem()">🗑️ Delete</button>
       </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       POPUP MODAL: QUICK RATE CUSTOMIZER FOR CUSTOMER (MILK / TIFFIN / ETC)
+       ====================================================================== -->
+  <div class="modal-overlay" id="quickRateModalOverlay" onclick="closeQuickRateModalOnBackdrop(event)">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="sheet-drag-handle"></div>
+
+      <div class="sheet-header">
+        <div class="sheet-title-box">
+          <h3 id="quickRateItemTitle">⚙️ Set Rate / ભાવ સેટ કરો</h3>
+          <span style="color:var(--text-muted); font-size:0.75rem;">કોઈપણ સમયે તમારી મરજી મુજબ ભાવ બદલો</span>
+        </div>
+        <button class="close-btn" onclick="closeQuickRateModal()">✕</button>
+      </div>
+
+      <input type="hidden" id="quickRateItemId">
+
+      <div class="form-group-clean">
+        <label class="form-label-clean" id="quickRateInputLabel">નવો ભાવ (Rate in ₹)</label>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-family:'Epilogue',system-ui,sans-serif; font-size:1.4rem; font-weight:800; color:#131d16;">₹</span>
+          <input type="number" step="any" id="quickRateInputVal" class="input-clean" style="font-size:1.25rem; font-weight:800;" placeholder="63">
+          <span id="quickRateUnitLabel" style="font-size:0.82rem; font-weight:700; color:#6d756e; white-space:nowrap;">₹ પ્રતિ Liter</span>
+        </div>
+      </div>
+
+      <!-- Scope choice: All Month vs From Today Only -->
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:12px; margin-bottom:14px;">
+        <label style="display:block; font-size:0.75rem; font-weight:800; color:#1e293b; margin-bottom:8px;">
+          આ નવો ભાવ કઈ કઈ તારીખોમાં લાગુ કરવો છે?
+        </label>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer;">
+            <input type="radio" name="quickRateScope" id="quickRateScopeAll" value="all" checked style="margin-top:2px; accent-color:#1b382b;">
+            <div>
+              <strong style="font-size:0.80rem; color:#0f172a; display:block;">આખા મહિનાની બધી જ તારીખોમાં (Recalculate All Days)</strong>
+              <span style="font-size:0.70rem; color:#64748b;">૧ તારીખથી લઈને આજ સુધીનું આખા મહિનાનું બિલ નવા ભાવ મુજબ આપોઆપ ફરી ગણાશે.</span>
+            </div>
+          </label>
+          <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer;">
+            <input type="radio" name="quickRateScope" id="quickRateScopeFuture" value="future" style="margin-top:2px; accent-color:#1b382b;">
+            <div>
+              <strong style="font-size:0.80rem; color:#0f172a; display:block;">ફક્ત આજથી જ લાગુ કરો (From Today Only)</strong>
+              <span style="font-size:0.70rem; color:#64748b;">પાછલો જૂનો રેકોર્ડ જેમ છે તેમ જ રહેશે, ફક્ત આજ પછીના દિવસોમાં નવો ભાવ ગણાશે.</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:10px;">
+        <button class="btn btn-primary" style="flex:1;" onclick="saveQuickRate()">
+          💾 Save & Apply Rate / ભાવ સેવ કરો
+        </button>
+        <button class="btn btn-secondary" style="width:80px;" onclick="closeQuickRateModal()">
+          Cancel
+        </button>
+      </div>
+
     </div>
   </div>
 
@@ -3829,7 +3924,7 @@
        EXPENSE & INCOME LEDGERS
        ========================================================================== */
     const defaultAccounts = [
-      { id: 'milk', name: '🥛 Milk', type: 'fixed', fixedRate: 32, unit: 'Liter', step: 0.5 },
+      { id: 'milk', name: '🥛 Milk', type: 'fixed', fixedRate: 63, unit: 'Liter', step: 0.5 },
       { id: 'tiffin', name: '🍱 Tiffin', type: 'fixed', fixedRate: 120, unit: 'Meal', step: 1 },
       { id: 'veg_fruits', name: '🥬 Veg & Fruits', type: 'direct', fixedRate: null, unit: '₹', step: 1 },
       { id: 'groceries', name: '🛒 Groceries', type: 'direct', fixedRate: null, unit: '₹', step: 1 },
@@ -3840,6 +3935,21 @@
     let accounts = JSON.parse(localStorage.getItem(STORAGE_KEY_ACCOUNTS) || 'null') || defaultAccounts;
     let ledger = JSON.parse(localStorage.getItem(STORAGE_KEY_LEDGER) || '{}');
     let incomeLedger = JSON.parse(localStorage.getItem(STORAGE_KEY_INCOME) || '{}');
+
+    // Auto-migration: if user had old demo milk rate 32, upgrade to standard 63 and update sample amounts
+    const curMilkAcc = accounts.find(a => a.id === 'milk');
+    if (curMilkAcc && curMilkAcc.fixedRate === 32) {
+      curMilkAcc.fixedRate = 63;
+      saveAccounts();
+      Object.keys(ledger).forEach(dk => {
+        if (ledger[dk] && ledger[dk].milk && Number(ledger[dk].milk.qty) > 0) {
+          if (ledger[dk].milk.amount === Math.round(Number(ledger[dk].milk.qty) * 32)) {
+            ledger[dk].milk.amount = Math.round(Number(ledger[dk].milk.qty) * 63);
+          }
+        }
+      });
+      saveLedger();
+    }
 
     function saveAccounts() { localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(accounts)); }
     function saveLedger() { localStorage.setItem(STORAGE_KEY_LEDGER, JSON.stringify(ledger)); }
@@ -3890,7 +4000,7 @@
     function seedSampleHouseholdData() {
       if (Object.keys(ledger).length > 2) return; // already populated
 
-      const milkAcc = accounts.find(a => a.id === 'milk') || { fixedRate: 32 };
+      const milkAcc = accounts.find(a => a.id === 'milk') || { fixedRate: 63 };
       const tiffinAcc = accounts.find(a => a.id === 'tiffin') || { fixedRate: 120 };
 
       // Pre-seed realistic October 2026 household entries
@@ -3918,7 +4028,7 @@
       baseSamples.forEach(s => {
         const dk = fmtDateKey(2026, 9, s.day);
         ledger[dk] = {
-          milk: { qty: s.milk, amount: Math.round(s.milk * (milkAcc.fixedRate || 32)) },
+          milk: { qty: s.milk, amount: Math.round(s.milk * (milkAcc.fixedRate || 63)) },
           tiffin: { qty: s.tiffin, amount: Math.round(s.tiffin * (tiffinAcc.fixedRate || 120)) }
         };
         if (s.extra > 0) {
@@ -4123,6 +4233,7 @@
           renderMainDaysGrid();
           renderSelectedCardDetails();
           renderTodayTally();
+          openExpenseModal(dateKey);
         };
 
         const todayPillHtml = isToday ? `<span class="cell-today-pill">Today</span>` : '';
@@ -4173,8 +4284,8 @@
       const todayKey = getTodayKey();
       if (!ledger[todayKey]) ledger[todayKey] = {};
 
-      const milkAcc = accounts.find(a => a.id === 'milk') || { fixedRate: 32 };
-      const tiffinAcc = accounts.find(a => a.id === 'tiffin') || { fixedRate: 120 };
+      const milkAcc = accounts.find(a => a.id === 'milk') || { fixedRate: 63, unit: 'Liter' };
+      const tiffinAcc = accounts.find(a => a.id === 'tiffin') || { fixedRate: 120, unit: 'Meal' };
 
       const curMilk = Number(ledger[todayKey]?.milk?.qty) || 1.5;
       const curTiffin = Number(ledger[todayKey]?.tiffin?.qty ?? 2);
@@ -4182,8 +4293,24 @@
       const milkEl = document.getElementById('todayMilkCountText');
       if (milkEl) milkEl.innerText = `${curMilk}L`;
 
+      const milkSub = document.getElementById('tallyMilkSub');
+      if (milkSub) {
+        milkSub.innerText = `₹${milkAcc.fixedRate || 63}/${milkAcc.unit || 'Liter'} • Morning`;
+      }
+
       const tiffinTag = document.getElementById('todayTiffinBoxesTag');
       if (tiffinTag) tiffinTag.innerText = `${curTiffin} Boxes`;
+
+      const tiffinSub = document.getElementById('tallyTiffinSub');
+      if (tiffinSub) {
+        tiffinSub.innerText = `₹${tiffinAcc.fixedRate || 120}/${tiffinAcc.unit || 'Box'} • Daily`;
+      }
+
+      const quickMilkSub = document.getElementById('quickMilkSubText');
+      if (quickMilkSub) {
+        const halfCost = Math.round(0.5 * (milkAcc.fixedRate || 63));
+        quickMilkSub.innerText = `+₹${halfCost} in bill`;
+      }
 
       const tiffinBtn = document.getElementById('todayTiffinToggleBtn');
       const tiffinLbl = document.getElementById('todayTiffinToggleLabel');
@@ -4207,13 +4334,13 @@
       const todayKey = getTodayKey();
       if (!ledger[todayKey]) ledger[todayKey] = {};
 
-      const milkAcc = accounts.find(a => a.id === 'milk') || { fixedRate: 32 };
+      const milkAcc = accounts.find(a => a.id === 'milk') || { fixedRate: 63 };
       let cur = Number(ledger[todayKey]?.milk?.qty) || 1.5;
       let next = Math.max(0, Math.round((cur + delta) * 10) / 10);
 
       ledger[todayKey].milk = {
         qty: next,
-        amount: Math.round(next * (milkAcc.fixedRate || 32))
+        amount: Math.round(next * (milkAcc.fixedRate || 63))
       };
       saveLedger();
 
@@ -5016,10 +5143,19 @@
           acc.unit = type === 'fixed' ? unit : '₹';
           acc.step = step;
 
-          if (ledger[selectedDateKey] && ledger[selectedDateKey][id]) {
-            const curQty = Number(ledger[selectedDateKey][id].qty) || 0;
-            if (type === 'fixed' && curQty > 0) {
-              ledger[selectedDateKey][id].amount = Math.round(curQty * rate);
+          if (type === 'fixed') {
+            const applyAll = document.getElementById('editApplyAllPast')?.checked;
+            if (applyAll) {
+              Object.keys(ledger).forEach(dk => {
+                if (ledger[dk] && ledger[dk][id] && Number(ledger[dk][id].qty) > 0) {
+                  ledger[dk][id].amount = Math.round(Number(ledger[dk][id].qty) * rate);
+                }
+              });
+            } else if (ledger[selectedDateKey] && ledger[selectedDateKey][id]) {
+              const curQty = Number(ledger[selectedDateKey][id].qty) || 0;
+              if (curQty > 0) {
+                ledger[selectedDateKey][id].amount = Math.round(curQty * rate);
+              }
             }
           }
         }
@@ -5033,6 +5169,67 @@
       if (document.getElementById('expenseModalOverlay').classList.contains('active')) {
         renderModalItems();
       }
+    }
+
+    /* QUICK RATE MODAL CONTROLLER (CUSTOMER SELF-SERVICE FOR MILK, TIFFIN, ETC) */
+    function openQuickRateModal(accId) {
+      const acc = accounts.find(a => a.id === accId);
+      if (!acc) return;
+
+      document.getElementById('quickRateItemId').value = acc.id;
+      document.getElementById('quickRateItemTitle').innerText = `⚙️ ${acc.name} - ભાવ સેટ કરો`;
+      document.getElementById('quickRateInputVal').value = acc.fixedRate || 0;
+      document.getElementById('quickRateUnitLabel').innerText = `₹ પ્રતિ ${acc.unit || 'unit'}`;
+      document.getElementById('quickRateScopeAll').checked = true;
+      document.getElementById('quickRateModalOverlay').classList.add('active');
+    }
+
+    function closeQuickRateModal() {
+      const modal = document.getElementById('quickRateModalOverlay');
+      if (modal) modal.classList.remove('active');
+    }
+
+    function closeQuickRateModalOnBackdrop(e) {
+      if (e.target.id === 'quickRateModalOverlay') closeQuickRateModal();
+    }
+
+    function saveQuickRate() {
+      const id = document.getElementById('quickRateItemId').value;
+      const rateVal = parseFloat(document.getElementById('quickRateInputVal').value);
+      const scopeAll = document.getElementById('quickRateScopeAll').checked;
+
+      if (isNaN(rateVal) || rateVal <= 0) {
+        alert("કૃપા કરીને સાચો ભાવ (Rate) દાખલ કરો.");
+        return;
+      }
+
+      const acc = accounts.find(a => a.id === id);
+      if (!acc) return;
+
+      acc.fixedRate = rateVal;
+      saveAccounts();
+
+      if (scopeAll) {
+        // Recalculate all entries in entire ledger
+        Object.keys(ledger).forEach(dk => {
+          if (ledger[dk] && ledger[dk][id] && Number(ledger[dk][id].qty) > 0) {
+            ledger[dk][id].amount = Math.round(Number(ledger[dk][id].qty) * rateVal);
+          }
+        });
+        saveLedger();
+        showToast(`${acc.name} નો ભાવ ₹${rateVal} સેવ થયો અને આખા મહિનામાં ગણાઈ ગયો! ✅`);
+      } else {
+        // Only update current / today date
+        const todayKey = getTodayKey();
+        if (ledger[todayKey] && ledger[todayKey][id] && Number(ledger[todayKey][id].qty) > 0) {
+          ledger[todayKey][id].amount = Math.round(Number(ledger[todayKey][id].qty) * rateVal);
+          saveLedger();
+        }
+        showToast(`${acc.name} નો ભાવ ₹${rateVal} સેવ થયો (આજથી લાગુ)! ✅`);
+      }
+
+      closeQuickRateModal();
+      renderAll();
     }
 
     function deleteEditedItem() {
@@ -5074,8 +5271,8 @@
               ${isFixed ? `Fixed: ₹${acc.fixedRate} / ${acc.unit} (Step: ${acc.step})` : `Direct Amount (₹)`}
             </div>
           </div>
-          <button class="btn btn-secondary" style="width:auto; padding:4px 10px; font-size:0.75rem;" onclick="openEditItemModal('${acc.id}')">
-            ✏️ Edit
+          <button class="btn btn-secondary" style="width:auto; padding:4px 10px; font-size:0.75rem;" onclick="${isFixed ? `openQuickRateModal('${acc.id}')` : `openEditItemModal('${acc.id}')`}">
+            ✏️ ${isFixed ? 'ભાવ બદલો' : 'Edit'}
           </button>
         `;
         container.appendChild(itemRow);
