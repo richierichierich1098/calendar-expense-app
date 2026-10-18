@@ -168,7 +168,7 @@
     /* SCREEN VIEWPORT */
     .screen-viewport {
       flex: 1;
-      overflow-y: auto;
+      overflow-y: auto !important;
       overflow-x: hidden !important;
       background: var(--bg);
       position: relative;
@@ -176,14 +176,25 @@
       flex-direction: column;
       width: 100%;
       max-width: 100%;
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
     }
 
     .screen-viewport::-webkit-scrollbar {
-      width: 4px;
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
     }
-    .screen-viewport::-webkit-scrollbar-thumb {
-      background: rgba(0,0,0,0.1);
-      border-radius: 4px;
+
+    /* Hide native scrollbars inside phone mockup */
+    .device-mockup * {
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
+    .device-mockup *::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
     }
 
     /* BOTTOM HOME INDICATOR BAR */
@@ -644,9 +655,10 @@
     .app-screen-shell {
       display: flex;
       flex-direction: column;
-      flex: 1;
-      padding-bottom: 78px; /* Space for bottom nav */
-      overflow-x: hidden !important;
+      flex: 1 0 auto;
+      min-height: 100%;
+      padding-bottom: 85px; /* Space for bottom nav */
+      overflow: visible !important;
       width: 100%;
       max-width: 100%;
       background: #131d16;
@@ -826,8 +838,8 @@
     .app-screen {
       display: none;
       padding: 12px 14px 20px 14px;
-      flex: 1;
-      overflow-x: hidden !important;
+      flex: 1 0 auto;
+      overflow: visible !important;
       width: 100%;
       max-width: 100%;
       box-sizing: border-box;
@@ -843,6 +855,11 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    /* Prevent any screen card from being collapsed or clipped by flexbox */
+    .app-screen > * {
+      flex-shrink: 0 !important;
+    }
+
     /* MONTH OVERVIEW CONTAINER (SLATE FOREST & METALLIC BRASS) */
     .month-overview-card {
       position: relative;
@@ -853,6 +870,7 @@
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
       padding: 14px 16px;
       margin-bottom: 12px;
+      flex-shrink: 0 !important;
     }
 
     .month-overview-glow-1 {
