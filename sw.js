@@ -1,4 +1,4 @@
-const CACHE_NAME = 'gharkharch-v2';
+const CACHE_NAME = 'gharkharch-v3';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

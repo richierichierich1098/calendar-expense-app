@@ -1837,9 +1837,17 @@
       padding: 16px 18px 24px 18px;
       max-height: 82vh;
       overflow-y: auto;
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
       box-shadow: 0 -10px 30px rgba(0,0,0,0.2);
       animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
+    }
+
+    .modal-sheet::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
     }
 
     @keyframes slideUp {
@@ -1862,16 +1870,84 @@
       margin-bottom: 14px;
       padding-bottom: 8px;
       border-bottom: 1px solid var(--border);
+      gap: 8px;
     }
+
+    .sheet-header-left {
+      display: flex;
+      align-items: center;
+      min-width: 72px;
+    }
+
+    .sheet-header-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+      min-width: 72px;
+    }
+
+    .sheet-date-nav-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      color: #1e293b;
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      padding: 0;
+    }
+
+    .sheet-date-nav-btn:hover {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+      color: var(--primary);
+    }
+
+    .sheet-date-nav-btn:active {
+      transform: scale(0.92);
+    }
+
+    .sheet-title-box {
+      flex: 1;
+    }
+
+    .sheet-title-box.centered {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-width: 0;
+    }
+
     .sheet-title-box h3 {
-      font-size: 1.15rem;
+      font-size: 1.05rem;
       font-weight: 800;
       color: #0f172a;
+      line-height: 1.25;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
     }
+
     .sheet-title-box span {
       font-size: 0.75rem;
       color: #b45309;
       font-weight: 700;
+      line-height: 1.25;
+      margin-top: 2px;
     }
 
     .close-btn {
@@ -1886,6 +1962,19 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 0;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      transition: all 0.15s ease;
+    }
+
+    .close-btn:hover {
+      background: #f1f5f9;
+      color: #dc2626;
+      border-color: #fca5a5;
+    }
+
+    .close-btn:active {
+      transform: scale(0.92);
     }
 
     /* LUXURY VOICE EXPENSE COMMAND COMPONENT */
@@ -3210,11 +3299,17 @@
       <div class="sheet-drag-handle"></div>
 
       <div class="sheet-header">
-        <div class="sheet-title-box">
+        <div class="sheet-header-left">
+          <button class="sheet-date-nav-btn" onclick="navModalDate(-1)" title="Previous Date (પાછલી તારીખ)" aria-label="Previous Date">‹</button>
+        </div>
+        <div class="sheet-title-box centered">
           <h3 id="modalDateHeading">7 October 2026</h3>
           <span id="modalTithiHeading">Aso Vad Ekadashi</span>
         </div>
-        <button class="close-btn" onclick="closeExpenseModal()">✕</button>
+        <div class="sheet-header-actions">
+          <button class="sheet-date-nav-btn" onclick="navModalDate(1)" title="Next Date (આગલી તારીખ)" aria-label="Next Date">›</button>
+          <button class="close-btn" onclick="closeExpenseModal()" title="Close" aria-label="Close">✕</button>
+        </div>
       </div>
 
       <div id="modalIncomeNotice" style="display:none; margin-bottom:12px;"></div>
@@ -4552,6 +4647,33 @@
     }
 
     /* EXPENSE MODAL CONTROLLER */
+    function navModalDate(delta) {
+      if (typeof stopVoiceListening === 'function') stopVoiceListening();
+      if (!selectedDateKey) {
+        const now = new Date();
+        selectedDateKey = fmtDateKey(now.getFullYear(), now.getMonth(), now.getDate());
+      }
+      const parts = selectedDateKey.split('-');
+      const y = parseInt(parts[0], 10);
+      const m = parseInt(parts[1], 10) - 1;
+      const d = parseInt(parts[2], 10);
+
+      const curDate = new Date(y, m, d);
+      curDate.setDate(curDate.getDate() + delta);
+
+      const newY = curDate.getFullYear();
+      const newM = curDate.getMonth();
+      const newD = curDate.getDate();
+      const newDateKey = fmtDateKey(newY, newM, newD);
+
+      selectedDateKey = newDateKey;
+      currentYear = newY;
+      currentMonth = newM;
+
+      renderAll();
+      openExpenseModal(newDateKey);
+    }
+
     function openExpenseModal(dateKey) {
       selectedDateKey = dateKey;
       const parts = dateKey.split('-');
