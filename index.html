@@ -3248,13 +3248,26 @@
             </div>
           </div>
 
-          <div class="calendar-card" style="padding:14px;">
+          <div class="calendar-card" style="padding:14px; margin-bottom:14px;">
             <h4 style="font-size:0.9rem; font-weight:800; margin-bottom:6px;">💾 Data Backup & Restore</h4>
             <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:12px;">All expense & income entries are automatically saved inside this phone. You can also export or restore your full backup anytime.</p>
             <div style="display:flex; gap:8px; flex-wrap:wrap;">
               <button class="btn btn-secondary" style="flex:1; min-width:140px;" onclick="exportBackupJSON()">📤 Export Backup</button>
               <button class="btn btn-secondary" style="flex:1; min-width:140px;" onclick="document.getElementById('importBackupInput').click()">📥 Restore Backup</button>
               <input type="file" id="importBackupInput" accept=".json" style="display:none;" onchange="importBackupJSON(event)">
+            </div>
+          </div>
+
+          <!-- ZERO / RESET EXPENSES CARD -->
+          <div class="calendar-card" style="padding:14px; border:1.5px dashed #fed7aa; background:#fffaf5;">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+              <div>
+                <h4 style="font-size:0.9rem; font-weight:800; color:#c2410c;">🧹 નવો હિસાબ શરૂ કરો (Reset Expenses)</h4>
+                <p style="font-size:0.73rem; color:var(--text-muted); margin-top:2px;">બધા જૂના કે સેમ્પલ ખર્ચ 0 કરીને નવેસરથી કોરો હિસાબ શરૂ કરો</p>
+              </div>
+              <button class="btn btn-secondary" style="width:auto; padding:6px 12px; font-size:0.75rem; border-color:#fdba74; color:#c2410c; flex-shrink:0;" onclick="clearAllExpenses()">
+                🗑️ હિસાબ 0 કરો
+              </button>
             </div>
           </div>
 
@@ -3857,6 +3870,15 @@
           document.getElementById('lockAvatar').innerText = 'R';
           document.getElementById('lockGreeting').innerText = 'Welcome back';
         }
+      } else if (name === 'signUp') {
+        const rName = document.getElementById('regName');
+        const rMobile = document.getElementById('regMobile');
+        if (rName) rName.value = '';
+        if (rMobile) rMobile.value = '';
+        for (let i = 1; i <= 4; i++) {
+          const el = document.getElementById('regPin' + i);
+          if (el) el.value = '';
+        }
       }
     }
 
@@ -3994,7 +4016,7 @@
       return pin;
     }
 
-    function handleRegisterProfile() {
+    function handleRegisterProfile(isDemo = false) {
       const name = document.getElementById('regName').value.trim();
       const mobile = document.getElementById('regMobile').value.trim();
       const pin = getPinFromBoxes('regPin');
@@ -4008,11 +4030,22 @@
         mobile,
         pin,
         calMode: 'english',
+        isDemo: !!isDemo,
         createdAt: new Date().toISOString()
       };
 
       localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
       localStorage.setItem(STORAGE_KEY_SESSION, 'active');
+
+      if (isDemo) {
+        seedSampleHouseholdData(true);
+      } else {
+        // A brand new real user profile: 100% clean, ZERO prefilled expenses or income!
+        ledger = {};
+        incomeLedger = {};
+        saveLedger();
+        saveIncomeLedger();
+      }
 
       showToast("Profile created! Welcome 🎉");
       showMainApp();
@@ -4025,7 +4058,7 @@
       document.getElementById('regPin2').value = '2';
       document.getElementById('regPin3').value = '3';
       document.getElementById('regPin4').value = '4';
-      handleRegisterProfile();
+      handleRegisterProfile(true);
     }
 
     function handleResetPin() {
@@ -4103,6 +4136,7 @@
 
       setAppCalendarMode(currentUser.calMode || 'english', false);
       initDateRangeFilter();
+      loadProfileLedgers(currentUser.mobile);
       renderAll();
     }
 
@@ -4119,8 +4153,68 @@
     ];
 
     let accounts = JSON.parse(localStorage.getItem(STORAGE_KEY_ACCOUNTS) || 'null') || defaultAccounts;
-    let ledger = JSON.parse(localStorage.getItem(STORAGE_KEY_LEDGER) || '{}');
-    let incomeLedger = JSON.parse(localStorage.getItem(STORAGE_KEY_INCOME) || '{}');
+    let ledger = {};
+    let incomeLedger = {};
+
+    function getLedgerStorageKey(mobile) {
+      return (mobile && mobile !== '9876543210') ? `app_expense_ledger_${mobile}` : STORAGE_KEY_LEDGER;
+    }
+
+    function getIncomeStorageKey(mobile) {
+      return (mobile && mobile !== '9876543210') ? `app_income_ledger_${mobile}` : STORAGE_KEY_INCOME;
+    }
+
+    function loadProfileLedgers(mobile) {
+      const lKey = getLedgerStorageKey(mobile);
+      const iKey = getIncomeStorageKey(mobile);
+      const savedL = localStorage.getItem(lKey);
+      const savedI = localStorage.getItem(iKey);
+
+      if (savedL !== null) {
+        try { ledger = JSON.parse(savedL || '{}'); } catch(e) { ledger = {}; }
+      } else if (mobile === '9876543210' && localStorage.getItem(STORAGE_KEY_LEDGER)) {
+        try { ledger = JSON.parse(localStorage.getItem(STORAGE_KEY_LEDGER) || '{}'); } catch(e) { ledger = {}; }
+      } else {
+        ledger = {};
+      }
+
+      if (savedI !== null) {
+        try { incomeLedger = JSON.parse(savedI || '{}'); } catch(e) { incomeLedger = {}; }
+      } else if (mobile === '9876543210' && localStorage.getItem(STORAGE_KEY_INCOME)) {
+        try { incomeLedger = JSON.parse(localStorage.getItem(STORAGE_KEY_INCOME) || '{}'); } catch(e) { incomeLedger = {}; }
+      } else {
+        incomeLedger = {};
+      }
+    }
+
+    function saveAccounts() { localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(accounts)); }
+
+    function saveLedger() {
+      const lKey = getLedgerStorageKey(currentUser?.mobile);
+      localStorage.setItem(lKey, JSON.stringify(ledger));
+      if (!currentUser || currentUser.mobile === '9876543210') {
+        localStorage.setItem(STORAGE_KEY_LEDGER, JSON.stringify(ledger));
+      }
+    }
+
+    function saveIncomeLedger() {
+      const iKey = getIncomeStorageKey(currentUser?.mobile);
+      localStorage.setItem(iKey, JSON.stringify(incomeLedger));
+      if (!currentUser || currentUser.mobile === '9876543210') {
+        localStorage.setItem(STORAGE_KEY_INCOME, JSON.stringify(incomeLedger));
+      }
+    }
+
+    function clearAllExpenses() {
+      if (confirm("શું તમે બધા ખર્ચ અને આવક 0 કરીને નવો હિસાબ શરૂ કરવા માંગો છો?\n(Do you want to clear all expenses and start fresh from ₹0?)")) {
+        ledger = {};
+        incomeLedger = {};
+        saveLedger();
+        saveIncomeLedger();
+        renderAll();
+        showToast("બધા ખર્ચ ક્લિયર થઈ ગયા છે. હિસાબ ₹0 થી શરૂ થયો! 🧹");
+      }
+    }
 
     // Auto-migration: if user had old demo milk rate 32, upgrade to standard 63 and update sample amounts
     const curMilkAcc = accounts.find(a => a.id === 'milk');
@@ -4136,10 +4230,6 @@
       });
       saveLedger();
     }
-
-    function saveAccounts() { localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(accounts)); }
-    function saveLedger() { localStorage.setItem(STORAGE_KEY_LEDGER, JSON.stringify(ledger)); }
-    function saveIncomeLedger() { localStorage.setItem(STORAGE_KEY_INCOME, JSON.stringify(incomeLedger)); }
 
     /* CALENDAR STATE */
     let currentYear = 2026;
@@ -4182,9 +4272,9 @@
       renderMainDaysGrid();
     }
 
-    /* SEED INITIAL SAMPLE DATA IF EMPTY FOR OCTOBER 2026 */
-    function seedSampleHouseholdData() {
-      if (Object.keys(ledger).length > 2) return; // already populated
+    /* SEED INITIAL SAMPLE DATA IF EMPTY FOR OCTOBER 2026 (DEMO ONLY) */
+    function seedSampleHouseholdData(force = false) {
+      if (!force) return; // NEVER auto-seed for real profiles! Only when explicit Demo setup is triggered.
 
       const milkAcc = accounts.find(a => a.id === 'milk') || { fixedRate: 63 };
       const tiffinAcc = accounts.find(a => a.id === 'tiffin') || { fixedRate: 120 };
@@ -4226,22 +4316,19 @@
       ledger['2026-10-10'].households = { qty: 1, amount: 975 };
 
       // Monthly household budget income
-      if (!incomeLedger['2026-10-01']) {
-        incomeLedger['2026-10-01'] = [{
-          id: 'inc_oct_init',
-          amount: 12000,
-          source: 'Monthly Household Allowance',
-          mode: 'Bank / UPI',
-          notes: 'October Budget'
-        }];
-        saveIncomeLedger();
-      }
-
+      incomeLedger['2026-10-01'] = [{
+        id: 'inc_oct_init',
+        amount: 12000,
+        source: 'Monthly Household Allowance',
+        mode: 'Bank / UPI',
+        notes: 'October Budget'
+      }];
+      saveIncomeLedger();
       saveLedger();
     }
 
     function renderAll() {
-      seedSampleHouseholdData();
+      // NOTE: seedSampleHouseholdData() is intentionally NOT called here so new profiles remain 100% clean!
       renderWalletBanner();
       renderMainDaysGrid();
       renderTodayTally();
@@ -4293,15 +4380,15 @@
       }
 
       milkLiters = Math.round(milkLiters * 10) / 10;
-      const budgetLimit = monthIncome > 0 ? monthIncome : 12000;
-      const pctUsed = Math.min(100, Math.round((monthExpenses / (budgetLimit || 1)) * 100));
+      const budgetLimit = monthIncome;
+      const pctUsed = monthIncome > 0 ? Math.min(100, Math.round((monthExpenses / monthIncome) * 100)) : 0;
 
       // 1. Month Overview Trio
       const elMonthSpent = document.getElementById('overviewMonthSpent');
       if (elMonthSpent) elMonthSpent.innerText = `₹${monthExpenses.toLocaleString('en-IN')}`;
 
       const elMonthBudget = document.getElementById('overviewMonthBudget');
-      if (elMonthBudget) elMonthBudget.innerText = monthIncome > 0 ? `Budget ₹${monthIncome.toLocaleString('en-IN')}` : `Limit ₹${budgetLimit.toLocaleString('en-IN')}`;
+      if (elMonthBudget) elMonthBudget.innerText = monthIncome > 0 ? `Budget ₹${monthIncome.toLocaleString('en-IN')}` : `Limit ₹0`;
 
       const elTiffinBill = document.getElementById('overviewTiffinBill');
       if (elTiffinBill) elTiffinBill.innerText = `₹${tiffinCost.toLocaleString('en-IN')}`;
@@ -4320,7 +4407,7 @@
       if (elKpiExpense) elKpiExpense.innerText = `₹${monthExpenses.toLocaleString('en-IN')}`;
 
       const elKpiLimit = document.getElementById('kpiBudgetLimit');
-      if (elKpiLimit) elKpiLimit.innerText = `Limit: ₹${budgetLimit.toLocaleString('en-IN')}`;
+      if (elKpiLimit) elKpiLimit.innerText = monthIncome > 0 ? `Limit: ₹${monthIncome.toLocaleString('en-IN')}` : `Limit: ₹0`;
 
       const elKpiPct = document.getElementById('kpiBudgetPct');
       if (elKpiPct) elKpiPct.innerText = `${pctUsed}%`;
@@ -4346,10 +4433,10 @@
       if (elKpiMilkAvg) elKpiMilkAvg.innerText = `${avgPerDay} L/day avg`;
 
       const elKpiStaff = document.getElementById('kpiStaffCost');
-      if (elKpiStaff) elKpiStaff.innerText = `₹${(staffCost || 975).toLocaleString('en-IN')}`;
+      if (elKpiStaff) elKpiStaff.innerText = `₹${staffCost.toLocaleString('en-IN')}`;
 
       const elKpiStaffDays = document.getElementById('kpiStaffDays');
-      if (elKpiStaffDays) elKpiStaffDays.innerText = `${staffDays > 0 ? staffDays : 18} Present`;
+      if (elKpiStaffDays) elKpiStaffDays.innerText = `${staffDays} Present`;
 
       const elKpiStaffAdv = document.getElementById('kpiStaffAdvance');
       if (elKpiStaffAdv) elKpiStaffAdv.innerText = `0 Advance`;
@@ -4468,13 +4555,13 @@
 
     function renderTodayTally() {
       const todayKey = getTodayKey();
-      if (!ledger[todayKey]) ledger[todayKey] = {};
+      const dayData = ledger[todayKey] || {};
 
       const milkAcc = accounts.find(a => a.id === 'milk') || { fixedRate: 63, unit: 'Liter' };
       const tiffinAcc = accounts.find(a => a.id === 'tiffin') || { fixedRate: 120, unit: 'Meal' };
 
-      const curMilk = Number(ledger[todayKey]?.milk?.qty) || 1.5;
-      const curTiffin = Number(ledger[todayKey]?.tiffin?.qty ?? 2);
+      const curMilk = Number(dayData.milk?.qty || 0);
+      const curTiffin = Number(dayData.tiffin?.qty || 0);
 
       const milkEl = document.getElementById('todayMilkCountText');
       if (milkEl) milkEl.innerText = `${curMilk}L`;
@@ -4506,7 +4593,7 @@
           tiffinLbl.innerText = 'Delivered';
         } else {
           tiffinBtn.className = 'tiffin-toggle-btn skipped';
-          tiffinLbl.innerText = 'Skipped';
+          tiffinLbl.innerText = 'Not Delivered';
         }
       }
 
@@ -4521,7 +4608,7 @@
       if (!ledger[todayKey]) ledger[todayKey] = {};
 
       const milkAcc = accounts.find(a => a.id === 'milk') || { fixedRate: 63 };
-      let cur = Number(ledger[todayKey]?.milk?.qty) || 1.5;
+      let cur = Number(ledger[todayKey]?.milk?.qty || 0);
       let next = Math.max(0, Math.round((cur + delta) * 10) / 10);
 
       ledger[todayKey].milk = {
@@ -4539,7 +4626,7 @@
       if (!ledger[todayKey]) ledger[todayKey] = {};
 
       const tiffinAcc = accounts.find(a => a.id === 'tiffin') || { fixedRate: 120 };
-      const cur = Number(ledger[todayKey]?.tiffin?.qty ?? 2);
+      const cur = Number(ledger[todayKey]?.tiffin?.qty || 0);
       const next = (cur > 0) ? 0 : 2;
 
       ledger[todayKey].tiffin = {
